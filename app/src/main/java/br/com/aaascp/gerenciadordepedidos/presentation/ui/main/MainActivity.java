@@ -19,7 +19,7 @@ import br.com.aaascp.gerenciadordepedidos.presentation.ui.order.list.OrdersListA
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class MainActivity extends AppCompatActivity
+public final class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     @BindView(R.id.main_toolbar)
