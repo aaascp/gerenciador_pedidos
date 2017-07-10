@@ -12,7 +12,6 @@
 
         <activity
             android:name=".presentation.ui.main.MainActivity"
-            android:label="@string/title_activity_main"
             android:theme="@style/AppTheme.NoActionBar">
 
             <intent-filter>
@@ -20,6 +19,9 @@
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>
         </activity>
+
+        <activity android:name=".presentation.ui.order.list.OrdersListActivity" />
+        <activity android:name=".presentation.ui.order.details.OrderDetailsActivity" />
     </application>
 
 </manifest>

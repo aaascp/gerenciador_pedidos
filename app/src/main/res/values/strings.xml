@@ -1,9 +1,15 @@
 <resources>
-    <string name="app_name">GerenciadorDePedidos</string>
-    <string name="title_activity_main">MainActivity</string>
+    <string name="app_name">Gerenciador de Pedidos</string>
 
-    <string name="navigation_drawer_open">Open navigation drawer</string>
-    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="navigation_drawer_open">Abre Navigation Drawer</string>
+    <string name="navigation_drawer_close">Fecha Navigation Drawer</string>
 
-    <string name="action_settings">Settings</string>
+    <string name="menu_preferences">Preferências</string>
+
+    <string name="nav_orders_list">Lista de Pedidos</string>
+    <string name="nav_find_order">Encontrar Pedido</string>
+    <string name="nav_add_profile">Adicionar Perfil</string>
+    <string name="nav_settings">Configurações</string>
+    <string name="nav_preferences">Preferências</string>
+    <string name="nav_logout">Sair</string>
 </resources>

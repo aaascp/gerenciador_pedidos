@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <group
+        android:id="@+id/main_menu_features"
+        android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_orders_list"
+            android:icon="@drawable/ic_list_black_vector"
+            android:title="@string/nav_orders_list" />
+
+        <item
+            android:id="@+id/nav_find_order"
+            android:icon="@drawable/ic_search_black_vector"
+            android:title="@string/nav_find_order" />
+
+
+    </group>
+
+    <item android:title="@string/nav_settings">
+        <menu>
+            <item
+                android:id="@+id/nav_add_profile"
+                android:icon="@drawable/ic_profile_add_black_vector"
+                android:title="@string/nav_add_profile" />
+
+            <item
+                android:id="@+id/nav_settings"
+                android:icon="@drawable/ic_settings_black_vector"
+                android:title="@string/nav_preferences" />
+        </menu>
+    </item>
+
+    <group android:id="@+id/main_menu_actions">
+        <item
+            android:id="@+id/nav_logout"
+            android:icon="@drawable/ic_logout_black_vector"
+            android:title="@string/nav_logout" />
+    </group>
+
+
+</menu>
