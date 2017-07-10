@@ -36,9 +36,9 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_main);
-        setSupportActionBar(toolbar);
-
         ButterKnife.bind(this);
+
+        setSupportActionBar(toolbar);
 
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this,
@@ -70,8 +70,13 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        return item.getItemId() == R.id.menu_settings
-                || super.onOptionsItemSelected(item);
+        int id = item.getItemId();
+
+        if (id == R.id.menu_settings) {
+            OrdersListActivity.startForContext(this);
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -80,10 +85,19 @@ public class MainActivity extends AppCompatActivity
 
         if (id == R.id.nav_orders_list) {
             OrdersListActivity.startForContext(this);
+
         } else if (id == R.id.nav_find_order) {
             OrdersListActivity.startForContext(this);
+
+        } else if (id == R.id.nav_add_profile) {
+            OrdersListActivity.startForContext(this);
+
         } else if (id == R.id.nav_settings) {
             OrdersListActivity.startForContext(this);
+
+        } else if (id == R.id.nav_logout) {
+            OrdersListActivity.startForContext(this);
+
         }
 
         drawer.closeDrawer(GravityCompat.START);

@@ -20,8 +20,13 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".presentation.ui.order.list.OrdersListActivity" />
-        <activity android:name=".presentation.ui.order.details.OrderDetailsActivity" />
+        <activity
+            android:name=".presentation.ui.order.list.OrdersListActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+
+        <activity
+            android:name=".presentation.ui.order.details.OrderDetailsActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
     </application>
 
 </manifest>

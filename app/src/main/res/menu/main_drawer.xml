@@ -27,7 +27,7 @@
 
             <item
                 android:id="@+id/nav_settings"
-                android:icon="@drawable/ic_settings_black_vector"
+                android:icon="@drawable/ic_settings_white_vector"
                 android:title="@string/nav_preferences" />
         </menu>
     </item>
