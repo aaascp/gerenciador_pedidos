@@ -10,7 +10,9 @@ import android.widget.TextView;
 import java.util.List;
 
 import br.com.aaascp.gerenciadordepedidos.R;
+import br.com.aaascp.gerenciadordepedidos.domain.OrdersDomain;
 import br.com.aaascp.gerenciadordepedidos.domain.dto.Order;
+import br.com.aaascp.gerenciadordepedidos.presentation.ui.order.details.OrderDetailsActivity;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -41,7 +43,7 @@ class OrdersListAdapter extends RecyclerView.Adapter<OrdersListAdapter.ViewHolde
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        Order order = orders.get(position);
+        final Order order = orders.get(position);
 
         holder.id.setText(
                 String.valueOf(
@@ -54,6 +56,15 @@ class OrdersListAdapter extends RecyclerView.Adapter<OrdersListAdapter.ViewHolde
                         order.itemsCount()));
 
         holder.lastModifiedAt.setText(order.lastModifiedAt());
+
+        holder.root.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                OrderDetailsActivity.startForOrder(
+                        context,
+                        order.id());
+            }
+        });
     }
 
     @Override
@@ -62,6 +73,9 @@ class OrdersListAdapter extends RecyclerView.Adapter<OrdersListAdapter.ViewHolde
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
+
+        @BindView(R.id.order_root)
+        View root;
 
         @BindView(R.id.order_id_value)
         TextView id;

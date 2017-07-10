@@ -11,8 +11,7 @@
         android:theme="@style/AppTheme">
 
         <activity
-            android:name=".presentation.ui.main.MainActivity"
-            android:theme="@style/AppTheme">
+            android:name=".presentation.ui.main.MainActivity" >
 
             <intent-filter>
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -21,8 +20,10 @@
         </activity>
 
         <activity
-            android:name=".presentation.ui.order.list.OrdersListActivity"
-            android:theme="@style/AppTheme" />
+            android:name=".presentation.ui.order.list.OrdersListActivity" />
+
+        <activity
+            android:name=".presentation.ui.order.details.OrderDetailsActivity" />
     </application>
 
 </manifest>
