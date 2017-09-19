@@ -10,7 +10,6 @@ import android.widget.TextView;
 import java.util.List;
 
 import br.com.aaascp.gerenciadordepedidos.R;
-import br.com.aaascp.gerenciadordepedidos.domain.OrdersDomain;
 import br.com.aaascp.gerenciadordepedidos.domain.dto.Order;
 import br.com.aaascp.gerenciadordepedidos.presentation.ui.order.details.OrderDetailsActivity;
 import butterknife.BindView;

@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -12,10 +11,10 @@ import android.view.View;
 import java.util.List;
 
 import br.com.aaascp.gerenciadordepedidos.R;
-import br.com.aaascp.gerenciadordepedidos.domain.OrdersDomain;
-import br.com.aaascp.gerenciadordepedidos.domain.callback.DomainCallback;
 import br.com.aaascp.gerenciadordepedidos.domain.dto.Order;
 import br.com.aaascp.gerenciadordepedidos.presentation.ui.BaseActivity;
+import br.com.aaascp.gerenciadordepedidos.repository.OrdersRepository;
+import br.com.aaascp.gerenciadordepedidos.repository.callback.RepositoryCallback;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -58,7 +57,8 @@ public final class OrdersListActivity extends BaseActivity {
     }
 
     private void setupOrdersList() {
-        OrdersDomain.getOrdersList(new DomainCallback<List<Order>>() {
+        OrdersRepository.getList(new RepositoryCallback<List<Order>>() {
+
             @Override
             public void onSuccess(List<Order> result) {
                 showOrdersList(result);

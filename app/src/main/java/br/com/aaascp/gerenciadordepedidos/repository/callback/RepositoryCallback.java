@@ -1,12 +1,16 @@
 package br.com.aaascp.gerenciadordepedidos.repository.callback;
 
+import java.util.List;
+
 /**
  * Created by andre on 10/07/17.
  */
 
-public interface RepositoryCallback<T> {
+public abstract class RepositoryCallback<T> {
 
-    void onSuccess(T data);
+    public void onSuccess(T data) {
+    }
 
-    void onError(RepositoryError error);
+    public void onError(List<String> error) {
+    }
 }

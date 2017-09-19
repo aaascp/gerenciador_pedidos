@@ -1,4 +1,4 @@
-package br.com.aaascp.gerenciadordepedidos.repository.remote;
+package br.com.aaascp.gerenciadordepedidos.repository;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -7,12 +7,12 @@ import br.com.aaascp.gerenciadordepedidos.domain.dto.Order;
 import br.com.aaascp.gerenciadordepedidos.repository.callback.RepositoryCallback;
 
 /**
- * Created by andre on 10/07/17.
+ * Created by andre on 18/09/17.
  */
 
-public final class OrdersRemoteRepository {
+public class OrdersRepository {
 
-    public static void getOrdersList(RepositoryCallback<List<Order>> callback) {
+    public static void getList(RepositoryCallback<List<Order>> callback) {
         List<Order> orders = new ArrayList<>();
 
         Order order1 = Order.builder()
