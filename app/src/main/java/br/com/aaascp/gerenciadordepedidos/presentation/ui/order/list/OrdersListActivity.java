@@ -15,6 +15,7 @@ import br.com.aaascp.gerenciadordepedidos.domain.dto.Order;
 import br.com.aaascp.gerenciadordepedidos.presentation.ui.BaseActivity;
 import br.com.aaascp.gerenciadordepedidos.repository.OrdersRepository;
 import br.com.aaascp.gerenciadordepedidos.repository.callback.RepositoryCallback;
+import br.com.aaascp.gerenciadordepedidos.repository.utils.filter.OrderFilter;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -24,17 +25,24 @@ import butterknife.ButterKnife;
 
 public final class OrdersListActivity extends BaseActivity {
 
+    private static final String ORDER_FILTER_TAG = "ORDER_FILTER_TAG";
+
     @BindView(R.id.orders_list_toolbar)
     Toolbar toolbar;
 
     @BindView(R.id.orders_list_recycler)
     RecyclerView recyclerView;
 
-    public static void startForContext(Context context) {
-        context.startActivity(
+    public static void startForContext(Context context, OrderFilter orderFilter) {
+        Intent intent =
                 new Intent(
                         context,
-                        OrdersListActivity.class));
+                        OrdersListActivity.class);
+
+        intent.putExtra(ORDER_FILTER_TAG, orderFilter);
+
+
+        context.startActivity(intent);
     }
 
     @Override
@@ -53,22 +61,27 @@ public final class OrdersListActivity extends BaseActivity {
             }
         });
 
-        setupOrdersList();
+        Bundle extra = getIntent().getExtras();
+        if (extra != null) {
+            OrderFilter filter = extra.getParcelable(ORDER_FILTER_TAG);
+            setupOrdersList(filter);
+        }
     }
 
-    private void setupOrdersList() {
-        OrdersRepository.getList(new RepositoryCallback<List<Order>>() {
+    private void setupOrdersList(OrderFilter filter) {
+        OrdersRepository.getList(
+                filter,
+                new RepositoryCallback<List<Order>>() {
+                    @Override
+                    public void onSuccess(List<Order> result) {
+                        showOrdersList(result);
+                    }
 
-            @Override
-            public void onSuccess(List<Order> result) {
-                showOrdersList(result);
-            }
-
-            @Override
-            public void onError(List<String> errors) {
-                showError();
-            }
-        });
+                    @Override
+                    public void onError(List<String> errors) {
+                        showError();
+                    }
+                });
     }
 
     private void showOrdersList(List<Order> orders) {

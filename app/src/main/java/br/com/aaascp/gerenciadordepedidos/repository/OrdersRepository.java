@@ -5,6 +5,7 @@ import java.util.List;
 
 import br.com.aaascp.gerenciadordepedidos.domain.dto.Order;
 import br.com.aaascp.gerenciadordepedidos.repository.callback.RepositoryCallback;
+import br.com.aaascp.gerenciadordepedidos.repository.utils.filter.OrderFilter;
 
 /**
  * Created by andre on 18/09/17.
@@ -12,7 +13,10 @@ import br.com.aaascp.gerenciadordepedidos.repository.callback.RepositoryCallback
 
 public class OrdersRepository {
 
-    public static void getList(RepositoryCallback<List<Order>> callback) {
+    public static void getList(
+            OrderFilter filter,
+            RepositoryCallback<List<Order>> callback) {
+
         List<Order> orders = new ArrayList<>();
 
         Order order1 = Order.builder()
@@ -20,6 +24,7 @@ public class OrdersRepository {
                 .shipType("Sedex")
                 .itemsCount(5)
                 .lastModifiedAt("09/07/2017 às 22:00")
+                .isProcessed(false)
                 .build();
 
         Order order2 = Order.builder()
@@ -27,6 +32,7 @@ public class OrdersRepository {
                 .shipType("Sedex")
                 .itemsCount(10)
                 .lastModifiedAt("11/07/2017 às 10:23")
+                .isProcessed(false)
                 .build();
 
         Order order3 = Order.builder()
@@ -34,6 +40,7 @@ public class OrdersRepository {
                 .shipType("PAC")
                 .itemsCount(2)
                 .lastModifiedAt("16/07/2017 às 13:54")
+                .isProcessed(false)
                 .build();
 
         Order order4 = Order.builder()
@@ -41,6 +48,7 @@ public class OrdersRepository {
                 .shipType("Transportadora")
                 .itemsCount(1)
                 .lastModifiedAt("25/07/2017 às 21:30")
+                .isProcessed(false)
                 .build();
 
         orders.add(order1);

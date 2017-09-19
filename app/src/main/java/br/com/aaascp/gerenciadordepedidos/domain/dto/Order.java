@@ -16,6 +16,8 @@ public abstract class Order implements Parcelable {
 
     public abstract int itemsCount();
 
+    public abstract boolean isProcessed();
+
     public abstract String lastModifiedAt();
 
     public static Builder builder() {
@@ -29,6 +31,8 @@ public abstract class Order implements Parcelable {
         public abstract Builder shipType(String value);
 
         public abstract Builder itemsCount(int value);
+
+        public abstract Builder isProcessed(boolean value);
 
         public abstract Builder lastModifiedAt(String value);
 

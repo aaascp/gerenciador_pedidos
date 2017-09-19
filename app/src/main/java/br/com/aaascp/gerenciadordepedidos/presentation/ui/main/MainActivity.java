@@ -73,7 +73,6 @@ public final class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.menu_settings) {
-            OrdersListActivity.startForContext(this);
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -84,19 +83,14 @@ public final class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_orders_list) {
-            OrdersListActivity.startForContext(this);
 
         } else if (id == R.id.nav_find_order) {
-            OrdersListActivity.startForContext(this);
 
         } else if (id == R.id.nav_add_profile) {
-            OrdersListActivity.startForContext(this);
 
         } else if (id == R.id.nav_settings) {
-            OrdersListActivity.startForContext(this);
 
         } else if (id == R.id.nav_logout) {
-            OrdersListActivity.startForContext(this);
 
         }
 
