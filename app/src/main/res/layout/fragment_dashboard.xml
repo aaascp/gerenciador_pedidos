@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <br.com.aaascp.gerenciadordepedidos.presentation.custom_views.DashboardButton
+        android:id="@+id/dashboard_to_process"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginBottom="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="32dp"
+        app:backgroundColor="@color/warm_grey"
+        app:label="@string/dashboard_orders_to_process"
+        app:layout_constraintBottom_toTopOf="@+id/dashboard_"
+        app:layout_constraintHorizontal_chainStyle="spread"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@+id/dashboard_processed"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_chainStyle="spread"
+        tools:background="@drawable/rounded_square_grey" />
+
+    <br.com.aaascp.gerenciadordepedidos.presentation.custom_views.DashboardButton
+        android:id="@+id/dashboard_processed"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="16dp"
+        app:backgroundColor="@color/primary"
+        app:icon="@drawable/ic_list_black_vector"
+        app:label="@string/dashboard_orders_processed"
+        app:layout_constraintBottom_toBottomOf="@id/dashboard_to_process"
+        app:layout_constraintLeft_toRightOf="@+id/dashboard_to_process"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/dashboard_to_process"
+        tools:background="@drawable/rounded_square_grey" />
+
+    <br.com.aaascp.gerenciadordepedidos.presentation.custom_views.DashboardButton
+        android:id="@+id/dashboard_"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginBottom="32dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="16dp"
+        app:backgroundColor="@color/warm_grey"
+        app:icon="@drawable/ic_logout_black_vector"
+        app:label="@string/dashboard_orders_"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_chainStyle="spread"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@+id/dashboard_find"
+        app:layout_constraintTop_toBottomOf="@+id/dashboard_to_process"
+        tools:background="@drawable/rounded_square_grey" />
+
+    <br.com.aaascp.gerenciadordepedidos.presentation.custom_views.DashboardButton
+        android:id="@+id/dashboard_find"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="16dp"
+        app:backgroundColor="@color/warm_grey"
+        app:icon="@drawable/ic_search_black_vector"
+        app:label="@string/dashboard_orders_find"
+        app:layout_constraintBottom_toBottomOf="@id/dashboard_"
+        app:layout_constraintLeft_toRightOf="@id/dashboard_"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@id/dashboard_"
+        tools:background="@drawable/rounded_square_grey" />
+
+</android.support.constraint.ConstraintLayout>

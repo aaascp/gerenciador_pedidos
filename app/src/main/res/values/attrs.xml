@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="DashboardButton">
+        <attr name="value" format="string" />
+        <attr name="label" format="string" />
+        <attr name="icon" format="reference" />
+        <attr name="backgroundColor" format="color" />
+    </declare-styleable>
+</resources>
