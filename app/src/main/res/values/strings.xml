@@ -18,7 +18,7 @@
     <string name="orders_list_size_label">Itens:</string>
     <string name="orders_list_ship_type_label">Forma de envio:</string>
     <string name="orders_list_id_label">ID:</string>
-    <string name="orders_list_action">Preparar pedido</string>
+    <string name="orders_list_action">Processar</string>
 
     <string name="order_details_title">Pedidos:</string>
 
