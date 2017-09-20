@@ -20,9 +20,9 @@ import butterknife.ButterKnife;
  */
 class OrdersListAdapter extends RecyclerView.Adapter<OrdersListAdapter.ViewHolder> {
 
-    private Context context;
-    private List<Order> orders;
-    private LayoutInflater layoutInflater;
+    private final Context context;
+    private final List<Order> orders;
+    private final LayoutInflater layoutInflater;
 
     OrdersListAdapter(Context context, List<Order> orders) {
         this.context = context;
@@ -48,11 +48,11 @@ class OrdersListAdapter extends RecyclerView.Adapter<OrdersListAdapter.ViewHolde
                 String.valueOf(
                         order.id()));
 
-        holder.shipType.setText(order.shipType());
+        holder.shipType.setText(order.shipmentInfo().shipType());
 
         holder.itemsCount.setText(
                 String.valueOf(
-                        order.itemsCount()));
+                        order.items().size()));
 
         holder.lastModifiedAt.setText(order.lastModifiedAt());
 
@@ -61,7 +61,7 @@ class OrdersListAdapter extends RecyclerView.Adapter<OrdersListAdapter.ViewHolde
             public void onClick(View v) {
                 OrderDetailsActivity.startForOrder(
                         context,
-                        order.id());
+                        order);
             }
         });
     }

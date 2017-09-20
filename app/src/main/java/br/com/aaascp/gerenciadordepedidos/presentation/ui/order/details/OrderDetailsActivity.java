@@ -6,9 +6,13 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.View;
 
 import br.com.aaascp.gerenciadordepedidos.R;
+import br.com.aaascp.gerenciadordepedidos.domain.dto.Order;
+import br.com.aaascp.gerenciadordepedidos.domain.dto.OrderItem;
 import br.com.aaascp.gerenciadordepedidos.presentation.ui.BaseActivity;
+import br.com.aaascp.gerenciadordepedidos.repository.OrdersRepository;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -18,7 +22,7 @@ import butterknife.ButterKnife;
 
 public final class OrderDetailsActivity extends BaseActivity {
 
-    public static final String ORDER_ID_EXTRA = "ORDER_ID_EXTRA";
+    public static final String ORDER_EXTRA = "ORDER_EXTRA";
 
     @BindView(R.id.order_details_toolbar)
     Toolbar toolbar;
@@ -26,14 +30,14 @@ public final class OrderDetailsActivity extends BaseActivity {
     @BindView(R.id.order_details_recycler)
     RecyclerView recyclerView;
 
-    private int orderId;
+    private Order order;
 
-    public static void startForOrder(Context context, int orderId) {
+    public static void startForOrder(Context context, Order order) {
         Intent intent = new Intent(
                 context,
                 OrderDetailsActivity.class);
 
-        intent.putExtra(ORDER_ID_EXTRA, orderId);
+        intent.putExtra(ORDER_EXTRA, order);
 
         context.startActivity(intent);
     }
@@ -45,16 +49,43 @@ public final class OrderDetailsActivity extends BaseActivity {
         setContentView(R.layout.activity_order_details);
         ButterKnife.bind(this);
 
-        orderId = 0;
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
-            orderId = extras.getInt(ORDER_ID_EXTRA, 0);
+            order = extras.getParcelable(ORDER_EXTRA);
         }
+
+        toolbar.setTitle(
+                String.format(
+                        getString(R.string.order_details_title),
+                        order.id()));
+
+        toolbar.setNavigationIcon(R.drawable.ic_back_white_vector);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
 
         setupOrder();
     }
 
     private void setupOrder() {
+        if (order != null) {
+            showOrder();
+        } else {
+            showError();
+        }
+    }
+
+    private void showOrder() {
+        recyclerView.setAdapter(
+                new OrderDetailsAdapter(
+                        this,
+                        order.items()));
+    }
+
+    private void showError() {
 
     }
 }

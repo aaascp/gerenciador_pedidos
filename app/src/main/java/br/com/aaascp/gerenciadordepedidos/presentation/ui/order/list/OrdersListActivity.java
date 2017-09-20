@@ -52,7 +52,6 @@ public final class OrdersListActivity extends BaseActivity {
         setContentView(R.layout.activity_orders_list);
         ButterKnife.bind(this);
 
-        setSupportActionBar(toolbar);
         toolbar.setNavigationIcon(R.drawable.ic_back_white_vector);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override

@@ -3,7 +3,10 @@ package br.com.aaascp.gerenciadordepedidos.repository;
 import java.util.ArrayList;
 import java.util.List;
 
+import br.com.aaascp.gerenciadordepedidos.domain.dto.CustomerInfo;
 import br.com.aaascp.gerenciadordepedidos.domain.dto.Order;
+import br.com.aaascp.gerenciadordepedidos.domain.dto.OrderItem;
+import br.com.aaascp.gerenciadordepedidos.domain.dto.ShipmentInfo;
 import br.com.aaascp.gerenciadordepedidos.repository.callback.RepositoryCallback;
 import br.com.aaascp.gerenciadordepedidos.repository.utils.filter.OrderFilter;
 
@@ -13,43 +16,23 @@ import br.com.aaascp.gerenciadordepedidos.repository.utils.filter.OrderFilter;
 
 public class OrdersRepository {
 
+    public static void getOrder(
+            int id,
+            RepositoryCallback<Order> callback) {
+
+        callback.onSuccess(orderFactory(1000));
+    }
+
     public static void getList(
             OrderFilter filter,
             RepositoryCallback<List<Order>> callback) {
 
         List<Order> orders = new ArrayList<>();
 
-        Order order1 = Order.builder()
-                .id(1000)
-                .shipType("Sedex")
-                .itemsCount(5)
-                .lastModifiedAt("09/07/2017 às 22:00")
-                .isProcessed(false)
-                .build();
-
-        Order order2 = Order.builder()
-                .id(1002)
-                .shipType("Sedex")
-                .itemsCount(10)
-                .lastModifiedAt("11/07/2017 às 10:23")
-                .isProcessed(false)
-                .build();
-
-        Order order3 = Order.builder()
-                .id(1003)
-                .shipType("PAC")
-                .itemsCount(2)
-                .lastModifiedAt("16/07/2017 às 13:54")
-                .isProcessed(false)
-                .build();
-
-        Order order4 = Order.builder()
-                .id(1004)
-                .shipType("Transportadora")
-                .itemsCount(1)
-                .lastModifiedAt("25/07/2017 às 21:30")
-                .isProcessed(false)
-                .build();
+        Order order1 = orderFactory(1000);
+        Order order2 = orderFactory(1001);
+        Order order3 = orderFactory(1002);
+        Order order4 = orderFactory(1003);
 
         orders.add(order1);
         orders.add(order2);
@@ -57,5 +40,61 @@ public class OrdersRepository {
         orders.add(order4);
 
         callback.onSuccess(orders);
+    }
+
+    private static Order orderFactory(int id) {
+        List<OrderItem> items = new ArrayList<>();
+
+        OrderItem item1 = OrderItem.builder()
+                .cod(1234)
+                .description("Cerveja 1")
+                .imageUrl("")
+                .quantity(5)
+                .build();
+
+        OrderItem item2 = OrderItem.builder()
+                .cod(2345)
+                .description("Cerveja 2")
+                .imageUrl("")
+                .quantity(3)
+                .build();
+
+        OrderItem item3 = OrderItem.builder()
+                .cod(3456)
+                .description("Cerveja 3")
+                .imageUrl("")
+                .quantity(4)
+                .build();
+
+        OrderItem item4 = OrderItem.builder()
+                .cod(4567)
+                .description("Cerveja 4")
+                .imageUrl("")
+                .quantity(2)
+                .build();
+
+        items.add(item1);
+        items.add(item2);
+        items.add(item3);
+        items.add(item4);
+
+        ShipmentInfo shipmentInfo = ShipmentInfo.builder()
+                .shipType("Sedex")
+                .address("Avenida Engenheiro Max de Souza, 1293, Coqueiros")
+                .build();
+
+        CustomerInfo customerInfo = CustomerInfo.builder()
+                .id(1000)
+                .name("André Alex Araujo")
+                .build();
+
+        return Order.builder()
+                .id(id)
+                .shipmentInfo(shipmentInfo)
+                .customerInfo(customerInfo)
+                .items(items)
+                .processedAt("09/07/2017 às 22:00")
+                .lastModifiedAt("09/07/2017 às 22:00")
+                .build();
     }
 }

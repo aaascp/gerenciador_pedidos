@@ -20,7 +20,11 @@
     <string name="orders_list_id_label">ID:</string>
     <string name="orders_list_action">Processar</string>
 
-    <string name="order_details_title">Pedidos:</string>
+    <string name="order_details_title">#%d</string>
+
+    <string name="orders_item_cod_label">COD:</string>
+    <string name="orders_item_description_label">Descrição:</string>
+    <string name="orders_item_quantity_label">Quantidade:</string>
 
     <string name="dashboard_orders_to_process">para processar</string>
     <string name="dashboard_orders_processed">processados</string>
