@@ -6,6 +6,10 @@
 
     <string name="menu_preferences">Preferências</string>
 
+    <string name="menu_order_details_more_details">Detalhes</string>
+    <string name="menu_order_details_clear">Limpar</string>
+    <string name="menu_order_details_skip">Pular</string>
+
     <string name="nav_orders_list">Lista de Pedidos</string>
     <string name="nav_find_order">Encontrar Pedido</string>
     <string name="nav_add_profile">Adicionar Perfil</string>
