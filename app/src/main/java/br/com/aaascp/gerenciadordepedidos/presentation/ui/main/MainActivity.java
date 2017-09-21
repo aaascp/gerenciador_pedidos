@@ -15,7 +15,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import br.com.aaascp.gerenciadordepedidos.R;
-import br.com.aaascp.gerenciadordepedidos.presentation.ui.order.list.OrdersListActivity;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 

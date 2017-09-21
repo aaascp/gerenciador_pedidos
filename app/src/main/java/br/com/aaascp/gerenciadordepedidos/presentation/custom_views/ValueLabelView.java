@@ -5,6 +5,7 @@ import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
+import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,23 +20,24 @@ import butterknife.ButterKnife;
  * Created by andre on 18/09/17.
  */
 
-public class DashboardButton extends ConstraintLayout {
+public class ValueLabelView extends ConstraintLayout {
 
-    @BindView(R.id.dashboard_button_icon)
+    @BindView(R.id.value_label_view_icon)
     ImageView iconView;
 
-    @BindView(R.id.dashboard_button_value)
+    @BindView(R.id.value_label_view_value)
     TextView valueView;
 
-    @BindView(R.id.dashboard_button_label)
+    @BindView(R.id.value_label_view_label)
     TextView labelView;
 
     private String value;
     private String label;
     private Drawable icon;
     private Drawable background;
+    private int color;
 
-    public DashboardButton(Context context, @Nullable AttributeSet attrs) {
+    public ValueLabelView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
 
         extractAttributes(context, attrs);
@@ -57,14 +59,19 @@ public class DashboardButton extends ConstraintLayout {
     private void extractAttributes(Context context, AttributeSet attrs) {
         TypedArray a = context.getTheme().obtainStyledAttributes(
                 attrs,
-                R.styleable.DashboardButton,
+                R.styleable.ValueLabelView,
                 0, 0);
 
         try {
-            value = a.getString(R.styleable.DashboardButton_value);
-            label = a.getString(R.styleable.DashboardButton_label);
-            icon = a.getDrawable(R.styleable.DashboardButton_icon);
-            background = a.getDrawable(R.styleable.DashboardButton_background);
+            value = a.getString(R.styleable.ValueLabelView_value);
+            label = a.getString(R.styleable.ValueLabelView_label);
+            icon = a.getDrawable(R.styleable.ValueLabelView_icon);
+            background = a.getDrawable(R.styleable.ValueLabelView_backgroundImage);
+            color = a.getColor(
+                    R.styleable.ValueLabelView_color,
+                    ContextCompat.getColor(
+                            context,
+                            R.color.primary_text));
 
         } finally {
             a.recycle();
@@ -75,6 +82,8 @@ public class DashboardButton extends ConstraintLayout {
         setValue();
         setBackground();
         labelView.setText(label);
+        labelView.setTextColor(color);
+        valueView.setTextColor(color);
     }
 
     private void setValue() {

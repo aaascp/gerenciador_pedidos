@@ -4,35 +4,33 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/square_warm_grey_8dp"
     android:orientation="vertical">
 
     <ImageView
-        android:id="@+id/dashboard_button_icon"
+        android:id="@+id/value_label_view_icon"
         android:layout_width="40dp"
         android:layout_height="40dp"
-        android:src="@drawable/ic_search_black_vector"
         android:visibility="gone"
-        app:layout_constraintBottom_toTopOf="@+id/dashboard_button_value"
+        app:layout_constraintBottom_toTopOf="@+id/value_label_view_value"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_chainStyle="packed" />
 
     <TextView
-        android:id="@+id/dashboard_button_value"
+        android:id="@+id/value_label_view_value"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="@dimen/large_title_text_size"
         android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/dashboard_button_label"
+        app:layout_constraintBottom_toTopOf="@+id/value_label_view_label"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/dashboard_button_icon"
+        app:layout_constraintTop_toBottomOf="@+id/value_label_view_icon"
         tools:text="Value" />
 
     <TextView
-        android:id="@+id/dashboard_button_label"
+        android:id="@+id/value_label_view_label"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginLeft="16dp"
@@ -45,7 +43,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/dashboard_button_value"
+        app:layout_constraintTop_toBottomOf="@+id/value_label_view_value"
         tools:text="Label" />
 
 </android.support.constraint.ConstraintLayout>

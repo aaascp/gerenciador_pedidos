@@ -7,7 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import br.com.aaascp.gerenciadordepedidos.R;
-import br.com.aaascp.gerenciadordepedidos.presentation.custom_views.DashboardButton;
+import br.com.aaascp.gerenciadordepedidos.presentation.custom_views.ValueLabelView;
 import br.com.aaascp.gerenciadordepedidos.presentation.ui.BaseFragment;
 import br.com.aaascp.gerenciadordepedidos.presentation.ui.order.list.OrdersListActivity;
 import br.com.aaascp.gerenciadordepedidos.repository.utils.filter.OrderFilter;
@@ -22,7 +22,7 @@ import butterknife.OnClick;
 public class DashboardFragment extends BaseFragment {
 
     @BindView(R.id.dashboard_to_process)
-    DashboardButton toProcessButton;
+    ValueLabelView toProcessButton;
 
     @Nullable
     @Override
