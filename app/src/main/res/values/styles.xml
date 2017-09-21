@@ -27,7 +27,6 @@
         <item name="titleTextAppearance">@style/Toolbar.TextAppearance.Highlighted</item>
     </style>
 
-
     <style name="Toolbar.TextAppearance.Base" parent="AppTheme">
         <item name="android:textStyle">bold</item>
         <item name="android:textColor">@android:color/white</item>
@@ -36,6 +35,10 @@
 
     <style name="Toolbar.TextAppearance.Highlighted" parent="Toolbar.TextAppearance.Base">
         <item name="android:textStyle">bold|italic</item>
+    </style>
+
+    <style name="Toolbar.TextAppearance.Expanded" parent="Toolbar.TextAppearance.Base">
+        <item name="android:textSize">@dimen/large_title_text_size</item>
     </style>
 
 </resources>

@@ -7,14 +7,14 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.TextView;
 
 import br.com.aaascp.gerenciadordepedidos.R;
 import br.com.aaascp.gerenciadordepedidos.domain.dto.Order;
-import br.com.aaascp.gerenciadordepedidos.domain.dto.OrderItem;
 import br.com.aaascp.gerenciadordepedidos.presentation.ui.BaseActivity;
-import br.com.aaascp.gerenciadordepedidos.repository.OrdersRepository;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 /**
  * Created by andre on 09/07/17.
@@ -29,6 +29,9 @@ public final class OrderDetailsActivity extends BaseActivity {
 
     @BindView(R.id.order_details_recycler)
     RecyclerView recyclerView;
+
+    @BindView(R.id.order_details_count_text)
+    TextView processedCount;
 
     private Order order;
 
@@ -57,7 +60,9 @@ public final class OrderDetailsActivity extends BaseActivity {
         toolbar.setTitle(
                 String.format(
                         getString(R.string.order_details_title),
-                        order.id()));
+                        order.id(),
+                        1,
+                        10));
 
         toolbar.setNavigationIcon(R.drawable.ic_back_white_vector);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
@@ -70,12 +75,27 @@ public final class OrderDetailsActivity extends BaseActivity {
         setupOrder();
     }
 
+    @OnClick(R.id.order_details_fab)
+    void onFabClick() {
+
+    }
+
     private void setupOrder() {
+        setupProcessedCount();
+
         if (order != null) {
             showOrder();
         } else {
             showError();
         }
+    }
+
+    private void setupProcessedCount() {
+        processedCount.setText(
+                String.format(
+                        getString(R.string.order_details_count_text),
+                        1,
+                        order.items().size()));
     }
 
     private void showOrder() {

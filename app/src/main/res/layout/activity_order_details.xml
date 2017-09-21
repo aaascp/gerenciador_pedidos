@@ -9,13 +9,57 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/order_details_toolbar"
-            style="@style/ToolbarStyle.Highlighted"
+        <android.support.design.widget.CollapsingToolbarLayout
+            android:id="@+id/store_details_collapsing_toolbar"
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary" />
+            android:layout_height="280dp"
+            app:collapsedTitleTextAppearance="@style/Toolbar.TextAppearance.Highlighted"
+            app:expandedTitleGravity="bottom|center_horizontal"
+            app:expandedTitleTextAppearance="@style/Toolbar.TextAppearance.Expanded"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed|snap">
 
+            <br.com.aaascp.gerenciadordepedidos.presentation.custom_views.ValueLabelView
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="?attr/actionBarSize"
+                app:backgroundImage="@drawable/circle_transparent_white_border_4dp"
+                app:color="@android:color/white"
+                app:label="entrega"
+                app:value="TRANSPORTADORA" />
+
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/order_details_toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                app:layout_collapseMode="pin" />
+
+        </android.support.design.widget.CollapsingToolbarLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:background="@color/cardview_light_background"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="16dp"
+                android:text="@string/order_details_count"
+                android:textSize="@dimen/large_text_size"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/order_details_count_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="4dp"
+                android:textSize="@dimen/large_text_size"
+                tools:text="1/5" />
+        </LinearLayout>
 
     </android.support.design.widget.AppBarLayout>
 
@@ -26,5 +70,14 @@
         app:layoutManager="LinearLayoutManager"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         tools:listitem="@layout/row_order_items" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/order_details_fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right|bottom"
+        android:layout_marginBottom="16dp"
+        android:layout_marginRight="16dp"
+        android:src="@drawable/ic_skip_next_white_vector" />
 
 </android.support.design.widget.CoordinatorLayout>

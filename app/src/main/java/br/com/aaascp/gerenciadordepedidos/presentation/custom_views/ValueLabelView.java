@@ -45,7 +45,7 @@ public class ValueLabelView extends ConstraintLayout {
         LayoutInflater inflater = (LayoutInflater) context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-        View view = inflater.inflate(R.layout.view_dashboard_button, this, true);
+        View view = inflater.inflate(R.layout.view_value_label, this, true);
 
         ButterKnife.bind(this, view);
 
