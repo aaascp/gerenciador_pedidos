@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.design.widget.Snackbar;
-import android.util.Log;
 import android.util.SparseArray;
 import android.view.SurfaceView;
 import android.view.View;
@@ -20,6 +19,8 @@ import com.google.android.gms.vision.barcode.BarcodeDetector;
 import br.com.aaascp.gerenciadordepedidos.R;
 import br.com.aaascp.gerenciadordepedidos.domain.dto.Order;
 import br.com.aaascp.gerenciadordepedidos.presentation.ui.BaseActivity;
+import br.com.aaascp.gerenciadordepedidos.repository.OrdersRepository;
+import br.com.aaascp.gerenciadordepedidos.repository.callback.RepositoryCallback;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -28,10 +29,10 @@ import butterknife.OnClick;
  * Created by andre on 21/09/17.
  */
 
-public class BarcodeProcessorActivity extends BaseActivity {
+public class BarcodeProcessorActivity extends BaseActivity
+        implements OnItemProcessedListener {
 
-    public static final String ORDER_EXTRA = "ORDER_EXTRA";
-    private static final String TAG = BarcodeProcessor.class.getSimpleName();
+    public static final String EXTRA_ORDER_ID = "EXTRA_ORDER_ID";
 
     private BarcodeDetector barcodeDetector;
 
@@ -47,15 +48,19 @@ public class BarcodeProcessorActivity extends BaseActivity {
     @BindView(R.id.barcode_processor_items_left)
     TextView itemsLeft;
 
+    private OrdersRepository ordersRepository;
+    private int orderId;
     private Order order;
 
-    public static Intent getIntentForOrder(Context context, Order order) {
+    public static Intent getIntentForOrder(
+            Context context,
+            int orderId) {
 
         Intent intent = new Intent(
                 context,
                 BarcodeProcessorActivity.class);
 
-        intent.putExtra(ORDER_EXTRA, order);
+        intent.putExtra(EXTRA_ORDER_ID, orderId);
 
         return intent;
     }
@@ -68,13 +73,8 @@ public class BarcodeProcessorActivity extends BaseActivity {
 
         ButterKnife.bind(this);
 
-        Bundle extras = getIntent().getExtras();
-        if (extras != null) {
-            order = extras.getParcelable(ORDER_EXTRA);
-        }
-
-        setupTitle();
-        setupItemsLeft();
+        ordersRepository = new OrdersRepository();
+        extractExtras();
 
         setupBarcodeDetector();
     }
@@ -82,6 +82,27 @@ public class BarcodeProcessorActivity extends BaseActivity {
     @OnClick(R.id.barcode_processor_close)
     void onCloseClick() {
         onBackPressed();
+    }
+
+    private void extractExtras() {
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            orderId = extras.getInt(EXTRA_ORDER_ID, 0);
+            setupOrder();
+        }
+    }
+
+    private void setupOrder() {
+        ordersRepository
+                .getOrder(orderId,
+                        new RepositoryCallback<Order>() {
+                            @Override
+                            public void onSuccess(Order data) {
+                                order = data;
+                                setupTitle();
+                                setupItemsLeft();
+                            }
+                        });
     }
 
     private void setupTitle() {
@@ -125,7 +146,7 @@ public class BarcodeProcessorActivity extends BaseActivity {
             return;
         }
 
-//        barcodeDetector.setProcessor(new BarcodeProcessor(codeText));
+        barcodeDetector.setProcessor(new BarcodeProcessor(this));
 
         setupCamera();
     }
@@ -141,8 +162,6 @@ public class BarcodeProcessorActivity extends BaseActivity {
     }
 
     private void showErrorMessage(@StringRes int message, String error) {
-        Log.d(TAG, error);
-
         Snackbar.make(
                 root,
                 message,
@@ -150,14 +169,18 @@ public class BarcodeProcessorActivity extends BaseActivity {
                 .show();
     }
 
+    @Override
+    public void onItemProcessed(String code) {
+        order.process(code);
+    }
+
     protected static final class BarcodeProcessor implements Detector.Processor<Barcode> {
 
-        private TextView codeText;
+        private final OnItemProcessedListener listener;
 
-        BarcodeProcessor(TextView codeText) {
-            this.codeText = codeText;
+        BarcodeProcessor(OnItemProcessedListener listener) {
+            this.listener = listener;
         }
-
 
         @Override
         public void receiveDetections(Detector.Detections<Barcode> detections) {
@@ -165,13 +188,8 @@ public class BarcodeProcessorActivity extends BaseActivity {
             final SparseArray<Barcode> barcodes = detections.getDetectedItems();
 
             if (barcodes.size() != 0) {
-
                 final String code = barcodes.valueAt(0).displayValue;
-                codeText.post(new Runnable() {
-                    public void run() {
-                        codeText.setText(code);
-                    }
-                });
+                listener.onItemProcessed(code);
             }
         }
 
@@ -179,6 +197,5 @@ public class BarcodeProcessorActivity extends BaseActivity {
         public void release() {
 
         }
-
     }
 }

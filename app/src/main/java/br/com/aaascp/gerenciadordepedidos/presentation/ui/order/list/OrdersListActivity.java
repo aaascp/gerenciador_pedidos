@@ -4,10 +4,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 
 import java.util.List;
@@ -40,6 +38,7 @@ public final class OrdersListActivity extends BaseActivity {
     @BindView(R.id.orders_list_recycler)
     RecyclerView recyclerView;
 
+    private OrdersRepository ordersRepository;
     private List<Order> orders;
 
     public static void startForContext(Context context, OrderFilter orderFilter) {
@@ -59,6 +58,8 @@ public final class OrdersListActivity extends BaseActivity {
 
         setContentView(R.layout.activity_orders_list);
         ButterKnife.bind(this);
+
+        ordersRepository = new OrdersRepository();
 
         extractExtras();
         setupToolbar();
@@ -100,7 +101,7 @@ public final class OrdersListActivity extends BaseActivity {
     }
 
     private void setupOrdersList(OrderFilter filter) {
-        OrdersRepository.getList(
+        ordersRepository.getList(
                 filter,
                 new RepositoryCallback<List<Order>>() {
                     @Override
@@ -140,7 +141,7 @@ public final class OrdersListActivity extends BaseActivity {
         Intent intent =
                 OrderDetailsActivity.getIntentForOrder(
                         this,
-                        orders.get(position),
+                        orders.get(position).id(),
                         position + 1,
                         orders.size());
 
@@ -151,6 +152,4 @@ public final class OrdersListActivity extends BaseActivity {
     void onFabClick() {
         processOrderAtPosition(0);
     }
-
-
 }

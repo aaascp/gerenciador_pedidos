@@ -12,6 +12,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import br.com.aaascp.gerenciadordepedidos.R;
+import br.com.aaascp.gerenciadordepedidos.repository.dao.OrderDao;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -47,6 +48,8 @@ public final class MainActivity extends AppCompatActivity
         toggle.syncState();
 
         navigationView.setNavigationItemSelectedListener(this);
+
+        OrderDao.initialize();
     }
 
     @Override

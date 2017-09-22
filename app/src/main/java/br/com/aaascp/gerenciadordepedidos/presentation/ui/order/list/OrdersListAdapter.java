@@ -61,7 +61,7 @@ class OrdersListAdapter extends RecyclerView.Adapter<OrdersListAdapter.ViewHolde
             public void onClick(View v) {
                 OrderDetailsActivity.startForOrder(
                         context,
-                        order);
+                        order.id());
             }
         });
     }

@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -17,6 +16,8 @@ import br.com.aaascp.gerenciadordepedidos.domain.dto.Order;
 import br.com.aaascp.gerenciadordepedidos.presentation.ui.BaseActivity;
 import br.com.aaascp.gerenciadordepedidos.presentation.ui.camera.BarcodeProcessorActivity;
 import br.com.aaascp.gerenciadordepedidos.presentation.ui.order.list.OrdersListActivity;
+import br.com.aaascp.gerenciadordepedidos.repository.OrdersRepository;
+import br.com.aaascp.gerenciadordepedidos.repository.callback.RepositoryCallback;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -27,7 +28,7 @@ import butterknife.OnClick;
 
 public final class OrderDetailsActivity extends BaseActivity {
 
-    private static final String EXTRA_ORDER = "EXTRA_ORDER";
+    private static final String EXTRA_ORDER_ID = "EXTRA_ORDER_ID";
     private static final String EXTRA_TOTAL = "EXTRA_TOTAL";
     private static final String EXTRA_CURRENT = "EXTRA_CURRENT";
 
@@ -42,13 +43,14 @@ public final class OrderDetailsActivity extends BaseActivity {
     @BindView(R.id.order_details_count_text)
     TextView processedCount;
 
-    private Order order;
+    private OrdersRepository ordersRepository;
+    private int orderId;
     private int total;
     private int current;
 
     public static Intent getIntentForOrder(
             Context context,
-            Order order,
+            int orderId,
             int current,
             int total) {
 
@@ -56,17 +58,17 @@ public final class OrderDetailsActivity extends BaseActivity {
                 context,
                 OrderDetailsActivity.class);
 
-        intent.putExtra(EXTRA_ORDER, order);
+        intent.putExtra(EXTRA_ORDER_ID, orderId);
         intent.putExtra(EXTRA_TOTAL, total);
         intent.putExtra(EXTRA_CURRENT, current);
 
         return intent;
     }
 
-    public static void startForOrder(Context context, Order order) {
+    public static void startForOrder(Context context, int orderId) {
         Intent intent = getIntentForOrder(
                 context,
-                order,
+                orderId,
                 1,
                 1);
 
@@ -79,6 +81,8 @@ public final class OrderDetailsActivity extends BaseActivity {
 
         setContentView(R.layout.activity_order_details);
         ButterKnife.bind(this);
+
+        ordersRepository = new OrdersRepository();
 
         extractExtras();
         setupToolbar();
@@ -112,9 +116,11 @@ public final class OrderDetailsActivity extends BaseActivity {
     private void extractExtras() {
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
-            order = extras.getParcelable(EXTRA_ORDER);
+            orderId = extras.getInt(EXTRA_ORDER_ID, 0);
             total = extras.getInt(EXTRA_TOTAL, 1);
             current = extras.getInt(EXTRA_CURRENT, 1);
+
+            setupOrder();
         }
     }
 
@@ -142,23 +148,26 @@ public final class OrderDetailsActivity extends BaseActivity {
         toolbar.setTitle(
                 String.format(
                         title,
-                        order.id(),
+                        orderId,
                         current,
                         total));
 
     }
 
     private void setupOrder() {
-        setupProcessedCount();
-
-        if (order != null) {
-            showOrder();
-        } else {
-            showError();
-        }
+        ordersRepository.getOrder(
+                orderId,
+                new RepositoryCallback<Order>() {
+                    @Override
+                    public void onSuccess(Order data) {
+                        setupProcessedCount(data);
+                        showOrder(data);
+                    }
+                }
+        );
     }
 
-    private void setupProcessedCount() {
+    private void setupProcessedCount(Order order) {
         processedCount.setText(
                 String.format(
                         getString(R.string.order_details_count_text),
@@ -166,7 +175,7 @@ public final class OrderDetailsActivity extends BaseActivity {
                         order.size()));
     }
 
-    private void showOrder() {
+    private void showOrder(Order order) {
         recyclerView.setAdapter(
                 new OrderDetailsAdapter(
                         this,
@@ -182,7 +191,7 @@ public final class OrderDetailsActivity extends BaseActivity {
         startActivity(
                 BarcodeProcessorActivity.getIntentForOrder(
                         this,
-                        order));
+                        orderId));
     }
 
     @Override

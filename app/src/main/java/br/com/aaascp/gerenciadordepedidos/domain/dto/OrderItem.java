@@ -5,12 +5,16 @@ import android.support.annotation.Nullable;
 
 import com.google.auto.value.AutoValue;
 
+import br.com.aaascp.gerenciadordepedidos.utils.StringUtils;
+
 /**
  * Created by andre on 20/09/17.
  */
 
 @AutoValue
 public abstract class OrderItem implements Parcelable {
+
+    public abstract int id();
 
     public abstract int code();
 
@@ -22,12 +26,20 @@ public abstract class OrderItem implements Parcelable {
     @Nullable
     public abstract String processedAt();
 
+    public boolean isProcessed() {
+        return !StringUtils.isNullOrEmpty(processedAt());
+    }
+
+    public abstract OrderItem withProcessedAt(String processedAt);
+
     public static Builder builder() {
         return new AutoValue_OrderItem.Builder();
     }
 
     @AutoValue.Builder
     public abstract static class Builder {
+        public abstract Builder id(int value);
+
         public abstract Builder code(int value);
 
         public abstract Builder description(String value);
