@@ -28,6 +28,10 @@ import butterknife.OnClick;
 
 public final class OrderDetailsActivity extends BaseActivity {
 
+    public static final String RESULT_ORDER_PROCESS = "RESULT_ORDER_PROCESS";
+
+    private static final int CODE_ORDER_PROCESS = 100;
+
     private static final String EXTRA_ORDER_ID = "EXTRA_ORDER_ID";
     private static final String EXTRA_TOTAL = "EXTRA_TOTAL";
     private static final String EXTRA_CURRENT = "EXTRA_CURRENT";
@@ -41,9 +45,10 @@ public final class OrderDetailsActivity extends BaseActivity {
     RecyclerView recyclerView;
 
     @BindView(R.id.order_details_count_text)
-    TextView processedCount;
+    TextView processedCountView;
 
     private OrdersRepository ordersRepository;
+    private Order order;
     private int orderId;
     private int total;
     private int current;
@@ -90,6 +95,23 @@ public final class OrderDetailsActivity extends BaseActivity {
     }
 
     @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (data == null) {
+            return;
+        }
+
+        Bundle extras = data.getExtras();
+        if (requestCode == CODE_ORDER_PROCESS &&
+                extras != null &&
+                resultCode == RESULT_OK) {
+
+            setProcessedCount(extras.getInt(RESULT_ORDER_PROCESS));
+        }
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_order_details, menu);
 
@@ -111,6 +133,15 @@ public final class OrderDetailsActivity extends BaseActivity {
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void finish() {
+        Intent intent = new Intent();
+        intent.putExtra(OrdersListActivity.RESULT_ORDER_PROCESS, current++);
+        setResult(RESULT_OK, intent);
+
+        super.finish();
     }
 
     private void extractExtras() {
@@ -160,22 +191,23 @@ public final class OrderDetailsActivity extends BaseActivity {
                 new RepositoryCallback<Order>() {
                     @Override
                     public void onSuccess(Order data) {
-                        setupProcessedCount(data);
-                        showOrder(data);
+                        order = data;
+                        setProcessedCount(0);
+                        showOrder();
                     }
                 }
         );
     }
 
-    private void setupProcessedCount(Order order) {
-        processedCount.setText(
+    private void setProcessedCount(int processedCount) {
+        processedCountView.setText(
                 String.format(
                         getString(R.string.order_details_count_text),
-                        1,
+                        processedCount,
                         order.size()));
     }
 
-    private void showOrder(Order order) {
+    private void showOrder() {
         recyclerView.setAdapter(
                 new OrderDetailsAdapter(
                         this,
@@ -188,18 +220,10 @@ public final class OrderDetailsActivity extends BaseActivity {
 
     @OnClick(R.id.order_details_fab)
     void onFabClick() {
-        startActivity(
+        startActivityForResult(
                 BarcodeProcessorActivity.getIntentForOrder(
                         this,
-                        orderId));
-    }
-
-    @Override
-    public void finish() {
-        Intent intent = new Intent();
-        intent.putExtra(OrdersListActivity.RESULT_ORDER_PROCESS, current++);
-        setResult(RESULT_OK, intent);
-
-        super.finish();
+                        orderId),
+                CODE_ORDER_PROCESS);
     }
 }

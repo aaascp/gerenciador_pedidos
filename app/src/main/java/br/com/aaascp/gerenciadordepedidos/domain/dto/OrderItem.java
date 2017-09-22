@@ -16,7 +16,7 @@ public abstract class OrderItem implements Parcelable {
 
     public abstract int id();
 
-    public abstract int code();
+    public abstract String code();
 
     public abstract String description();
 
@@ -40,7 +40,7 @@ public abstract class OrderItem implements Parcelable {
     public abstract static class Builder {
         public abstract Builder id(int value);
 
-        public abstract Builder code(int value);
+        public abstract Builder code(String value);
 
         public abstract Builder description(String value);
 

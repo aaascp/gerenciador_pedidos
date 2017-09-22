@@ -6,19 +6,18 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.design.widget.Snackbar;
-import android.util.SparseArray;
 import android.view.SurfaceView;
 import android.view.View;
 import android.widget.TextView;
 
 import com.google.android.gms.vision.CameraSource;
-import com.google.android.gms.vision.Detector;
-import com.google.android.gms.vision.barcode.Barcode;
 import com.google.android.gms.vision.barcode.BarcodeDetector;
+
 
 import br.com.aaascp.gerenciadordepedidos.R;
 import br.com.aaascp.gerenciadordepedidos.domain.dto.Order;
 import br.com.aaascp.gerenciadordepedidos.presentation.ui.BaseActivity;
+import br.com.aaascp.gerenciadordepedidos.presentation.ui.order.details.OrderDetailsActivity;
 import br.com.aaascp.gerenciadordepedidos.repository.OrdersRepository;
 import br.com.aaascp.gerenciadordepedidos.repository.callback.RepositoryCallback;
 import butterknife.BindView;
@@ -49,8 +48,10 @@ public class BarcodeProcessorActivity extends BaseActivity
     TextView itemsLeft;
 
     private OrdersRepository ordersRepository;
-    private int orderId;
     private Order order;
+
+    private int orderId;
+    private int processedCount;
 
     public static Intent getIntentForOrder(
             Context context,
@@ -79,9 +80,22 @@ public class BarcodeProcessorActivity extends BaseActivity
         setupBarcodeDetector();
     }
 
-    @OnClick(R.id.barcode_processor_close)
-    void onCloseClick() {
-        onBackPressed();
+    @Override
+    public void onItemProcessed(String code) {
+        if (ordersRepository.processItem(order, code)) {
+            processedCount++;
+            setItemsLeft();
+            checkFinish();
+        }
+    }
+
+    @Override
+    public void finish() {
+        Intent intent = new Intent();
+        intent.putExtra(OrderDetailsActivity.RESULT_ORDER_PROCESS, processedCount);
+        setResult(RESULT_OK, intent);
+
+        super.finish();
     }
 
     private void extractExtras() {
@@ -99,8 +113,9 @@ public class BarcodeProcessorActivity extends BaseActivity
                             @Override
                             public void onSuccess(Order data) {
                                 order = data;
+                                processedCount = 0;
                                 setupTitle();
-                                setupItemsLeft();
+                                setItemsLeft();
                             }
                         });
     }
@@ -116,21 +131,28 @@ public class BarcodeProcessorActivity extends BaseActivity
                         order.id()));
     }
 
-    private void setupItemsLeft() {
+    private void setItemsLeft() {
         if (order == null) {
             return;
         }
 
-        String itemsLeftText =
+        final int itemsLeftCount = order.size() - processedCount;
+
+        final String itemsLeftText =
                 getResources()
                         .getQuantityString(
                                 R.plurals.barcode_processor_items_left,
-                                order.items().size());
+                                itemsLeftCount);
 
-        itemsLeft.setText(
-                String.format(
-                        itemsLeftText,
-                        order.size()));
+        itemsLeft.post(new Runnable() {
+            @Override
+            public void run() {
+                itemsLeft.setText(
+                        String.format(
+                                itemsLeftText,
+                                itemsLeftCount));
+            }
+        });
     }
 
     private void setupBarcodeDetector() {
@@ -158,7 +180,9 @@ public class BarcodeProcessorActivity extends BaseActivity
                 .build();
 
 
-        previewLayout.getHolder().addCallback(new CameraPreview(cameraSource));
+        previewLayout.getHolder()
+                .addCallback(
+                        new CameraPreview(cameraSource));
     }
 
     private void showErrorMessage(@StringRes int message, String error) {
@@ -169,33 +193,14 @@ public class BarcodeProcessorActivity extends BaseActivity
                 .show();
     }
 
-    @Override
-    public void onItemProcessed(String code) {
-        order.process(code);
+    private void checkFinish() {
+        if (processedCount == order.size()) {
+            finish();
+        }
     }
 
-    protected static final class BarcodeProcessor implements Detector.Processor<Barcode> {
-
-        private final OnItemProcessedListener listener;
-
-        BarcodeProcessor(OnItemProcessedListener listener) {
-            this.listener = listener;
-        }
-
-        @Override
-        public void receiveDetections(Detector.Detections<Barcode> detections) {
-
-            final SparseArray<Barcode> barcodes = detections.getDetectedItems();
-
-            if (barcodes.size() != 0) {
-                final String code = barcodes.valueAt(0).displayValue;
-                listener.onItemProcessed(code);
-            }
-        }
-
-        @Override
-        public void release() {
-
-        }
+    @OnClick(R.id.barcode_processor_close)
+    void onCloseClick() {
+        onBackPressed();
     }
 }

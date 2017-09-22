@@ -31,27 +31,6 @@ public abstract class Order implements Parcelable {
 
     public abstract String lastModifiedAt();
 
-    public boolean process(String code) {
-        List<OrderItem> itemGroup = items().get(code);
-
-        for (int i = 0; i < itemGroup.size(); i++) {
-            OrderItem item = itemGroup.get(i);
-
-            if (!item.isProcessed()) {
-                String date = new SimpleDateFormat("dd-MM-yyyy às HH:mm").format(new Date());
-
-                OrderItem newItem = item.withProcessedAt(date);
-
-                itemGroup.remove(item);
-                itemGroup.add(newItem);
-
-                return true;
-            }
-        }
-
-        return false;
-    }
-
     public static Builder builder() {
         return new AutoValue_Order.Builder();
     }

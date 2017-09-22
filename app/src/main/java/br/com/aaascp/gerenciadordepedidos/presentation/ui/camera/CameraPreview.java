@@ -1,8 +1,5 @@
 package br.com.aaascp.gerenciadordepedidos.presentation.ui.camera;
 
-import android.Manifest;
-import android.content.pm.PackageManager;
-import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 import android.view.SurfaceHolder;
 
@@ -26,11 +23,11 @@ final class CameraPreview implements SurfaceHolder.Callback {
 
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
-//        try {
-//            cameraSource.start(holder);
-//        } catch (IOException e) {
-//            Log.e(TAG, e.getMessage());
-//        }
+        try {
+            cameraSource.start(holder);
+        } catch (IOException e) {
+            Log.e(TAG, e.getMessage());
+        }
     }
 
     @Override
