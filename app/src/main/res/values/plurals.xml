@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <plurals name="barcode_processor_items_left">
+        <item quantity="one">Falta 1 item</item>
+        <item quantity="other">Faltam %1$d itens</item>
+    </plurals>
+</resources>

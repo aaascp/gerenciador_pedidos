@@ -50,6 +50,7 @@ public class OrdersRepository {
                 .description("Cerveja 1")
                 .imageUrl("")
                 .quantity(5)
+                .processedAt(null)
                 .build();
 
         OrderItem item2 = OrderItem.builder()
@@ -57,6 +58,7 @@ public class OrdersRepository {
                 .description("Cerveja 2")
                 .imageUrl("")
                 .quantity(3)
+                .processedAt(null)
                 .build();
 
         OrderItem item3 = OrderItem.builder()
@@ -64,6 +66,7 @@ public class OrdersRepository {
                 .description("Cerveja 3")
                 .imageUrl("")
                 .quantity(4)
+                .processedAt(null)
                 .build();
 
         OrderItem item4 = OrderItem.builder()
@@ -71,6 +74,7 @@ public class OrdersRepository {
                 .description("Cerveja 4")
                 .imageUrl("")
                 .quantity(2)
+                .processedAt(null)
                 .build();
 
         items.add(item1);
@@ -93,7 +97,7 @@ public class OrdersRepository {
                 .shipmentInfo(shipmentInfo)
                 .customerInfo(customerInfo)
                 .items(items)
-                .processedAt("09/07/2017 às 22:00")
+                .processedAt(null)
                 .lastModifiedAt("09/07/2017 às 22:00")
                 .build();
     }

@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/barcode_processor_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <SurfaceView
+        android:id="@+id/barcode_processor_preview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/default_bar_height"
+        android:layout_gravity="top"
+        android:background="@android:color/black">
+
+        <ImageView
+            android:id="@+id/barcode_processor_close"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="16dp"
+            android:background="@android:color/black"
+            app:srcCompat="@drawable/ic_close_white_vector" />
+
+        <TextView
+            android:id="@+id/barcode_processor_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/large_title_text_size"
+            android:textStyle="bold|italic"
+            tools:text="#1000" />
+
+        <ImageView
+            android:id="@+id/barcode_processor_items"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical|right"
+            android:layout_marginRight="16dp"
+            android:background="@android:color/black"
+            app:srcCompat="@drawable/ic_items_white_vector" />
+
+    </FrameLayout>
+
+    <View
+        android:layout_width="2dp"
+        android:layout_height="300dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="@dimen/default_bar_height"
+        android:layout_marginBottom="@dimen/default_bar_height"
+        android:background="@android:color/white" />
+
+    <TextView
+        android:id="@+id/barcode_processor_items_left"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/default_bar_height"
+        android:layout_gravity="bottom"
+        android:background="@android:color/black"
+        android:gravity="center"
+        android:textColor="@android:color/white"
+        android:textSize="@dimen/title_text_size"
+        tools:text="Faltam 4 items" />
+
+</FrameLayout>

@@ -14,6 +14,7 @@ import android.widget.TextView;
 import br.com.aaascp.gerenciadordepedidos.R;
 import br.com.aaascp.gerenciadordepedidos.domain.dto.Order;
 import br.com.aaascp.gerenciadordepedidos.presentation.ui.BaseActivity;
+import br.com.aaascp.gerenciadordepedidos.presentation.ui.camera.BarcodeProcessorActivity;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -98,7 +99,10 @@ public final class OrderDetailsActivity extends BaseActivity {
 
     @OnClick(R.id.order_details_fab)
     void onFabClick() {
-
+        startActivity(
+                BarcodeProcessorActivity.getIntentForOrder(
+                        this,
+                        order));
     }
 
     private void setupOrder() {
@@ -116,7 +120,7 @@ public final class OrderDetailsActivity extends BaseActivity {
                 String.format(
                         getString(R.string.order_details_count_text),
                         1,
-                        order.items().size()));
+                        order.itemsExpaded().size()));
     }
 
     private void showOrder() {

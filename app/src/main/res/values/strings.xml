@@ -37,4 +37,6 @@
     <string name="dashboard_orders_">Não sei ainda</string>
     <string name="dashboard_orders_find">procurar</string>
 
+    <string name="barcode_processor_title">#%1$d</string>
+
 </resources>

@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="br.com.aaascp.gerenciadordepedidos">
 
+    <uses-permission android:name="android.permission.CAMERA" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -10,8 +12,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
-        <activity
-            android:name=".presentation.ui.main.MainActivity" >
+        <activity android:name=".presentation.ui.main.MainActivity">
 
             <intent-filter>
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -19,11 +20,11 @@
             </intent-filter>
         </activity>
 
-        <activity
-            android:name=".presentation.ui.order.list.OrdersListActivity" />
+        <activity android:name=".presentation.ui.order.list.OrdersListActivity" />
 
-        <activity
-            android:name=".presentation.ui.order.details.OrderDetailsActivity" />
+        <activity android:name=".presentation.ui.order.details.OrderDetailsActivity" />
+
+        <activity android:name=".presentation.ui.camera.BarcodeProcessorActivity" />
     </application>
 
 </manifest>
