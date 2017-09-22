@@ -5,8 +5,8 @@ import android.support.annotation.Nullable;
 
 import com.google.auto.value.AutoValue;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by andre on 10/07/17.
@@ -20,33 +20,14 @@ public abstract class Order implements Parcelable {
 
     public abstract CustomerInfo customerInfo();
 
-    public abstract List<OrderItem> items();
+    public abstract Map<String, List<OrderItem>> items();
+
+    public abstract int size();
 
     @Nullable
     public abstract String processedAt();
 
     public abstract String lastModifiedAt();
-
-    public List<OrderItem> itemsExpaded() {
-        List<OrderItem> itemsExpanded = new ArrayList<>();
-
-        for (OrderItem item : items()) {
-            for (int i = 0; i < item.quantity(); i++) {
-
-                itemsExpanded.add(
-                        OrderItem.builder()
-                                .cod(item.cod())
-                                .imageUrl(item.imageUrl())
-                                .quantity(1)
-                                .description(item.description())
-                                .processedAt(null)
-                                .build());
-            }
-        }
-
-
-        return itemsExpanded;
-    }
 
     public static Builder builder() {
         return new AutoValue_Order.Builder();
@@ -60,11 +41,13 @@ public abstract class Order implements Parcelable {
 
         public abstract Builder customerInfo(CustomerInfo value);
 
-        public abstract Builder items(List<OrderItem> value);
+        public abstract Builder items(Map<String, List<OrderItem>> value);
 
         public abstract Builder processedAt(String value);
 
         public abstract Builder lastModifiedAt(String value);
+
+        public abstract Builder size(int value);
 
         public abstract Order build();
     }

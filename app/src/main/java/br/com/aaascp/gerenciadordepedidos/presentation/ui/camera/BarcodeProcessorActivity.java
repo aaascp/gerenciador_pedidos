@@ -84,11 +84,6 @@ public class BarcodeProcessorActivity extends BaseActivity {
         onBackPressed();
     }
 
-    @OnClick(R.id.barcode_processor_items)
-    void onItemsClick() {
-
-    }
-
     private void setupTitle() {
         if (order == null) {
             return;
@@ -114,7 +109,7 @@ public class BarcodeProcessorActivity extends BaseActivity {
         itemsLeft.setText(
                 String.format(
                         itemsLeftText,
-                        order.itemsExpaded().size()));
+                        order.size()));
     }
 
     private void setupBarcodeDetector() {

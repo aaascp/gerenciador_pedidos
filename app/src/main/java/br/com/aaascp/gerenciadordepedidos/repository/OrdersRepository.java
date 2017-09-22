@@ -1,7 +1,13 @@
 package br.com.aaascp.gerenciadordepedidos.repository;
 
+import android.util.SparseArray;
+
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import br.com.aaascp.gerenciadordepedidos.domain.dto.CustomerInfo;
 import br.com.aaascp.gerenciadordepedidos.domain.dto.Order;
@@ -43,44 +49,68 @@ public class OrdersRepository {
     }
 
     private static Order orderFactory(int id) {
-        List<OrderItem> items = new ArrayList<>();
+        Map<String, List<OrderItem>> items = new HashMap<>();
 
         OrderItem item1 = OrderItem.builder()
-                .cod(1234)
+                .code(1234)
                 .description("Cerveja 1")
                 .imageUrl("")
-                .quantity(5)
                 .processedAt(null)
                 .build();
 
         OrderItem item2 = OrderItem.builder()
-                .cod(2345)
-                .description("Cerveja 2")
+                .code(1234)
+                .description("Cerveja 1")
                 .imageUrl("")
-                .quantity(3)
                 .processedAt(null)
                 .build();
 
         OrderItem item3 = OrderItem.builder()
-                .cod(3456)
-                .description("Cerveja 3")
+                .code(1234)
+                .description("Cerveja 1")
                 .imageUrl("")
-                .quantity(4)
                 .processedAt(null)
                 .build();
 
         OrderItem item4 = OrderItem.builder()
-                .cod(4567)
-                .description("Cerveja 4")
+                .code(2345)
+                .description("Cerveja 2")
                 .imageUrl("")
-                .quantity(2)
                 .processedAt(null)
                 .build();
 
-        items.add(item1);
-        items.add(item2);
-        items.add(item3);
-        items.add(item4);
+        OrderItem item5 = OrderItem.builder()
+                .code(2345)
+                .description("Cerveja 2")
+                .imageUrl("")
+                .processedAt(null)
+                .build();
+
+        OrderItem item6 = OrderItem.builder()
+                .code(3456)
+                .description("Cerveja 3")
+                .imageUrl("")
+                .processedAt(null)
+                .build();
+
+        OrderItem item7 = OrderItem.builder()
+                .code(4567)
+                .description("Cerveja 4")
+                .imageUrl("")
+                .processedAt(null)
+                .build();
+
+        OrderItem item8 = OrderItem.builder()
+                .code(4567)
+                .description("Cerveja 4")
+                .imageUrl("")
+                .processedAt(null)
+                .build();
+
+        items.put("1234", Arrays.asList(item1, item2, item3));
+        items.put("2345", Arrays.asList(item4, item5));
+        items.put("3456", Collections.singletonList(item6));
+        items.put("4567", Arrays.asList(item7, item8));
 
         ShipmentInfo shipmentInfo = ShipmentInfo.builder()
                 .shipType("Sedex")
@@ -97,6 +127,7 @@ public class OrdersRepository {
                 .shipmentInfo(shipmentInfo)
                 .customerInfo(customerInfo)
                 .items(items)
+                .size(8)
                 .processedAt(null)
                 .lastModifiedAt("09/07/2017 às 22:00")
                 .build();

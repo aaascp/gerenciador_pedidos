@@ -63,7 +63,7 @@
 
 
         <TextView
-            android:id="@+id/order_item_cod_value"
+            android:id="@+id/order_item_code_value"
             style="@style/OrdersList.Values"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

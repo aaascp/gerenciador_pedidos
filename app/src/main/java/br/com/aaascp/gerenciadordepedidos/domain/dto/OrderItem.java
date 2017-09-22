@@ -12,11 +12,9 @@ import com.google.auto.value.AutoValue;
 @AutoValue
 public abstract class OrderItem implements Parcelable {
 
-    public abstract int cod();
+    public abstract int code();
 
     public abstract String description();
-
-    public abstract int quantity();
 
     @Nullable
     public abstract String imageUrl();
@@ -30,11 +28,9 @@ public abstract class OrderItem implements Parcelable {
 
     @AutoValue.Builder
     public abstract static class Builder {
-        public abstract Builder cod(int value);
+        public abstract Builder code(int value);
 
         public abstract Builder description(String value);
-
-        public abstract Builder quantity(int value);
 
         public abstract Builder imageUrl(String value);
 

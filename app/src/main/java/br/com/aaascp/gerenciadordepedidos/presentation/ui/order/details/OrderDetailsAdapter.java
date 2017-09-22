@@ -8,7 +8,9 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import br.com.aaascp.gerenciadordepedidos.R;
 import br.com.aaascp.gerenciadordepedidos.domain.dto.OrderItem;
@@ -21,14 +23,19 @@ import butterknife.ButterKnife;
 
 class OrderDetailsAdapter extends RecyclerView.Adapter<OrderDetailsAdapter.ViewHolder> {
 
-    private final List<OrderItem> items;
+    private final Map<String, List<OrderItem>> items;
+    private final List<String> index;
     private final LayoutInflater layoutInflater;
 
     OrderDetailsAdapter(
             Context context,
-            List<OrderItem> items) {
+            Map<String, List<OrderItem>> items) {
 
         this.items = items;
+
+        index = new ArrayList<>();
+        index.addAll(items.keySet());
+
         layoutInflater = LayoutInflater.from(context);
     }
 
@@ -43,15 +50,17 @@ class OrderDetailsAdapter extends RecyclerView.Adapter<OrderDetailsAdapter.ViewH
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        OrderItem item = items.get(position);
+        String code = index.get(position);
+        List<OrderItem> orderItems = items.get(code);
+        OrderItem firstOrder = orderItems.get(0);
 
         holder.cod.setText(
-                String.valueOf(item.cod()));
+                String.valueOf(firstOrder.code()));
 
         holder.quantity.setText(
-                String.valueOf(item.quantity()));
+                String.valueOf(orderItems.size()));
 
-        holder.description.setText(item.description());
+        holder.description.setText(firstOrder.description());
     }
 
     @Override
@@ -64,7 +73,7 @@ class OrderDetailsAdapter extends RecyclerView.Adapter<OrderDetailsAdapter.ViewH
         @BindView(R.id.order_item_image)
         ImageView image;
 
-        @BindView(R.id.order_item_cod_value)
+        @BindView(R.id.order_item_code_value)
         TextView cod;
 
         @BindView(R.id.order_item_quantity_value)

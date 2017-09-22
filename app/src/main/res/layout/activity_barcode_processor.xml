@@ -25,7 +25,7 @@
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="16dp"
             android:background="@android:color/black"
-            app:srcCompat="@drawable/ic_close_white_vector" />
+            app:srcCompat="@drawable/ic_back_white_vector" />
 
         <TextView
             android:id="@+id/barcode_processor_title"
@@ -37,14 +37,6 @@
             android:textStyle="bold|italic"
             tools:text="#1000" />
 
-        <ImageView
-            android:id="@+id/barcode_processor_items"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical|right"
-            android:layout_marginRight="16dp"
-            android:background="@android:color/black"
-            app:srcCompat="@drawable/ic_items_white_vector" />
 
     </FrameLayout>
 

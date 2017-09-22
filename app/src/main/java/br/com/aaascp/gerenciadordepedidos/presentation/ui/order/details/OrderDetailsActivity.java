@@ -120,7 +120,7 @@ public final class OrderDetailsActivity extends BaseActivity {
                 String.format(
                         getString(R.string.order_details_count_text),
                         1,
-                        order.itemsExpaded().size()));
+                        order.size()));
     }
 
     private void showOrder() {
