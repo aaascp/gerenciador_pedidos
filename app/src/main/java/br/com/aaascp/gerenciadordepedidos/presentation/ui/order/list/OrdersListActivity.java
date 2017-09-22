@@ -4,8 +4,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 
 import java.util.List;
@@ -13,11 +15,13 @@ import java.util.List;
 import br.com.aaascp.gerenciadordepedidos.R;
 import br.com.aaascp.gerenciadordepedidos.domain.dto.Order;
 import br.com.aaascp.gerenciadordepedidos.presentation.ui.BaseActivity;
+import br.com.aaascp.gerenciadordepedidos.presentation.ui.order.details.OrderDetailsActivity;
 import br.com.aaascp.gerenciadordepedidos.repository.OrdersRepository;
 import br.com.aaascp.gerenciadordepedidos.repository.callback.RepositoryCallback;
 import br.com.aaascp.gerenciadordepedidos.repository.utils.filter.OrderFilter;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 /**
  * Created by andre on 09/07/17.
@@ -25,7 +29,10 @@ import butterknife.ButterKnife;
 
 public final class OrdersListActivity extends BaseActivity {
 
-    private static final String ORDER_FILTER_TAG = "ORDER_FILTER_TAG";
+    public static final String RESULT_ORDER_PROCESS = "RESULT_ORDER_PROCESS";
+    private static final int CODE_ORDER_PROCESS = 100;
+
+    private static final String EXTRA_ORDER_FILTER_EXTRA = "EXTRA_ORDER_FILTER_EXTRA";
 
     @BindView(R.id.orders_list_toolbar)
     Toolbar toolbar;
@@ -33,14 +40,15 @@ public final class OrdersListActivity extends BaseActivity {
     @BindView(R.id.orders_list_recycler)
     RecyclerView recyclerView;
 
+    private List<Order> orders;
+
     public static void startForContext(Context context, OrderFilter orderFilter) {
         Intent intent =
                 new Intent(
                         context,
                         OrdersListActivity.class);
 
-        intent.putExtra(ORDER_FILTER_TAG, orderFilter);
-
+        intent.putExtra(EXTRA_ORDER_FILTER_EXTRA, orderFilter);
 
         context.startActivity(intent);
     }
@@ -52,6 +60,36 @@ public final class OrdersListActivity extends BaseActivity {
         setContentView(R.layout.activity_orders_list);
         ButterKnife.bind(this);
 
+        extractExtras();
+        setupToolbar();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (data == null) {
+            return;
+        }
+
+        Bundle extras = data.getExtras();
+        if (requestCode == CODE_ORDER_PROCESS &&
+                extras != null &&
+                resultCode == RESULT_OK) {
+
+            processOrderAtPosition(extras.getInt(RESULT_ORDER_PROCESS));
+        }
+    }
+
+    private void extractExtras() {
+        Bundle extra = getIntent().getExtras();
+        if (extra != null) {
+            OrderFilter filter = extra.getParcelable(EXTRA_ORDER_FILTER_EXTRA);
+            setupOrdersList(filter);
+        }
+    }
+
+    private void setupToolbar() {
         toolbar.setNavigationIcon(R.drawable.ic_back_white_vector);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -59,12 +97,6 @@ public final class OrdersListActivity extends BaseActivity {
                 onBackPressed();
             }
         });
-
-        Bundle extra = getIntent().getExtras();
-        if (extra != null) {
-            OrderFilter filter = extra.getParcelable(ORDER_FILTER_TAG);
-            setupOrdersList(filter);
-        }
     }
 
     private void setupOrdersList(OrderFilter filter) {
@@ -84,6 +116,8 @@ public final class OrdersListActivity extends BaseActivity {
     }
 
     private void showOrdersList(List<Order> orders) {
+        this.orders = orders;
+
         recyclerView.setAdapter(
                 new OrdersListAdapter(
                         this,
@@ -96,4 +130,27 @@ public final class OrdersListActivity extends BaseActivity {
 //                        this,
 //                        orders));
     }
+
+    private void processOrderAtPosition(int position) {
+        if (orders == null ||
+                position >= orders.size()) {
+            return;
+        }
+
+        Intent intent =
+                OrderDetailsActivity.getIntentForOrder(
+                        this,
+                        orders.get(position),
+                        position + 1,
+                        orders.size());
+
+        startActivityForResult(intent, CODE_ORDER_PROCESS);
+    }
+
+    @OnClick(R.id.orders_list_fab)
+    void onFabClick() {
+        processOrderAtPosition(0);
+    }
+
+
 }

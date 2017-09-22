@@ -24,7 +24,6 @@
     <string name="orders_list_id_label">ID:</string>
     <string name="orders_list_action">Processar</string>
 
-    <string name="order_details_title">#%1$d (%2$d/%3$d)</string>
     <string name="order_details_count">Items processados:</string>
     <string name="order_details_count_text">%1$d / %2$d</string>
 

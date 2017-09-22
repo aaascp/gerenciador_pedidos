@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -15,6 +16,7 @@ import br.com.aaascp.gerenciadordepedidos.R;
 import br.com.aaascp.gerenciadordepedidos.domain.dto.Order;
 import br.com.aaascp.gerenciadordepedidos.presentation.ui.BaseActivity;
 import br.com.aaascp.gerenciadordepedidos.presentation.ui.camera.BarcodeProcessorActivity;
+import br.com.aaascp.gerenciadordepedidos.presentation.ui.order.list.OrdersListActivity;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -25,7 +27,11 @@ import butterknife.OnClick;
 
 public final class OrderDetailsActivity extends BaseActivity {
 
-    public static final String ORDER_EXTRA = "ORDER_EXTRA";
+    private static final String EXTRA_ORDER = "EXTRA_ORDER";
+    private static final String EXTRA_TOTAL = "EXTRA_TOTAL";
+    private static final String EXTRA_CURRENT = "EXTRA_CURRENT";
+
+    private static final int MENU_ITEM_SKIP = 0;
 
     @BindView(R.id.order_details_toolbar)
     Toolbar toolbar;
@@ -37,13 +43,32 @@ public final class OrderDetailsActivity extends BaseActivity {
     TextView processedCount;
 
     private Order order;
+    private int total;
+    private int current;
 
-    public static void startForOrder(Context context, Order order) {
+    public static Intent getIntentForOrder(
+            Context context,
+            Order order,
+            int current,
+            int total) {
+
         Intent intent = new Intent(
                 context,
                 OrderDetailsActivity.class);
 
-        intent.putExtra(ORDER_EXTRA, order);
+        intent.putExtra(EXTRA_ORDER, order);
+        intent.putExtra(EXTRA_TOTAL, total);
+        intent.putExtra(EXTRA_CURRENT, current);
+
+        return intent;
+    }
+
+    public static void startForOrder(Context context, Order order) {
+        Intent intent = getIntentForOrder(
+                context,
+                order,
+                1,
+                1);
 
         context.startActivity(intent);
     }
@@ -55,33 +80,20 @@ public final class OrderDetailsActivity extends BaseActivity {
         setContentView(R.layout.activity_order_details);
         ButterKnife.bind(this);
 
-        Bundle extras = getIntent().getExtras();
-        if (extras != null) {
-            order = extras.getParcelable(ORDER_EXTRA);
-        }
-
-        toolbar.setTitle(
-                String.format(
-                        getString(R.string.order_details_title),
-                        order.id(),
-                        1,
-                        10));
-
-        toolbar.setNavigationIcon(R.drawable.ic_back_white_vector);
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onBackPressed();
-            }
-        });
-
-        setSupportActionBar(toolbar);
+        extractExtras();
+        setupToolbar();
         setupOrder();
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_order_details, menu);
+
+        if (total == current) {
+            MenuItem item = menu.getItem(MENU_ITEM_SKIP);
+            item.setVisible(false);
+        }
+
         return true;
     }
 
@@ -97,12 +109,43 @@ public final class OrderDetailsActivity extends BaseActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    @OnClick(R.id.order_details_fab)
-    void onFabClick() {
-        startActivity(
-                BarcodeProcessorActivity.getIntentForOrder(
-                        this,
-                        order));
+    private void extractExtras() {
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            order = extras.getParcelable(EXTRA_ORDER);
+            total = extras.getInt(EXTRA_TOTAL, 1);
+            current = extras.getInt(EXTRA_CURRENT, 1);
+        }
+    }
+
+    private void setupToolbar() {
+        setupTitle();
+
+        toolbar.setNavigationIcon(R.drawable.ic_back_white_vector);
+
+        setSupportActionBar(toolbar);
+
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
+    }
+
+    private void setupTitle() {
+        String title =
+                getResources().getQuantityString(
+                        R.plurals.order_details_title,
+                        total);
+
+        toolbar.setTitle(
+                String.format(
+                        title,
+                        order.id(),
+                        current,
+                        total));
+
     }
 
     private void setupOrder() {
@@ -132,5 +175,22 @@ public final class OrderDetailsActivity extends BaseActivity {
 
     private void showError() {
 
+    }
+
+    @OnClick(R.id.order_details_fab)
+    void onFabClick() {
+        startActivity(
+                BarcodeProcessorActivity.getIntentForOrder(
+                        this,
+                        order));
+    }
+
+    @Override
+    public void finish() {
+        Intent intent = new Intent();
+        intent.putExtra(OrdersListActivity.RESULT_ORDER_PROCESS, current++);
+        setResult(RESULT_OK, intent);
+
+        super.finish();
     }
 }
