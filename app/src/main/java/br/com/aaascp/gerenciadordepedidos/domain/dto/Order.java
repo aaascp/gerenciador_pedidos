@@ -5,9 +5,7 @@ import android.support.annotation.Nullable;
 
 import com.google.auto.value.AutoValue;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -22,7 +20,7 @@ public abstract class Order implements Parcelable {
 
     public abstract CustomerInfo customerInfo();
 
-    public abstract Map<String, List<OrderItem>> items();
+    public abstract Map<String, OrderItem> items();
 
     public abstract int size();
 
@@ -30,6 +28,18 @@ public abstract class Order implements Parcelable {
     public abstract String processedAt();
 
     public abstract String lastModifiedAt();
+
+    public CodesToProcess codesToProcess() {
+        Map<String, Integer> codes = new HashMap<>(items().size());
+
+        for (String code : items().keySet()) {
+            codes.put(
+                    code,
+                    items().get(code).quantity());
+        }
+
+        return CodesToProcess.create(codes);
+    }
 
     public static Builder builder() {
         return new AutoValue_Order.Builder();
@@ -43,7 +53,7 @@ public abstract class Order implements Parcelable {
 
         public abstract Builder customerInfo(CustomerInfo value);
 
-        public abstract Builder items(Map<String, List<OrderItem>> value);
+        public abstract Builder items(Map<String, OrderItem> value);
 
         public abstract Builder processedAt(String value);
 

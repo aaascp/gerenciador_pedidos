@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import br.com.aaascp.gerenciadordepedidos.R;
+import br.com.aaascp.gerenciadordepedidos.domain.dto.CodesToProcess;
 import br.com.aaascp.gerenciadordepedidos.domain.dto.Order;
 import br.com.aaascp.gerenciadordepedidos.presentation.ui.BaseActivity;
 import br.com.aaascp.gerenciadordepedidos.presentation.ui.camera.BarcodeProcessorActivity;
@@ -28,9 +29,7 @@ import butterknife.OnClick;
 
 public final class OrderDetailsActivity extends BaseActivity {
 
-    public static final String RESULT_ORDER_PROCESS = "RESULT_ORDER_PROCESS";
-
-    private static final int CODE_ORDER_PROCESS = 100;
+    private static final int REQUEST_CODE = 100;
 
     private static final String EXTRA_ORDER_ID = "EXTRA_ORDER_ID";
     private static final String EXTRA_TOTAL = "EXTRA_TOTAL";
@@ -47,6 +46,7 @@ public final class OrderDetailsActivity extends BaseActivity {
     @BindView(R.id.order_details_count_text)
     TextView processedCountView;
 
+    private CodesToProcess codesToProcess;
     private OrdersRepository ordersRepository;
     private Order order;
     private int orderId;
@@ -90,25 +90,8 @@ public final class OrderDetailsActivity extends BaseActivity {
         ordersRepository = new OrdersRepository();
 
         extractExtras();
-        setupToolbar();
         setupOrder();
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (data == null) {
-            return;
-        }
-
-        Bundle extras = data.getExtras();
-        if (requestCode == CODE_ORDER_PROCESS &&
-                extras != null &&
-                resultCode == RESULT_OK) {
-
-            setProcessedCount(extras.getInt(RESULT_ORDER_PROCESS));
-        }
+        setupToolbar();
     }
 
     @Override
@@ -136,6 +119,23 @@ public final class OrderDetailsActivity extends BaseActivity {
     }
 
     @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (data == null) {
+            return;
+        }
+
+        Bundle extras = data.getExtras();
+        if (resultCode == RESULT_OK &&
+                requestCode == REQUEST_CODE &&
+                extras != null) {
+
+            codesToProcess = extras.getParcelable(BarcodeProcessorActivity.EXTRA_RESULT);
+        }
+    }
+
+    @Override
     public void finish() {
         Intent intent = new Intent();
         intent.putExtra(OrdersListActivity.RESULT_ORDER_PROCESS, current++);
@@ -150,10 +150,24 @@ public final class OrderDetailsActivity extends BaseActivity {
             orderId = extras.getInt(EXTRA_ORDER_ID, 0);
             total = extras.getInt(EXTRA_TOTAL, 1);
             current = extras.getInt(EXTRA_CURRENT, 1);
-
-            setupOrder();
         }
     }
+
+    private void setupOrder() {
+        ordersRepository.getOrder(
+                orderId,
+                new RepositoryCallback<Order>() {
+                    @Override
+                    public void onSuccess(Order data) {
+                        order = data;
+                        codesToProcess = order.codesToProcess();
+                        setItemsLeft();
+                        showOrder();
+                    }
+                }
+        );
+    }
+
 
     private void setupToolbar() {
         setupTitle();
@@ -182,28 +196,13 @@ public final class OrderDetailsActivity extends BaseActivity {
                         orderId,
                         current,
                         total));
-
     }
 
-    private void setupOrder() {
-        ordersRepository.getOrder(
-                orderId,
-                new RepositoryCallback<Order>() {
-                    @Override
-                    public void onSuccess(Order data) {
-                        order = data;
-                        setProcessedCount(0);
-                        showOrder();
-                    }
-                }
-        );
-    }
-
-    private void setProcessedCount(int processedCount) {
+    private void setItemsLeft() {
         processedCountView.setText(
                 String.format(
                         getString(R.string.order_details_count_text),
-                        processedCount,
+                        codesToProcess.itemsLeft(),
                         order.size()));
     }
 
@@ -223,7 +222,8 @@ public final class OrderDetailsActivity extends BaseActivity {
         startActivityForResult(
                 BarcodeProcessorActivity.getIntentForOrder(
                         this,
-                        orderId),
-                CODE_ORDER_PROCESS);
+                        orderId,
+                        codesToProcess),
+                REQUEST_CODE);
     }
 }

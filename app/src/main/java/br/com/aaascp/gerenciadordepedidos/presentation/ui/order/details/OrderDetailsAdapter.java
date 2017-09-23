@@ -23,13 +23,13 @@ import butterknife.ButterKnife;
 
 class OrderDetailsAdapter extends RecyclerView.Adapter<OrderDetailsAdapter.ViewHolder> {
 
-    private final Map<String, List<OrderItem>> items;
+    private final Map<String, OrderItem> items;
     private final List<String> index;
     private final LayoutInflater layoutInflater;
 
     OrderDetailsAdapter(
             Context context,
-            Map<String, List<OrderItem>> items) {
+            Map<String, OrderItem> items) {
 
         this.items = items;
 
@@ -51,16 +51,15 @@ class OrderDetailsAdapter extends RecyclerView.Adapter<OrderDetailsAdapter.ViewH
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         String code = index.get(position);
-        List<OrderItem> orderItems = items.get(code);
-        OrderItem firstOrder = orderItems.get(0);
+        OrderItem orderItem = items.get(code);
 
         holder.cod.setText(
-                String.valueOf(firstOrder.code()));
+                String.valueOf(orderItem.code()));
 
         holder.quantity.setText(
-                String.valueOf(orderItems.size()));
+                String.valueOf(orderItem.quantity()));
 
-        holder.description.setText(firstOrder.description());
+        holder.description.setText(orderItem.description());
     }
 
     @Override

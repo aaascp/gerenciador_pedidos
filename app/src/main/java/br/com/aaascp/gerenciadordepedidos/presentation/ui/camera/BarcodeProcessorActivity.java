@@ -13,13 +13,9 @@ import android.widget.TextView;
 import com.google.android.gms.vision.CameraSource;
 import com.google.android.gms.vision.barcode.BarcodeDetector;
 
-
 import br.com.aaascp.gerenciadordepedidos.R;
-import br.com.aaascp.gerenciadordepedidos.domain.dto.Order;
+import br.com.aaascp.gerenciadordepedidos.domain.dto.CodesToProcess;
 import br.com.aaascp.gerenciadordepedidos.presentation.ui.BaseActivity;
-import br.com.aaascp.gerenciadordepedidos.presentation.ui.order.details.OrderDetailsActivity;
-import br.com.aaascp.gerenciadordepedidos.repository.OrdersRepository;
-import br.com.aaascp.gerenciadordepedidos.repository.callback.RepositoryCallback;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -31,7 +27,10 @@ import butterknife.OnClick;
 public class BarcodeProcessorActivity extends BaseActivity
         implements OnItemProcessedListener {
 
-    public static final String EXTRA_ORDER_ID = "EXTRA_ORDER_ID";
+    public static final String EXTRA_RESULT = "EXTRA_RESULT";
+
+    private static final String EXTRA_CODES_TO_PROCESS = "EXTRA_CODES_TO_PROCESS";
+    private static final String EXTRA_ORDER_ID = "EXTRA_ORDER_ID";
 
     private BarcodeDetector barcodeDetector;
 
@@ -47,20 +46,19 @@ public class BarcodeProcessorActivity extends BaseActivity
     @BindView(R.id.barcode_processor_items_left)
     TextView itemsLeft;
 
-    private OrdersRepository ordersRepository;
-    private Order order;
-
+    private CodesToProcess codesToProcess;
     private int orderId;
-    private int processedCount;
 
     public static Intent getIntentForOrder(
             Context context,
-            int orderId) {
+            int orderId,
+            CodesToProcess codesToProcess) {
 
         Intent intent = new Intent(
                 context,
                 BarcodeProcessorActivity.class);
 
+        intent.putExtra(EXTRA_CODES_TO_PROCESS, codesToProcess);
         intent.putExtra(EXTRA_ORDER_ID, orderId);
 
         return intent;
@@ -74,69 +72,47 @@ public class BarcodeProcessorActivity extends BaseActivity
 
         ButterKnife.bind(this);
 
-        ordersRepository = new OrdersRepository();
         extractExtras();
 
+        setupTitle();
         setupBarcodeDetector();
+        setupCamera();
+    }
+
+    @Override
+    public void finish() {
+        Intent result = new Intent();
+        result.putExtra(EXTRA_RESULT, codesToProcess);
+        setResult(RESULT_OK, result);
+
+        super.finish();
     }
 
     @Override
     public void onItemProcessed(String code) {
-        if (ordersRepository.processItem(order, code)) {
-            processedCount++;
+        if (codesToProcess.process(code)) {
             setItemsLeft();
             checkFinish();
         }
     }
 
-    @Override
-    public void finish() {
-        Intent intent = new Intent();
-        intent.putExtra(OrderDetailsActivity.RESULT_ORDER_PROCESS, processedCount);
-        setResult(RESULT_OK, intent);
-
-        super.finish();
-    }
-
     private void extractExtras() {
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
-            orderId = extras.getInt(EXTRA_ORDER_ID, 0);
-            setupOrder();
+            codesToProcess = extras.getParcelable(EXTRA_CODES_TO_PROCESS);
+            orderId = extras.getInt(EXTRA_ORDER_ID);
         }
-    }
-
-    private void setupOrder() {
-        ordersRepository
-                .getOrder(orderId,
-                        new RepositoryCallback<Order>() {
-                            @Override
-                            public void onSuccess(Order data) {
-                                order = data;
-                                processedCount = 0;
-                                setupTitle();
-                                setItemsLeft();
-                            }
-                        });
     }
 
     private void setupTitle() {
-        if (order == null) {
-            return;
-        }
-
         title.setText(
                 String.format(
                         getString(R.string.barcode_processor_title),
-                        order.id()));
+                        orderId));
     }
 
     private void setItemsLeft() {
-        if (order == null) {
-            return;
-        }
-
-        final int itemsLeftCount = order.size() - processedCount;
+        final int itemsLeftCount = codesToProcess.itemsLeft();
 
         final String itemsLeftText =
                 getResources()
@@ -169,8 +145,6 @@ public class BarcodeProcessorActivity extends BaseActivity
         }
 
         barcodeDetector.setProcessor(new BarcodeProcessor(this));
-
-        setupCamera();
     }
 
     private void setupCamera() {
@@ -194,7 +168,7 @@ public class BarcodeProcessorActivity extends BaseActivity
     }
 
     private void checkFinish() {
-        if (processedCount == order.size()) {
+        if (codesToProcess.itemsLeft() == 0) {
             finish();
         }
     }

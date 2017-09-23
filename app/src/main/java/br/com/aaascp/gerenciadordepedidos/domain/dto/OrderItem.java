@@ -23,14 +23,7 @@ public abstract class OrderItem implements Parcelable {
     @Nullable
     public abstract String imageUrl();
 
-    @Nullable
-    public abstract String processedAt();
-
-    public boolean isProcessed() {
-        return !StringUtils.isNullOrEmpty(processedAt());
-    }
-
-    public abstract OrderItem withProcessedAt(String processedAt);
+    public abstract int quantity();
 
     public static Builder builder() {
         return new AutoValue_OrderItem.Builder();
@@ -46,7 +39,7 @@ public abstract class OrderItem implements Parcelable {
 
         public abstract Builder imageUrl(String value);
 
-        public abstract Builder processedAt(String value);
+        public abstract Builder quantity(int value);
 
         public abstract OrderItem build();
     }

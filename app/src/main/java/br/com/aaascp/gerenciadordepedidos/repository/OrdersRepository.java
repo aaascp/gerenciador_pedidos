@@ -36,8 +36,4 @@ public class OrdersRepository {
     public void save(Order order) {
         orderDao.save(order);
     }
-
-    public boolean processItem(Order order, String code) {
-        return orderDao.processItem(order.id(), code);
-    }
 }
