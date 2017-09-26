@@ -5,15 +5,22 @@ import android.util.SparseArray;
 import com.google.android.gms.vision.Detector;
 import com.google.android.gms.vision.barcode.Barcode;
 
+import br.com.aaascp.gerenciadordepedidos.presentation.ui.BaseActivity;
+
 /**
  * Created by andre on 22/09/17.
  */
 
 final class BarcodeProcessor implements Detector.Processor<Barcode> {
 
+    private final BaseActivity baseActivity;
     private final OnItemProcessedListener listener;
 
-    BarcodeProcessor(OnItemProcessedListener listener) {
+    BarcodeProcessor(
+            BaseActivity baseActivity,
+            OnItemProcessedListener listener) {
+
+        this.baseActivity = baseActivity;
         this.listener = listener;
     }
 
@@ -24,7 +31,13 @@ final class BarcodeProcessor implements Detector.Processor<Barcode> {
 
         if (barcodes.size() != 0) {
             final String code = barcodes.valueAt(0).displayValue;
-            listener.onItemProcessed(code);
+
+            baseActivity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    listener.onItemProcessed(code);
+                }
+            });
         }
     }
 

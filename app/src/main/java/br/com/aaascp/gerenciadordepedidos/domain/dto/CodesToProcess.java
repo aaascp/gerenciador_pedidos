@@ -16,18 +16,27 @@ import br.com.aaascp.gerenciadordepedidos.utils.MathUtils;
 @AutoValue
 public abstract class CodesToProcess implements Parcelable {
 
+    public enum Status {
+        SUCCESS,
+        CODE_ALREADY_PROCESSED,
+        CODE_INVALID
+    }
+
     abstract Map<String, Integer> codes();
 
-    public boolean process(String code) {
+    public Status process(String code) {
+        if(!codes().containsKey(code)) {
+            return Status.CODE_INVALID;
+        }
+
         int leftItems = codes().get(code);
 
         if (leftItems > 0) {
             codes().put(code, leftItems - 1);
-
-            return true;
+            return Status.SUCCESS;
         }
 
-        return false;
+        return Status.CODE_ALREADY_PROCESSED;
     }
 
     public int itemsLeft() {

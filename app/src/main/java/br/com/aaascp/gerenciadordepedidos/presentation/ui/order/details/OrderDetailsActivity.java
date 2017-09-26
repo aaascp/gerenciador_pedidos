@@ -132,6 +132,7 @@ public final class OrderDetailsActivity extends BaseActivity {
                 extras != null) {
 
             codesToProcess = extras.getParcelable(BarcodeProcessorActivity.EXTRA_RESULT);
+            setItemsLeft();
         }
     }
 
@@ -199,11 +200,13 @@ public final class OrderDetailsActivity extends BaseActivity {
     }
 
     private void setItemsLeft() {
+        int total = order.size();
+
         processedCountView.setText(
                 String.format(
                         getString(R.string.order_details_count_text),
-                        codesToProcess.itemsLeft(),
-                        order.size()));
+                        total - codesToProcess.itemsLeft(),
+                        total));
     }
 
     private void showOrder() {

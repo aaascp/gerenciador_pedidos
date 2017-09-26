@@ -69,7 +69,7 @@ public class OrderDao {
 
         OrderItem item2 = OrderItem.builder()
                 .id(id * 10 + 4)
-                .code("127035240760")
+                .code("5012345678900")
                 .description("Cerveja 2")
                 .imageUrl("")
                 .quantity(1)
@@ -83,19 +83,9 @@ public class OrderDao {
                 .quantity(3)
                 .build();
 
-        OrderItem item4 = OrderItem.builder()
-                .id(id * 10 + 7)
-                .code("9789563530766")
-                .description("Cerveja 4")
-                .imageUrl("")
-                .quantity(2)
-                .build();
-
-
         items.put("314159265359", item1);
-        items.put("127035240760", item2);
-        items.put("7898357410015", item3);
-        items.put("9789563530766", item4);
+//        items.put("5012345678900", item2);
+//        items.put("7898357410015", item3);
 
         ShipmentInfo shipmentInfo = ShipmentInfo.builder()
                 .shipType("Sedex")
@@ -112,7 +102,7 @@ public class OrderDao {
                 .shipmentInfo(shipmentInfo)
                 .customerInfo(customerInfo)
                 .items(items)
-                .size(8)
+                .size(2)
                 .processedAt(null)
                 .lastModifiedAt("09/07/2017 às 22:00")
                 .build();

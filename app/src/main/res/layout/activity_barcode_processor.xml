@@ -41,6 +41,7 @@
     </FrameLayout>
 
     <View
+        android:id="@+id/barcode_processor_guide"
         android:layout_width="2dp"
         android:layout_height="300dp"
         android:layout_gravity="center"

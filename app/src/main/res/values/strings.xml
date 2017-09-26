@@ -17,6 +17,9 @@
     <string name="nav_preferences">Preferências</string>
     <string name="nav_logout">Sair</string>
 
+    <string name="dialog_ok">OK</string>
+    <string name="dialog_cancel">Cancelar</string>
+
     <string name="orders_list_title">Lista de Pedidos</string>
     <string name="orders_list_last_modification_label">Última modificação:</string>
     <string name="orders_list_size_label">Itens:</string>
@@ -37,5 +40,9 @@
     <string name="dashboard_orders_find">procurar</string>
 
     <string name="barcode_processor_title">#%1$d</string>
+    <string name="barcode_processor_finish_dialog_title">Todos os items foram processados!</string>
+    <string name="barcode_processor_finish_dialog_message">Voltar para lista.</string>
+    <string name="barcode_processor_items_left">Faltam 0 items</string>
+
 
 </resources>
