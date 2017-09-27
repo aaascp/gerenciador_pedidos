@@ -8,15 +8,14 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
 import br.com.aaascp.gerenciadordepedidos.R;
-import br.com.aaascp.gerenciadordepedidos.domain.dto.CodesToProcess;
-import br.com.aaascp.gerenciadordepedidos.domain.dto.Order;
+import br.com.aaascp.gerenciadordepedidos.models.CodesToProcess;
+import br.com.aaascp.gerenciadordepedidos.models.Order;
 import br.com.aaascp.gerenciadordepedidos.presentation.custom_views.ValueLabelView;
 import br.com.aaascp.gerenciadordepedidos.presentation.ui.BaseActivity;
 import br.com.aaascp.gerenciadordepedidos.presentation.ui.camera.BarcodeProcessorActivity;
@@ -24,7 +23,6 @@ import br.com.aaascp.gerenciadordepedidos.presentation.ui.order.list.OrdersListA
 import br.com.aaascp.gerenciadordepedidos.repository.OrdersRepository;
 import br.com.aaascp.gerenciadordepedidos.repository.callback.RepositoryCallback;
 import br.com.aaascp.gerenciadordepedidos.utils.DateFormatterUtils;
-import br.com.aaascp.gerenciadordepedidos.utils.StringUtils;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -114,6 +112,8 @@ public final class OrderDetailsActivity extends BaseActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_order_details, menu);
+
         if (total == current) {
             MenuItem item = menu.getItem(MENU_ITEM_SKIP);
             item.setVisible(false);
@@ -200,8 +200,8 @@ public final class OrderDetailsActivity extends BaseActivity {
     }
 
     private void setupToolbar() {
-        toolbar.inflateMenu(R.menu.menu_order_details);
         setupTitle();
+        setSupportActionBar(toolbar);
 
         if (total > 1) {
             toolbar.setNavigationIcon(R.drawable.ic_close_white_vector);

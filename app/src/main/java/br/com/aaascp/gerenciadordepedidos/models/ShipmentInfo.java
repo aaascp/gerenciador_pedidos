@@ -1,4 +1,4 @@
-package br.com.aaascp.gerenciadordepedidos.domain.dto;
+package br.com.aaascp.gerenciadordepedidos.models;
 
 import android.os.Parcelable;
 
@@ -16,7 +16,7 @@ public abstract class ShipmentInfo implements Parcelable {
     public abstract String address();
 
     public static Builder builder() {
-        return new AutoValue_ShipmentInfo.Builder();
+        return new $AutoValue_ShipmentInfo.Builder();
     }
 
     @AutoValue.Builder

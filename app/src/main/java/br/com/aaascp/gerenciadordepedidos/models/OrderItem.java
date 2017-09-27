@@ -1,4 +1,4 @@
-package br.com.aaascp.gerenciadordepedidos.domain.dto;
+package br.com.aaascp.gerenciadordepedidos.models;
 
 import android.os.Parcelable;
 import android.support.annotation.Nullable;

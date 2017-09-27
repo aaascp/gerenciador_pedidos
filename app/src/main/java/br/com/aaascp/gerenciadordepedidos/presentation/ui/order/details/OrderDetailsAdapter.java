@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Map;
 
 import br.com.aaascp.gerenciadordepedidos.R;
-import br.com.aaascp.gerenciadordepedidos.domain.dto.OrderItem;
+import br.com.aaascp.gerenciadordepedidos.models.OrderItem;
 import br.com.aaascp.gerenciadordepedidos.presentation.utils.ImageLoader;
 import br.com.aaascp.gerenciadordepedidos.utils.StringUtils;
 import butterknife.BindView;

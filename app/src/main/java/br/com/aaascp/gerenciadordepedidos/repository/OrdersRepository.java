@@ -2,7 +2,7 @@ package br.com.aaascp.gerenciadordepedidos.repository;
 
 import java.util.List;
 
-import br.com.aaascp.gerenciadordepedidos.domain.dto.Order;
+import br.com.aaascp.gerenciadordepedidos.models.Order;
 import br.com.aaascp.gerenciadordepedidos.repository.callback.RepositoryCallback;
 import br.com.aaascp.gerenciadordepedidos.repository.dao.OrderDao;
 import br.com.aaascp.gerenciadordepedidos.repository.utils.filter.OrderFilter;

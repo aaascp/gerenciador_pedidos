@@ -7,10 +7,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import br.com.aaascp.gerenciadordepedidos.domain.dto.CustomerInfo;
-import br.com.aaascp.gerenciadordepedidos.domain.dto.Order;
-import br.com.aaascp.gerenciadordepedidos.domain.dto.OrderItem;
-import br.com.aaascp.gerenciadordepedidos.domain.dto.ShipmentInfo;
+import br.com.aaascp.gerenciadordepedidos.models.CustomerInfo;
+import br.com.aaascp.gerenciadordepedidos.models.Order;
+import br.com.aaascp.gerenciadordepedidos.models.CodesToProcess;
+import br.com.aaascp.gerenciadordepedidos.models.OrderItem;
+import br.com.aaascp.gerenciadordepedidos.models.ShipmentInfo;
 
 /**
  * Created by andre on 22/09/17.

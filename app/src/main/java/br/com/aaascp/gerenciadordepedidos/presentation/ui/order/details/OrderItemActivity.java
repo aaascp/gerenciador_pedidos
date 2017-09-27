@@ -10,7 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import br.com.aaascp.gerenciadordepedidos.R;
-import br.com.aaascp.gerenciadordepedidos.domain.dto.OrderItem;
+import br.com.aaascp.gerenciadordepedidos.models.OrderItem;
 import br.com.aaascp.gerenciadordepedidos.presentation.ui.BaseActivity;
 import br.com.aaascp.gerenciadordepedidos.presentation.utils.ImageLoader;
 import br.com.aaascp.gerenciadordepedidos.utils.StringUtils;
