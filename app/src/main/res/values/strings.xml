@@ -1,41 +1,29 @@
 <resources>
     <string name="app_name">Gerenciador de Pedidos</string>
 
-    <string name="navigation_drawer_open">Abre Navigation Drawer</string>
-    <string name="navigation_drawer_close">Fecha Navigation Drawer</string>
-
-    <string name="menu_preferences">Preferências</string>
-
     <string name="menu_order_details_more_details">Detalhes</string>
     <string name="menu_order_details_clear">Limpar</string>
     <string name="menu_order_details_skip">Pular</string>
-
-    <string name="nav_orders_list">Lista de Pedidos</string>
-    <string name="nav_find_order">Encontrar Pedido</string>
-    <string name="nav_add_profile">Adicionar Perfil</string>
-    <string name="nav_settings">Configurações</string>
-    <string name="nav_preferences">Preferências</string>
-    <string name="nav_logout">Sair</string>
 
     <string name="dialog_ok">OK</string>
     <string name="dialog_cancel">Cancelar</string>
 
     <string name="orders_list_title">Lista de Pedidos</string>
-    <string name="orders_list_processed_at_label">Processada em:</string>
+    <string name="orders_list_processed_at_label">Processado em:</string>
     <string name="orders_list_last_modification_label">Última modificação:</string>
     <string name="orders_list_size_label">Itens:</string>
     <string name="orders_list_ship_type_label">Forma de envio:</string>
     <string name="orders_list_id_label">ID:</string>
     <string name="orders_list_action">Processar</string>
-    <string name="order_list_processed_at_empty">Não processada</string>
+    <string name="order_list_processed_at_empty">Não processado</string>
 
-    <string name="more_details_title">Compra: #%1$d</string>
+    <string name="more_details_title">Pedido: #%1$d</string>
 
-    <string name="more_details_order_title">Detalhes da compra</string>
+    <string name="more_details_order_title">Detalhes do pedido</string>
     <string name="more_details_order_size_label">Items</string>
-    <string name="more_details_order_processed_at_label">Processada em:</string>
+    <string name="more_details_order_processed_at_label">Processado em:</string>
     <string name="more_details_order_last_modification_label">Última modificação</string>
-    <string name="more_details_order_processed_at_empty">Não processada</string>
+    <string name="more_details_order_processed_at_empty">Não processado</string>
 
     <string name="more_details_shipment_title">Detalhes de entrega</string>
     <string name="more_details_shipment_type_label">Tipo:</string>
@@ -50,11 +38,11 @@
     <string name="order_details_finished">Finalizado:</string>
     <string name="order_details_finished_action">Concluir</string>
     <string name="order_details_processed_action">Voltar</string>
-    <string name="order_details_skip_dialog_title">Deseja pular esta compra?</string>
+    <string name="order_details_skip_dialog_title">Deseja pular este pedido?</string>
     <string name="order_details_skip_dialog_message">Todo progresso será perdido!</string>
-    <string name="order_details_clear_dialog_title">Deseja reiniciar esta compra?</string>
+    <string name="order_details_clear_dialog_title">Deseja reiniciar este pedido?</string>
     <string name="order_details_clear_dialog_message">Todo progresso será perdido!</string>
-    <string name="order_details_back_dialog_title">Deseja sair desta compra?</string>
+    <string name="order_details_back_dialog_title">Deseja sair deste pedido?</string>
     <string name="order_details_back_dialog_message">Todo progresso será perdido!</string>
     <string name="order_details_close_dialog_title">Deseja finalizar o processamento?</string>
     <string name="order_details_close_dialog_message">Todo progresso não concluido será perdido!</string>
@@ -67,7 +55,7 @@
 
     <string name="dashboard_orders_to_process">para processar</string>
     <string name="dashboard_orders_processed">processados</string>
-    <string name="dashboard_orders_">Não sei ainda</string>
+    <string name="dashboard_orders_all">todos</string>
     <string name="dashboard_orders_find">procurar</string>
 
     <string name="barcode_processor_title">#%1$d</string>

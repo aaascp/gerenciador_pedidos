@@ -114,8 +114,6 @@ public final class OrderDetailsActivity extends BaseActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_order_details, menu);
-
         if (total == current) {
             MenuItem item = menu.getItem(MENU_ITEM_SKIP);
             item.setVisible(false);
@@ -202,8 +200,8 @@ public final class OrderDetailsActivity extends BaseActivity {
     }
 
     private void setupToolbar() {
+        toolbar.inflateMenu(R.menu.menu_order_details);
         setupTitle();
-        setSupportActionBar(toolbar);
 
         if (total > 1) {
             toolbar.setNavigationIcon(R.drawable.ic_close_white_vector);

@@ -14,7 +14,7 @@
         android:layout_marginTop="32dp"
         app:backgroundImage="@drawable/square_primary_8dp"
         app:label="@string/dashboard_orders_to_process"
-        app:layout_constraintBottom_toTopOf="@+id/dashboard_"
+        app:layout_constraintBottom_toTopOf="@+id/dashboard_all"
         app:layout_constraintHorizontal_chainStyle="spread"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toLeftOf="@+id/dashboard_processed"
@@ -27,7 +27,7 @@
         android:layout_height="0dp"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="16dp"
-        app:icon="@drawable/ic_list_black_vector"
+        app:icon="@drawable/ic_done_all_black_vector"
         app:label="@string/dashboard_orders_processed"
         app:layout_constraintBottom_toBottomOf="@id/dashboard_to_process"
         app:layout_constraintLeft_toRightOf="@+id/dashboard_to_process"
@@ -35,15 +35,15 @@
         app:layout_constraintTop_toTopOf="@+id/dashboard_to_process" />
 
     <br.com.aaascp.gerenciadordepedidos.presentation.custom_views.ValueLabelView
-        android:id="@+id/dashboard_"
+        android:id="@+id/dashboard_all"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginBottom="32dp"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="8dp"
         android:layout_marginTop="16dp"
-        app:icon="@drawable/ic_logout_black_vector"
-        app:label="@string/dashboard_orders_"
+        app:icon="@drawable/ic_list_black_vector"
+        app:label="@string/dashboard_orders_all"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintHorizontal_chainStyle="spread"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -58,9 +58,9 @@
         android:layout_marginRight="16dp"
         app:icon="@drawable/ic_search_black_vector"
         app:label="@string/dashboard_orders_find"
-        app:layout_constraintBottom_toBottomOf="@id/dashboard_"
-        app:layout_constraintLeft_toRightOf="@id/dashboard_"
+        app:layout_constraintBottom_toBottomOf="@id/dashboard_all"
+        app:layout_constraintLeft_toRightOf="@id/dashboard_all"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="@id/dashboard_" />
+        app:layout_constraintTop_toTopOf="@id/dashboard_all" />
 
 </android.support.constraint.ConstraintLayout>

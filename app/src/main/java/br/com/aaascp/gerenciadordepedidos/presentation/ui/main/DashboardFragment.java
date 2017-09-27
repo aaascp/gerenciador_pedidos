@@ -61,7 +61,7 @@ public class DashboardFragment extends BaseFragment {
 
     }
 
-    @OnClick(R.id.dashboard_)
+    @OnClick(R.id.dashboard_all)
     void _Button() {
 
     }

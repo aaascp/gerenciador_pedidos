@@ -5,6 +5,7 @@
     <color name="accent">#FF4081</color>
     <color name="primary_text">@color/greyish_brown</color>
     <color name="secondary_text">@color/warm_grey</color>
+    <color name="primary_transparent">#333F51B5</color>
     <color name="light_grey">#EAEAEA</color>
     <color name="warm_grey">#929292</color>
     <color name="greyish_brown">#444444</color>
