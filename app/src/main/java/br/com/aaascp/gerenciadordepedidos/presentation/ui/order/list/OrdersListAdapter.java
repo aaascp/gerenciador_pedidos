@@ -56,6 +56,8 @@ class OrdersListAdapter extends RecyclerView.Adapter<OrdersListAdapter.ViewHolde
 
         holder.lastModifiedAt.setText(order.lastModifiedAt());
 
+        holder.processedAt.setText(getProcessedAt(order));
+
         holder.root.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -71,6 +73,14 @@ class OrdersListAdapter extends RecyclerView.Adapter<OrdersListAdapter.ViewHolde
         return orders.size();
     }
 
+    private String getProcessedAt(Order order) {
+        if (order.isProcessed()) {
+            return order.processedAt();
+        }
+
+        return context.getString(R.string.order_list_processed_at_empty);
+    }
+
     class ViewHolder extends RecyclerView.ViewHolder {
 
         @BindView(R.id.order_root)
@@ -84,6 +94,9 @@ class OrdersListAdapter extends RecyclerView.Adapter<OrdersListAdapter.ViewHolde
 
         @BindView(R.id.order_size_value)
         TextView itemsCount;
+
+        @BindView(R.id.order_processed_at_value)
+        TextView processedAt;
 
         @BindView(R.id.order_last_modification_date_value)
         TextView lastModifiedAt;

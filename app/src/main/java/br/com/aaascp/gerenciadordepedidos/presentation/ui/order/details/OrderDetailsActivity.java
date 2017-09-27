@@ -1,11 +1,14 @@
 package br.com.aaascp.gerenciadordepedidos.presentation.ui.order.details;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -14,11 +17,14 @@ import android.widget.TextView;
 import br.com.aaascp.gerenciadordepedidos.R;
 import br.com.aaascp.gerenciadordepedidos.domain.dto.CodesToProcess;
 import br.com.aaascp.gerenciadordepedidos.domain.dto.Order;
+import br.com.aaascp.gerenciadordepedidos.presentation.custom_views.ValueLabelView;
 import br.com.aaascp.gerenciadordepedidos.presentation.ui.BaseActivity;
 import br.com.aaascp.gerenciadordepedidos.presentation.ui.camera.BarcodeProcessorActivity;
 import br.com.aaascp.gerenciadordepedidos.presentation.ui.order.list.OrdersListActivity;
 import br.com.aaascp.gerenciadordepedidos.repository.OrdersRepository;
 import br.com.aaascp.gerenciadordepedidos.repository.callback.RepositoryCallback;
+import br.com.aaascp.gerenciadordepedidos.utils.DateFormatterUtils;
+import br.com.aaascp.gerenciadordepedidos.utils.StringUtils;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -46,8 +52,14 @@ public final class OrderDetailsActivity extends BaseActivity {
     @BindView(R.id.order_details_items_left)
     TextView itemsLeftView;
 
+    @BindView(R.id.order_details_ship_type)
+    ValueLabelView shipTypeView;
+
     @BindView(R.id.order_details_finish_root)
     View finishRoot;
+
+    @BindView(R.id.order_details_processed_root)
+    View alreadyProcessedRoot;
 
     @BindView(R.id.order_details_items_left_root)
     View itemsLeftRoot;
@@ -117,8 +129,13 @@ public final class OrderDetailsActivity extends BaseActivity {
         int id = item.getItemId();
 
         if (id == R.id.menu_order_details_more_details) {
+            showDetails();
             return true;
         } else if (id == R.id.menu_order_details_clear) {
+            showClearDialog();
+            return true;
+        } else if (id == R.id.menu_order_details_skip) {
+            showSkipDialog();
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -145,7 +162,7 @@ public final class OrderDetailsActivity extends BaseActivity {
     @Override
     public void finish() {
         Intent intent = new Intent();
-        intent.putExtra(OrdersListActivity.RESULT_ORDER_PROCESS, current++);
+        intent.putExtra(OrdersListActivity.RESULT_ORDER_PROCESS, current + 1);
         setResult(RESULT_OK, intent);
 
         super.finish();
@@ -175,19 +192,38 @@ public final class OrderDetailsActivity extends BaseActivity {
         );
     }
 
+    private void finishOrder() {
+        ordersRepository.save(
+                order.withProcessedAt(
+                        DateFormatterUtils
+                                .getDateHourInstance()
+                                .now()));
+        finish();
+    }
+
     private void setupToolbar() {
         setupTitle();
-
-        toolbar.setNavigationIcon(R.drawable.ic_back_white_vector);
-
         setSupportActionBar(toolbar);
 
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onBackPressed();
-            }
-        });
+        if (total > 1) {
+            toolbar.setNavigationIcon(R.drawable.ic_close_white_vector);
+            toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    showCloseDialog();
+                }
+            });
+        } else {
+            toolbar.setNavigationIcon(R.drawable.ic_back_white_vector);
+            toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onBackPressed();
+                }
+            });
+        }
+
+        shipTypeView.setValue(order.shipmentInfo().shipType());
     }
 
     private void setupTitle() {
@@ -204,16 +240,19 @@ public final class OrderDetailsActivity extends BaseActivity {
                         total));
     }
 
-    private void checkFinish(){
+    private void checkFinish() {
         int itemsLeftCount = codesToProcess.itemsLeft();
 
-        if(itemsLeftCount == 0) {
-            finishRoot.setVisibility(View.VISIBLE);
-            itemsLeftRoot.setVisibility(View.GONE);
-        } else {
-            finishRoot.setVisibility(View.GONE);
-            itemsLeftRoot.setVisibility(View.VISIBLE);
+        finishRoot.setVisibility(View.GONE);
+        itemsLeftRoot.setVisibility(View.GONE);
+        alreadyProcessedRoot.setVisibility(View.GONE);
 
+        if (order.isProcessed()) {
+            alreadyProcessedRoot.setVisibility(View.VISIBLE);
+        } else if (itemsLeftCount == 0) {
+            finishRoot.setVisibility(View.VISIBLE);
+        } else {
+            itemsLeftRoot.setVisibility(View.VISIBLE);
             setItemsLeft(itemsLeftCount);
         }
     }
@@ -235,6 +274,121 @@ public final class OrderDetailsActivity extends BaseActivity {
                         order.items()));
     }
 
+    private void showDetails() {
+        if (order == null) {
+            return;
+        }
+
+        OrderMoreDetailsActivity.startForOrder(this, order);
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (order.isProcessed()) {
+            super.onBackPressed();
+            return;
+        }
+
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        builder.setTitle(R.string.order_details_back_dialog_title)
+                .setMessage(R.string.order_details_back_dialog_message)
+                .setPositiveButton(
+                        R.string.dialog_ok,
+                        new AlertDialog.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int id) {
+                                OrderDetailsActivity.super.onBackPressed();
+                            }
+                        })
+                .setNegativeButton(
+                        R.string.dialog_cancel,
+                        new AlertDialog.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.dismiss();
+                            }
+                        });
+
+        builder.show();
+    }
+
+    private void showSkipDialog() {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        builder.setTitle(R.string.order_details_skip_dialog_title)
+                .setMessage(R.string.order_details_skip_dialog_message)
+                .setPositiveButton(
+                        R.string.dialog_ok,
+                        new AlertDialog.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int id) {
+                                finish();
+                            }
+                        })
+                .setNegativeButton(
+                        R.string.dialog_cancel,
+                        new AlertDialog.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.dismiss();
+                            }
+                        });
+
+        builder.show();
+    }
+
+    private void showClearDialog() {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        builder.setTitle(R.string.order_details_clear_dialog_title)
+                .setMessage(R.string.order_details_clear_dialog_message)
+                .setPositiveButton(
+                        R.string.dialog_ok,
+                        new AlertDialog.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int id) {
+                                setupOrder();
+                            }
+                        })
+                .setNegativeButton(
+                        R.string.dialog_cancel,
+                        new AlertDialog.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.dismiss();
+                            }
+                        });
+
+        builder.show();
+    }
+
+    private void showCloseDialog() {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        builder.setTitle(R.string.order_details_close_dialog_title)
+                .setMessage(R.string.order_details_close_dialog_message)
+                .setPositiveButton(
+                        R.string.dialog_ok,
+                        new AlertDialog.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int id) {
+                                current = total;
+                                finish();
+                            }
+                        })
+                .setNegativeButton(
+                        R.string.dialog_cancel,
+                        new AlertDialog.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.dismiss();
+                            }
+                        });
+
+        builder.show();
+    }
+
     @OnClick(R.id.order_details_fab)
     void onFabClick() {
         startActivityForResult(
@@ -245,8 +399,18 @@ public final class OrderDetailsActivity extends BaseActivity {
                 REQUEST_CODE);
     }
 
-    @OnClick(R.id.order_details_count_text)
+    @OnClick(R.id.order_details_finish)
     void onFinishedClick() {
+        finishOrder();
+    }
+
+    @OnClick(R.id.order_details_processed)
+    void onAlreadyProcessedClick() {
         finish();
+    }
+
+    @OnClick(R.id.order_details_ship_type)
+    void onShipTypeClick() {
+        showDetails();
     }
 }

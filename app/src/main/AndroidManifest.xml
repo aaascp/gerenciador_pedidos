@@ -24,7 +24,10 @@
 
         <activity android:name=".presentation.ui.order.details.OrderDetailsActivity" />
 
+        <activity android:name=".presentation.ui.order.details.OrderMoreDetailsActivity" />
+
         <activity android:name=".presentation.ui.camera.BarcodeProcessorActivity" />
+
     </application>
 
 </manifest>

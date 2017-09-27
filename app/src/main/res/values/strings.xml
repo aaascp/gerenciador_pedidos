@@ -21,18 +21,45 @@
     <string name="dialog_cancel">Cancelar</string>
 
     <string name="orders_list_title">Lista de Pedidos</string>
+    <string name="orders_list_processed_at_label">Processada em:</string>
     <string name="orders_list_last_modification_label">Última modificação:</string>
     <string name="orders_list_size_label">Itens:</string>
     <string name="orders_list_ship_type_label">Forma de envio:</string>
     <string name="orders_list_id_label">ID:</string>
     <string name="orders_list_action">Processar</string>
+    <string name="order_list_processed_at_empty">Não processada</string>
+
+    <string name="more_details_title">Compra: #%1$d</string>
+
+    <string name="more_details_order_title">Detalhes da compra</string>
+    <string name="more_details_order_size_label">Items</string>
+    <string name="more_details_order_processed_at_label">Processada em:</string>
+    <string name="more_details_order_last_modification_label">Última modificação</string>
+    <string name="more_details_order_processed_at_empty">Não processada</string>
+
+    <string name="more_details_shipment_title">Detalhes de entrega</string>
+    <string name="more_details_shipment_type_label">Tipo:</string>
+    <string name="more_details_shipment_address_label">Endereço:</string>
+
+    <string name="more_details_customer_title">Detalhes do consumidor</string>
+    <string name="more_details_customer_id_label">ID:</string>
+    <string name="more_details_customer_name_label">Nome:</string>
 
     <string name="order_details_count">Items processados:</string>
     <string name="order_details_count_text">%1$d / %2$d</string>
     <string name="order_details_finished">Finalizado:</string>
     <string name="order_details_finished_action">Concluir</string>
+    <string name="order_details_processed_action">Voltar</string>
+    <string name="order_details_skip_dialog_title">Deseja pular esta compra?</string>
+    <string name="order_details_skip_dialog_message">Todo progresso será perdido!</string>
+    <string name="order_details_clear_dialog_title">Deseja reiniciar esta compra?</string>
+    <string name="order_details_clear_dialog_message">Todo progresso será perdido!</string>
+    <string name="order_details_back_dialog_title">Deseja sair desta compra?</string>
+    <string name="order_details_back_dialog_message">Todo progresso será perdido!</string>
+    <string name="order_details_close_dialog_title">Deseja finalizar o processamento?</string>
+    <string name="order_details_close_dialog_message">Todo progresso não concluido será perdido!</string>
 
-    <string name="orders_item_cod_label">COD:</string>
+    <string name="orders_item_code_label">Código:</string>
     <string name="orders_item_description_label">Descrição:</string>
     <string name="orders_item_quantity_label">Quantidade:</string>
 

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/order_root"
     android:layout_width="match_parent"
-    android:layout_height="150dp"
+    android:layout_height="wrap_content"
     android:layout_marginBottom="4dp"
     android:layout_marginLeft="8dp"
     android:layout_marginRight="8dp"
@@ -21,6 +21,7 @@
             style="@style/OrdersList.Labels"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
             android:layout_marginLeft="16dp"
             android:text="@string/orders_list_id_label"
             app:layout_constraintBottom_toTopOf="@+id/order_ship_type_label"
@@ -33,6 +34,7 @@
             style="@style/OrdersList.Labels"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
             android:text="@string/orders_list_ship_type_label"
             app:layout_constraintBottom_toTopOf="@+id/order_size_label"
             app:layout_constraintLeft_toLeftOf="@+id/order_id_label"
@@ -41,22 +43,37 @@
         <TextView
             android:id="@+id/order_size_label"
             style="@style/OrdersList.Labels"
+            android:layout_marginTop="4dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/orders_list_size_label"
-            app:layout_constraintBottom_toTopOf="@+id/order_last_modification_date_label"
+            app:layout_constraintBottom_toTopOf="@+id/order_processed_at_label"
             app:layout_constraintLeft_toLeftOf="@+id/order_id_label"
             app:layout_constraintTop_toBottomOf="@+id/order_ship_type_label" />
 
         <TextView
+            android:id="@+id/order_processed_at_label"
+            style="@style/OrdersList.Labels"
+            android:layout_marginTop="4dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/orders_list_processed_at_label"
+            app:layout_constraintBottom_toTopOf="@+id/order_last_modification_date_label"
+            app:layout_constraintLeft_toLeftOf="@+id/order_id_label"
+            app:layout_constraintTop_toBottomOf="@+id/order_size_label" />
+
+        <TextView
             android:id="@+id/order_last_modification_date_label"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="8dp"
             style="@style/OrdersList.Labels"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/orders_list_last_modification_label"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/order_list_separator"
             app:layout_constraintLeft_toLeftOf="@+id/order_id_label"
-            app:layout_constraintTop_toBottomOf="@+id/order_size_label" />
+            app:layout_constraintTop_toBottomOf="@+id/order_processed_at_label"
+            android:layout_marginLeft="0dp" />
 
         <TextView
             android:id="@+id/order_id_value"
@@ -92,6 +109,22 @@
             tools:text="5" />
 
         <TextView
+            android:id="@+id/order_processed_at_value"
+            style="@style/OrdersList.Values"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginLeft="4dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginStart="4dp"
+            android:ellipsize="end"
+            android:maxLines="1"
+            app:layout_constraintLeft_toRightOf="@+id/order_processed_at_label"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/order_processed_at_label"
+            tools:text="09/07/2017 às 22:00" />
+
+        <TextView
             android:id="@+id/order_last_modification_date_value"
             style="@style/OrdersList.Values"
             android:layout_width="0dp"
@@ -112,10 +145,12 @@
             android:layout_width="0dp"
             android:layout_height="1dp"
             android:layout_marginTop="16dp"
-            android:background="@color/warm_grey"
+            android:layout_marginBottom="48dp"
+            android:background="@color/light_grey"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/order_last_modification_date_value" />
+            app:layout_constraintTop_toBottomOf="@+id/order_last_modification_date_value"
+            app:layout_constraintBottom_toBottomOf="parent"/>
 
         <TextView
             android:id="@+id/order_action_text"

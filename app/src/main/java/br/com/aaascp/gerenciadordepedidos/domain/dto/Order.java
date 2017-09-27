@@ -8,6 +8,8 @@ import com.google.auto.value.AutoValue;
 import java.util.HashMap;
 import java.util.Map;
 
+import br.com.aaascp.gerenciadordepedidos.utils.StringUtils;
+
 /**
  * Created by andre on 10/07/17.
  */
@@ -35,11 +37,17 @@ public abstract class Order implements Parcelable {
         for (String code : items().keySet()) {
             codes.put(
                     code,
-                    items().get(code).quantity());
+                    isProcessed() ? 0 : items().get(code).quantity());
         }
 
         return CodesToProcess.create(codes);
     }
+
+    public boolean isProcessed() {
+        return !StringUtils.isNullOrEmpty(processedAt());
+    }
+
+    public abstract Order withProcessedAt(String processedAt);
 
     public static Builder builder() {
         return new AutoValue_Order.Builder();

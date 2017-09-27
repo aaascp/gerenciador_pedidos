@@ -10,7 +10,6 @@
         android:layout_height="wrap_content">
 
         <android.support.design.widget.CollapsingToolbarLayout
-            android:id="@+id/store_details_collapsing_toolbar"
             android:layout_width="match_parent"
             android:layout_height="280dp"
             app:collapsedTitleTextAppearance="@style/Toolbar.TextAppearance.Highlighted"
@@ -19,6 +18,7 @@
             app:layout_scrollFlags="scroll|exitUntilCollapsed|snap">
 
             <br.com.aaascp.gerenciadordepedidos.presentation.custom_views.ValueLabelView
+                android:id="@+id/order_details_ship_type"
                 android:layout_width="150dp"
                 android:layout_height="150dp"
                 android:layout_gravity="center_horizontal"
@@ -42,7 +42,12 @@
             tools:visibility="visible" />
 
         <include
-            layout="@layout/include_process_finished"
+            layout="@layout/include_processed_finish"
+            android:visibility="gone"
+            tools:visibility="visible" />
+
+        <include
+            layout="@layout/include_processed_already"
             android:visibility="gone"
             tools:visibility="visible" />
 

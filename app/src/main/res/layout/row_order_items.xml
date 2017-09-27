@@ -29,13 +29,13 @@
 
 
         <TextView
-            android:id="@+id/order_item_cod_label"
+            android:id="@+id/order_item_code_label"
             style="@style/OrdersList.Labels"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="8dp"
             android:layout_marginTop="8dp"
-            android:text="@string/orders_item_cod_label"
+            android:text="@string/orders_item_code_label"
             app:layout_constraintBottom_toTopOf="@+id/order_item_quantity_label"
             app:layout_constraintLeft_toRightOf="@+id/order_item_image"
             app:layout_constraintTop_toTopOf="parent"
@@ -47,8 +47,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/orders_item_quantity_label"
-            app:layout_constraintLeft_toLeftOf="@+id/order_item_cod_label"
-            app:layout_constraintTop_toBottomOf="@+id/order_item_cod_label"
+            app:layout_constraintLeft_toLeftOf="@+id/order_item_code_label"
+            app:layout_constraintTop_toBottomOf="@+id/order_item_code_label"
             app:layout_constraintBottom_toTopOf="@+id/order_item_description_label"/>
 
         <TextView
@@ -57,7 +57,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/orders_item_description_label"
-            app:layout_constraintLeft_toLeftOf="@+id/order_item_cod_label"
+            app:layout_constraintLeft_toLeftOf="@+id/order_item_code_label"
             app:layout_constraintTop_toBottomOf="@+id/order_item_quantity_label"
             app:layout_constraintBottom_toTopOf="@+id/order_item_description_value"/>
 
@@ -68,8 +68,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="4dp"
-            app:layout_constraintLeft_toRightOf="@+id/order_item_cod_label"
-            app:layout_constraintTop_toTopOf="@+id/order_item_cod_label"
+            app:layout_constraintLeft_toRightOf="@+id/order_item_code_label"
+            app:layout_constraintTop_toTopOf="@+id/order_item_code_label"
             tools:text="#15447" />
 
         <TextView

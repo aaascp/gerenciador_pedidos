@@ -39,6 +39,7 @@ public final class OrdersListActivity extends BaseActivity {
     RecyclerView recyclerView;
 
     private OrdersRepository ordersRepository;
+    private OrderFilter filter;
     private List<Order> orders;
 
     public static void startForContext(Context context, OrderFilter orderFilter) {
@@ -63,6 +64,7 @@ public final class OrdersListActivity extends BaseActivity {
 
         extractExtras();
         setupToolbar();
+        setupOrdersList();
     }
 
     @Override
@@ -85,8 +87,7 @@ public final class OrdersListActivity extends BaseActivity {
     private void extractExtras() {
         Bundle extra = getIntent().getExtras();
         if (extra != null) {
-            OrderFilter filter = extra.getParcelable(EXTRA_ORDER_FILTER_EXTRA);
-            setupOrdersList(filter);
+            filter = extra.getParcelable(EXTRA_ORDER_FILTER_EXTRA);
         }
     }
 
@@ -100,13 +101,14 @@ public final class OrdersListActivity extends BaseActivity {
         });
     }
 
-    private void setupOrdersList(OrderFilter filter) {
+    private void setupOrdersList() {
         ordersRepository.getList(
                 filter,
                 new RepositoryCallback<List<Order>>() {
                     @Override
                     public void onSuccess(List<Order> result) {
-                        showOrdersList(result);
+                        orders = result;
+                        showOrdersList();
                     }
 
                     @Override
@@ -116,9 +118,7 @@ public final class OrdersListActivity extends BaseActivity {
                 });
     }
 
-    private void showOrdersList(List<Order> orders) {
-        this.orders = orders;
-
+    private void showOrdersList() {
         recyclerView.setAdapter(
                 new OrdersListAdapter(
                         this,
@@ -133,8 +133,9 @@ public final class OrdersListActivity extends BaseActivity {
     }
 
     private void processOrderAtPosition(int position) {
-        if (orders == null ||
-                position >= orders.size()) {
+        if (position >= orders.size()) {
+
+            setupOrdersList();
             return;
         }
 
