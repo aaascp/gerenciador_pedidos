@@ -43,8 +43,14 @@ public final class OrderDetailsActivity extends BaseActivity {
     @BindView(R.id.order_details_recycler)
     RecyclerView recyclerView;
 
-    @BindView(R.id.order_details_count_text)
-    TextView processedCountView;
+    @BindView(R.id.order_details_items_left)
+    TextView itemsLeftView;
+
+    @BindView(R.id.order_details_finish_root)
+    View finishRoot;
+
+    @BindView(R.id.order_details_items_left_root)
+    View itemsLeftRoot;
 
     private CodesToProcess codesToProcess;
     private OrdersRepository ordersRepository;
@@ -132,7 +138,7 @@ public final class OrderDetailsActivity extends BaseActivity {
                 extras != null) {
 
             codesToProcess = extras.getParcelable(BarcodeProcessorActivity.EXTRA_RESULT);
-            setItemsLeft();
+            checkFinish();
         }
     }
 
@@ -162,13 +168,12 @@ public final class OrderDetailsActivity extends BaseActivity {
                     public void onSuccess(Order data) {
                         order = data;
                         codesToProcess = order.codesToProcess();
-                        setItemsLeft();
+                        checkFinish();
                         showOrder();
                     }
                 }
         );
     }
-
 
     private void setupToolbar() {
         setupTitle();
@@ -199,13 +204,27 @@ public final class OrderDetailsActivity extends BaseActivity {
                         total));
     }
 
-    private void setItemsLeft() {
+    private void checkFinish(){
+        int itemsLeftCount = codesToProcess.itemsLeft();
+
+        if(itemsLeftCount == 0) {
+            finishRoot.setVisibility(View.VISIBLE);
+            itemsLeftRoot.setVisibility(View.GONE);
+        } else {
+            finishRoot.setVisibility(View.GONE);
+            itemsLeftRoot.setVisibility(View.VISIBLE);
+
+            setItemsLeft(itemsLeftCount);
+        }
+    }
+
+    private void setItemsLeft(int itemsLeftCount) {
         int total = order.size();
 
-        processedCountView.setText(
+        itemsLeftView.setText(
                 String.format(
                         getString(R.string.order_details_count_text),
-                        total - codesToProcess.itemsLeft(),
+                        total - itemsLeftCount,
                         total));
     }
 
@@ -216,10 +235,6 @@ public final class OrderDetailsActivity extends BaseActivity {
                         order.items()));
     }
 
-    private void showError() {
-
-    }
-
     @OnClick(R.id.order_details_fab)
     void onFabClick() {
         startActivityForResult(
@@ -228,5 +243,10 @@ public final class OrderDetailsActivity extends BaseActivity {
                         orderId,
                         codesToProcess),
                 REQUEST_CODE);
+    }
+
+    @OnClick(R.id.order_details_count_text)
+    void onFinishedClick() {
+        finish();
     }
 }

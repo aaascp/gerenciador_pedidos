@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/order_details_items_left_root"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/default_bar_height"
+    android:background="@color/light_grey"
+    android:orientation="horizontal">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_marginLeft="16dp"
+        android:text="@string/order_details_count"
+        android:textSize="@dimen/large_text_size"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/order_details_items_left"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_marginLeft="4dp"
+        android:textSize="@dimen/large_text_size"
+        tools:text="1/5" />
+</LinearLayout>
