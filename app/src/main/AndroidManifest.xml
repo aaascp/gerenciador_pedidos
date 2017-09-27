@@ -28,6 +28,10 @@
 
         <activity android:name=".presentation.ui.camera.BarcodeProcessorActivity" />
 
+        <activity
+            android:name=".presentation.ui.order.details.OrderItemActivity"
+            android:theme="@style/Dialog" />
+
     </application>
 
 </manifest>

@@ -14,6 +14,8 @@ import java.util.Map;
 
 import br.com.aaascp.gerenciadordepedidos.R;
 import br.com.aaascp.gerenciadordepedidos.domain.dto.OrderItem;
+import br.com.aaascp.gerenciadordepedidos.presentation.utils.ImageLoader;
+import br.com.aaascp.gerenciadordepedidos.utils.StringUtils;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -23,6 +25,7 @@ import butterknife.ButterKnife;
 
 class OrderDetailsAdapter extends RecyclerView.Adapter<OrderDetailsAdapter.ViewHolder> {
 
+    private final Context context;
     private final Map<String, OrderItem> items;
     private final List<String> index;
     private final LayoutInflater layoutInflater;
@@ -31,6 +34,7 @@ class OrderDetailsAdapter extends RecyclerView.Adapter<OrderDetailsAdapter.ViewH
             Context context,
             Map<String, OrderItem> items) {
 
+        this.context = context;
         this.items = items;
 
         index = new ArrayList<>();
@@ -51,15 +55,30 @@ class OrderDetailsAdapter extends RecyclerView.Adapter<OrderDetailsAdapter.ViewH
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         String code = index.get(position);
-        OrderItem orderItem = items.get(code);
+        final OrderItem item = items.get(code);
 
-        holder.cod.setText(
-                String.valueOf(orderItem.code()));
+        String imageUrl = item.imageUrl();
+        if (!StringUtils.isNullOrEmpty(imageUrl)) {
+            ImageLoader.loadImage(
+                    context,
+                    imageUrl,
+                    holder.image);
+        }
+
+        holder.code.setText(
+                String.valueOf(item.code()));
 
         holder.quantity.setText(
-                String.valueOf(orderItem.quantity()));
+                String.valueOf(item.quantity()));
 
-        holder.description.setText(orderItem.description());
+        holder.description.setText(item.description());
+
+        holder.root.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                OrderItemActivity.startForItem(context, item);
+            }
+        });
     }
 
     @Override
@@ -69,11 +88,14 @@ class OrderDetailsAdapter extends RecyclerView.Adapter<OrderDetailsAdapter.ViewH
 
     class ViewHolder extends RecyclerView.ViewHolder {
 
+        @BindView(R.id.order_item_root)
+        View root;
+
         @BindView(R.id.order_item_image)
         ImageView image;
 
         @BindView(R.id.order_item_code_value)
-        TextView cod;
+        TextView code;
 
         @BindView(R.id.order_item_quantity_value)
         TextView quantity;

@@ -2,7 +2,7 @@
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/order_root"
+    android:id="@+id/order_item_root"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginBottom="4dp"
@@ -23,9 +23,9 @@
             android:layout_marginBottom="16dp"
             android:layout_marginLeft="8dp"
             android:layout_marginTop="16dp"
-            android:background="@android:color/black"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_image_black_vector" />
 
 
         <TextView
@@ -35,7 +35,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="8dp"
             android:layout_marginTop="8dp"
-            android:text="@string/orders_item_code_label"
+            android:text="@string/order_item_code_label"
             app:layout_constraintBottom_toTopOf="@+id/order_item_quantity_label"
             app:layout_constraintLeft_toRightOf="@+id/order_item_image"
             app:layout_constraintTop_toTopOf="parent"
@@ -46,20 +46,20 @@
             style="@style/OrdersList.Labels"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/orders_item_quantity_label"
+            android:text="@string/order_item_quantity_label"
+            app:layout_constraintBottom_toTopOf="@+id/order_item_description_label"
             app:layout_constraintLeft_toLeftOf="@+id/order_item_code_label"
-            app:layout_constraintTop_toBottomOf="@+id/order_item_code_label"
-            app:layout_constraintBottom_toTopOf="@+id/order_item_description_label"/>
+            app:layout_constraintTop_toBottomOf="@+id/order_item_code_label" />
 
         <TextView
             android:id="@+id/order_item_description_label"
             style="@style/OrdersList.Labels"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/orders_item_description_label"
+            android:text="@string/order_item_description_label"
+            app:layout_constraintBottom_toTopOf="@+id/order_item_description_value"
             app:layout_constraintLeft_toLeftOf="@+id/order_item_code_label"
-            app:layout_constraintTop_toBottomOf="@+id/order_item_quantity_label"
-            app:layout_constraintBottom_toTopOf="@+id/order_item_description_value"/>
+            app:layout_constraintTop_toBottomOf="@+id/order_item_quantity_label" />
 
 
         <TextView
@@ -88,12 +88,12 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
-            android:maxLines="3"
             android:ellipsize="end"
+            android:maxLines="3"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="@+id/order_item_description_label"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/order_item_description_label"
-            app:layout_constraintBottom_toBottomOf="parent"
             tools:text="Cerveja Unika West Coast" />
 
     </android.support.constraint.ConstraintLayout>

@@ -59,9 +59,11 @@
     <string name="order_details_close_dialog_title">Deseja finalizar o processamento?</string>
     <string name="order_details_close_dialog_message">Todo progresso não concluido será perdido!</string>
 
-    <string name="orders_item_code_label">Código:</string>
-    <string name="orders_item_description_label">Descrição:</string>
-    <string name="orders_item_quantity_label">Quantidade:</string>
+    <string name="order_item_title">Código: %1$s</string>
+
+    <string name="order_item_code_label">Código:</string>
+    <string name="order_item_description_label">Descrição:</string>
+    <string name="order_item_quantity_label">Quantidade:</string>
 
     <string name="dashboard_orders_to_process">para processar</string>
     <string name="dashboard_orders_processed">processados</string>

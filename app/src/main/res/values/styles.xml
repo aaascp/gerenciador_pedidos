@@ -7,6 +7,16 @@
         <item name="actionOverflowButtonStyle">@style/ToolbarOverflowIcon</item>
     </style>
 
+    <style name="Dialog" parent="AppTheme">
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:background">@android:color/transparent</item>
+        <item name="android:windowMinWidthMajor">90%</item>
+        <item name="android:windowMinWidthMinor">90%</item>
+    </style>
+
+
     <style name="ToolbarOverflowIcon" parent="Widget.AppCompat.ActionButton.Overflow">
         <item name="android:tint">@android:color/white</item>
     </style>
@@ -32,6 +42,10 @@
         <item name="titleTextAppearance">@style/Toolbar.TextAppearance.Highlighted</item>
     </style>
 
+    <style name="ToolbarStyle.Small" parent="ToolbarStyle">
+        <item name="titleTextAppearance">@style/Toolbar.TextAppearance.Small</item>
+    </style>
+
     <style name="Toolbar.TextAppearance.Base" parent="AppTheme">
         <item name="android:textStyle">bold</item>
         <item name="android:textColor">@android:color/white</item>
@@ -44,6 +58,10 @@
 
     <style name="Toolbar.TextAppearance.Expanded" parent="Toolbar.TextAppearance.Base">
         <item name="android:textSize">@dimen/large_title_text_size</item>
+    </style>
+
+    <style name="Toolbar.TextAppearance.Small" parent="Toolbar.TextAppearance.Base">
+        <item name="android:textSize">@dimen/title_text_size</item>
     </style>
 
 </resources>
