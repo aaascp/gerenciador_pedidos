@@ -4,7 +4,7 @@ import android.os.Bundle;
 
 import br.com.aaascp.gerenciadordepedidos.R;
 import br.com.aaascp.gerenciadordepedidos.presentation.ui.BaseActivity;
-import br.com.aaascp.gerenciadordepedidos.repository.dao.OrderDao;
+import br.com.aaascp.gerenciadordepedidos.repository.dao.OrderDaoMemory;
 import butterknife.ButterKnife;
 
 public final class MainActivity extends BaseActivity {
@@ -16,6 +16,6 @@ public final class MainActivity extends BaseActivity {
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
-        OrderDao.initialize();
+        OrderDaoMemory.initialize();
     }
 }

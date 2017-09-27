@@ -6,11 +6,18 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+
 import br.com.aaascp.gerenciadordepedidos.R;
+import br.com.aaascp.gerenciadordepedidos.models.OrderFilterList;
 import br.com.aaascp.gerenciadordepedidos.presentation.custom_views.ValueLabelView;
 import br.com.aaascp.gerenciadordepedidos.presentation.ui.BaseFragment;
 import br.com.aaascp.gerenciadordepedidos.presentation.ui.order.list.OrdersListActivity;
-import br.com.aaascp.gerenciadordepedidos.repository.utils.filter.OrderFilter;
+import br.com.aaascp.gerenciadordepedidos.repository.filters.OrderFilter;
+import br.com.aaascp.gerenciadordepedidos.repository.filters.IdFilter;
+import br.com.aaascp.gerenciadordepedidos.repository.filters.StatusFilter;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -46,29 +53,38 @@ public class DashboardFragment extends BaseFragment {
         toProcessButton.setValue("10");
     }
 
+    private void navigateToOrdersList(OrderFilter filter) {
+        List<OrderFilter> filters = new ArrayList<>();
+        filters.add(filter);
+
+        OrdersListActivity.startForContext(
+                getContext(),
+                OrderFilterList.create(filters));
+    }
+
     @OnClick(R.id.dashboard_to_process)
     void toProcessButton() {
-        OrderFilter filter =
-                new OrderFilter.Builder()
-                        .status(OrderFilter.Status.TO_PROCESS)
-                        .build();
-
-        OrdersListActivity.startForContext(getContext(), filter);
+        navigateToOrdersList(
+                StatusFilter.create(StatusFilter.Status.TO_PROCESS));
     }
 
     @OnClick(R.id.dashboard_processed)
     void processedButton() {
-
+        navigateToOrdersList(
+                StatusFilter.create(StatusFilter.Status.PROCESSED));
     }
 
     @OnClick(R.id.dashboard_all)
-    void _Button() {
-
+    void allButton() {
+        navigateToOrdersList(
+                StatusFilter.create(StatusFilter.Status.ALL));
     }
 
     @OnClick(R.id.dashboard_find)
     void findButton() {
+        HashSet<Integer> ids = new HashSet<>();
+        ids.add(1000);
 
+        navigateToOrdersList(IdFilter.create(ids));
     }
-
 }

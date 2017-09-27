@@ -12,11 +12,11 @@ import java.util.List;
 
 import br.com.aaascp.gerenciadordepedidos.R;
 import br.com.aaascp.gerenciadordepedidos.models.Order;
+import br.com.aaascp.gerenciadordepedidos.models.OrderFilterList;
 import br.com.aaascp.gerenciadordepedidos.presentation.ui.BaseActivity;
 import br.com.aaascp.gerenciadordepedidos.presentation.ui.order.details.OrderDetailsActivity;
 import br.com.aaascp.gerenciadordepedidos.repository.OrdersRepository;
 import br.com.aaascp.gerenciadordepedidos.repository.callback.RepositoryCallback;
-import br.com.aaascp.gerenciadordepedidos.repository.utils.filter.OrderFilter;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -30,7 +30,7 @@ public final class OrdersListActivity extends BaseActivity {
     public static final String RESULT_ORDER_PROCESS = "RESULT_ORDER_PROCESS";
     private static final int CODE_ORDER_PROCESS = 100;
 
-    private static final String EXTRA_ORDER_FILTER_EXTRA = "EXTRA_ORDER_FILTER_EXTRA";
+    private static final String EXTRA_ORDER_FILTERS_EXTRA = "EXTRA_ORDER_FILTERS_EXTRA";
 
     @BindView(R.id.orders_list_toolbar)
     Toolbar toolbar;
@@ -39,16 +39,16 @@ public final class OrdersListActivity extends BaseActivity {
     RecyclerView recyclerView;
 
     private OrdersRepository ordersRepository;
-    private OrderFilter filter;
+    private OrderFilterList filterList;
     private List<Order> orders;
 
-    public static void startForContext(Context context, OrderFilter orderFilter) {
+    public static void startForContext(Context context, OrderFilterList filters) {
         Intent intent =
                 new Intent(
                         context,
                         OrdersListActivity.class);
 
-        intent.putExtra(EXTRA_ORDER_FILTER_EXTRA, orderFilter);
+        intent.putExtra(EXTRA_ORDER_FILTERS_EXTRA, filters);
 
         context.startActivity(intent);
     }
@@ -87,7 +87,7 @@ public final class OrdersListActivity extends BaseActivity {
     private void extractExtras() {
         Bundle extra = getIntent().getExtras();
         if (extra != null) {
-            filter = extra.getParcelable(EXTRA_ORDER_FILTER_EXTRA);
+            filterList = extra.getParcelable(EXTRA_ORDER_FILTERS_EXTRA);
         }
     }
 
@@ -103,7 +103,7 @@ public final class OrdersListActivity extends BaseActivity {
 
     private void setupOrdersList() {
         ordersRepository.getList(
-                filter,
+                filterList,
                 new RepositoryCallback<List<Order>>() {
                     @Override
                     public void onSuccess(List<Order> result) {

@@ -5,8 +5,6 @@ import android.support.annotation.Nullable;
 
 import com.google.auto.value.AutoValue;
 
-import br.com.aaascp.gerenciadordepedidos.utils.StringUtils;
-
 /**
  * Created by andre on 20/09/17.
  */
