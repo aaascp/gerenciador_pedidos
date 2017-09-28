@@ -1,10 +1,13 @@
 package br.com.aaascp.gerenciadordepedidos.presentation.ui.main;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -15,6 +18,7 @@ import br.com.aaascp.gerenciadordepedidos.models.OrderFilterList;
 import br.com.aaascp.gerenciadordepedidos.presentation.custom_views.ValueLabelView;
 import br.com.aaascp.gerenciadordepedidos.presentation.ui.BaseFragment;
 import br.com.aaascp.gerenciadordepedidos.presentation.ui.order.list.OrdersListActivity;
+import br.com.aaascp.gerenciadordepedidos.presentation.utils.DialogUtils;
 import br.com.aaascp.gerenciadordepedidos.repository.filters.OrderFilter;
 import br.com.aaascp.gerenciadordepedidos.repository.filters.IdFilter;
 import br.com.aaascp.gerenciadordepedidos.repository.filters.StatusFilter;
@@ -63,6 +67,33 @@ public class DashboardFragment extends BaseFragment {
                 processAll);
     }
 
+    private void getIds() {
+        DialogUtils.getIntValues(
+                getContext(),
+                getString(R.string.dashboard_orders_find_dialog_title),
+                getString(R.string.dashboard_orders_find_dialog_message),
+                new DialogUtils.IntValuesListener() {
+                    @Override
+                    public void onValues(HashSet<Integer> values) {
+                        navigateToOrdersList(
+                                IdFilter.create(values),
+                                values.size() > 1);
+                    }
+
+                    @Override
+                    public void onError() {
+                        showErrorGettingIds();
+                    }
+                });
+    }
+
+    private void showErrorGettingIds() {
+        DialogUtils.showError(
+                getContext(),
+                getString(R.string.dashboard_orders_find_dialog_error_title),
+                getString(R.string.dashboard_orders_find_dialog_erro_message));
+    }
+
     @OnClick(R.id.dashboard_to_process)
     void toProcessButton() {
         navigateToOrdersList(
@@ -86,11 +117,6 @@ public class DashboardFragment extends BaseFragment {
 
     @OnClick(R.id.dashboard_find)
     void findButton() {
-        HashSet<Integer> ids = new HashSet<>();
-        ids.add(1000);
-
-        navigateToOrdersList(
-                IdFilter.create(ids),
-                false);
+        getIds();
     }
 }

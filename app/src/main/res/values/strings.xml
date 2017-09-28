@@ -59,6 +59,10 @@
     <string name="dashboard_orders_processed">processados</string>
     <string name="dashboard_orders_all">todos</string>
     <string name="dashboard_orders_find">procurar</string>
+    <string name="dashboard_orders_find_dialog_title">Procurar IDs:</string>
+    <string name="dashboard_orders_find_dialog_message">Digite os IDs separados por virgula</string>
+    <string name="dashboard_orders_find_dialog_error_title">Erro nos IDs</string>
+    <string name="dashboard_orders_find_dialog_erro_message">Os IDs devem conter números separados por vírgula, sem espaços.</string>
 
     <string name="barcode_processor_title">#%1$d</string>
     <string name="barcode_processor_finish_dialog_title">Todos os items foram processados!</string>
