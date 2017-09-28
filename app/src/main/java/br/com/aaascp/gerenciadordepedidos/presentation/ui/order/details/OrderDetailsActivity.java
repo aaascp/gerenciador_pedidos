@@ -15,8 +15,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
-import java.util.List;
-
 import br.com.aaascp.gerenciadordepedidos.R;
 import br.com.aaascp.gerenciadordepedidos.models.CodesToProcess;
 import br.com.aaascp.gerenciadordepedidos.models.Order;
@@ -24,10 +22,7 @@ import br.com.aaascp.gerenciadordepedidos.presentation.custom_views.ValueLabelVi
 import br.com.aaascp.gerenciadordepedidos.presentation.ui.BaseActivity;
 import br.com.aaascp.gerenciadordepedidos.presentation.ui.camera.BarcodeProcessorActivity;
 import br.com.aaascp.gerenciadordepedidos.presentation.ui.order.list.OrdersListActivity;
-import br.com.aaascp.gerenciadordepedidos.presentation.utils.DialogUtils;
-import br.com.aaascp.gerenciadordepedidos.presentation.utils.EmptyStateAdapter;
 import br.com.aaascp.gerenciadordepedidos.repository.OrdersRepository;
-import br.com.aaascp.gerenciadordepedidos.repository.callback.RepositoryCallback;
 import br.com.aaascp.gerenciadordepedidos.utils.DateFormatterUtils;
 import br.com.aaascp.gerenciadordepedidos.utils.PermissionUtils;
 import butterknife.BindView;
@@ -43,9 +38,10 @@ public final class OrderDetailsActivity extends BaseActivity {
     private static final int REQUEST_CODE_PROCESS = 100;
     private static final int REQUEST_CODE_CAMERA_PERMISSION = 200;
 
-    private static final String EXTRA_ORDER_ID = "EXTRA_ORDER_ID";
     private static final String EXTRA_TOTAL = "EXTRA_TOTAL";
     private static final String EXTRA_CURRENT = "EXTRA_CURRENT";
+    private static final String EXTRA_CODES_TO_PROCESS = "EXTRA_CODES_TO_PROCESS";
+    private static final String EXTRA_ORDER = "EXTRA_ORDER";
 
     private static final int MENU_ITEM_SKIP = 0;
 
@@ -70,17 +66,18 @@ public final class OrderDetailsActivity extends BaseActivity {
     @BindView(R.id.order_details_items_left_root)
     View itemsLeftRoot;
 
-    private OrderDetailsAdapter orderDetailsAdapter;
-    private CodesToProcess codesToProcess;
-    private OrdersRepository ordersRepository;
     private Order order;
-    private int orderId;
+    private CodesToProcess codesToProcess;
+
+    private OrdersRepository ordersRepository;
+    private OrderDetailsAdapter orderDetailsAdapter;
+
     private int total;
     private int current;
 
     public static Intent getIntentForOrder(
             Context context,
-            int orderId,
+            Order order,
             int current,
             int total) {
 
@@ -88,7 +85,7 @@ public final class OrderDetailsActivity extends BaseActivity {
                 context,
                 OrderDetailsActivity.class);
 
-        intent.putExtra(EXTRA_ORDER_ID, orderId);
+        intent.putExtra(EXTRA_ORDER, order);
         intent.putExtra(EXTRA_TOTAL, total);
         intent.putExtra(EXTRA_CURRENT, current);
 
@@ -104,38 +101,20 @@ public final class OrderDetailsActivity extends BaseActivity {
 
         ordersRepository = new OrdersRepository();
 
-        extractExtras();
+        extractExtras(savedInstanceState == null ? getIntent().getExtras() : savedInstanceState);
         setupOrder();
         setupToolbar();
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_order_details, menu);
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
 
-        if (total == current) {
-            MenuItem item = menu.getItem(MENU_ITEM_SKIP);
-            item.setVisible(false);
-        }
+        outState.putParcelable(EXTRA_ORDER, order);
+        outState.putParcelable(EXTRA_CODES_TO_PROCESS, codesToProcess);
 
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-
-        if (id == R.id.menu_order_details_more_details) {
-            showDetails();
-            return true;
-        } else if (id == R.id.menu_order_details_clear) {
-            showClearDialog();
-            return true;
-        } else if (id == R.id.menu_order_details_skip) {
-            showSkipDialog();
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
+        outState.putInt(EXTRA_TOTAL, total);
+        outState.putInt(EXTRA_CURRENT, current);
     }
 
     @Override
@@ -171,7 +150,35 @@ public final class OrderDetailsActivity extends BaseActivity {
         } else {
             PermissionUtils.requestPermissionForCamera(this, REQUEST_CODE_CAMERA_PERMISSION);
         }
+    }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_order_details, menu);
+
+        if (total == current) {
+            MenuItem item = menu.getItem(MENU_ITEM_SKIP);
+            item.setVisible(false);
+        }
+
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        if (id == R.id.menu_order_details_more_details) {
+            showDetails();
+            return true;
+        } else if (id == R.id.menu_order_details_clear) {
+            showClearDialog();
+            return true;
+        } else if (id == R.id.menu_order_details_skip) {
+            showSkipDialog();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     private void finishOrder(int resultCode) {
@@ -203,37 +210,23 @@ public final class OrderDetailsActivity extends BaseActivity {
         }
     }
 
-    private void extractExtras() {
-        Bundle extras = getIntent().getExtras();
+    private void extractExtras(Bundle extras) {
         if (extras != null) {
-            orderId = extras.getInt(EXTRA_ORDER_ID, 0);
+            order = extras.getParcelable(EXTRA_ORDER);
+            codesToProcess = extras.getParcelable(EXTRA_CODES_TO_PROCESS);
+
             total = extras.getInt(EXTRA_TOTAL, 1);
             current = extras.getInt(EXTRA_CURRENT, 1);
         }
     }
 
     private void setupOrder() {
-        ordersRepository.getOrder(
-                orderId,
-                new RepositoryCallback<Order>() {
-                    @Override
-                    public void onSuccess(Order data) {
-                        order = data;
-                        codesToProcess = order.codesToProcess();
-                        checkFinish();
-                        showOrder();
-                    }
+        if(codesToProcess == null) {
+            codesToProcess = order.codesToProcess();
+        }
 
-                    @Override
-                    public void onError(List<String> errors) {
-                        if (errors != null) {
-                            showError(errors.get(0));
-                        } else {
-                            showCommunicationError();
-                        }
-                    }
-                }
-        );
+        checkFinish();
+        showOrder();
     }
 
     private void setupToolbar() {
@@ -270,7 +263,7 @@ public final class OrderDetailsActivity extends BaseActivity {
         toolbar.setTitle(
                 String.format(
                         title,
-                        orderId,
+                        order.id(),
                         current,
                         total));
     }
@@ -310,18 +303,6 @@ public final class OrderDetailsActivity extends BaseActivity {
                         codesToProcess);
 
         recyclerView.setAdapter(orderDetailsAdapter);
-    }
-
-    private void showCommunicationError() {
-        showError(
-                getString(R.string.error_communication));
-    }
-
-    private void showError(String error) {
-        recyclerView.setAdapter(
-                new EmptyStateAdapter(
-                        this,
-                        error));
     }
 
     private void showDetails() {
@@ -450,7 +431,7 @@ public final class OrderDetailsActivity extends BaseActivity {
         startActivityForResult(
                 BarcodeProcessorActivity.getIntentForOrder(
                         this,
-                        orderId,
+                        order.id(),
                         codesToProcess),
                 REQUEST_CODE_PROCESS);
     }
