@@ -5,12 +5,9 @@ import android.content.DialogInterface;
 import android.support.v7.app.AlertDialog;
 import android.text.InputType;
 import android.text.method.DigitsKeyListener;
-import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 
 import br.com.aaascp.gerenciadordepedidos.R;
 
@@ -60,7 +57,7 @@ public class DialogUtils {
                             }
                         }
 
-                        if(!error) {
+                        if (!error) {
                             listener.onValues(values);
                         }
                     }
@@ -88,6 +85,15 @@ public class DialogUtils {
                 new DismissListener());
 
         builder.create().show();
+    }
+
+    public static void permissionError(Context context, String permission) {
+        showError(
+                context,
+                context.getString(R.string.error_permission_title),
+                String.format(
+                        context.getString(R.string.error_permission_message),
+                        permission));
     }
 
     public interface IntValuesListener {

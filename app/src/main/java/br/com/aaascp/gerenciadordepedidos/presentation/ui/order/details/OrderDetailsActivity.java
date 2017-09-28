@@ -4,7 +4,9 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -22,10 +24,12 @@ import br.com.aaascp.gerenciadordepedidos.presentation.custom_views.ValueLabelVi
 import br.com.aaascp.gerenciadordepedidos.presentation.ui.BaseActivity;
 import br.com.aaascp.gerenciadordepedidos.presentation.ui.camera.BarcodeProcessorActivity;
 import br.com.aaascp.gerenciadordepedidos.presentation.ui.order.list.OrdersListActivity;
+import br.com.aaascp.gerenciadordepedidos.presentation.utils.DialogUtils;
 import br.com.aaascp.gerenciadordepedidos.presentation.utils.EmptyStateAdapter;
 import br.com.aaascp.gerenciadordepedidos.repository.OrdersRepository;
 import br.com.aaascp.gerenciadordepedidos.repository.callback.RepositoryCallback;
 import br.com.aaascp.gerenciadordepedidos.utils.DateFormatterUtils;
+import br.com.aaascp.gerenciadordepedidos.utils.PermissionUtils;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -36,7 +40,8 @@ import butterknife.OnClick;
 
 public final class OrderDetailsActivity extends BaseActivity {
 
-    private static final int REQUEST_CODE = 100;
+    private static final int REQUEST_CODE_PROCESS = 100;
+    private static final int REQUEST_CODE_CAMERA_PERMISSION = 200;
 
     private static final String EXTRA_ORDER_ID = "EXTRA_ORDER_ID";
     private static final String EXTRA_TOTAL = "EXTRA_TOTAL";
@@ -143,7 +148,7 @@ public final class OrderDetailsActivity extends BaseActivity {
 
         Bundle extras = data.getExtras();
         if (resultCode == RESULT_OK &&
-                requestCode == REQUEST_CODE &&
+                requestCode == REQUEST_CODE_PROCESS &&
                 extras != null) {
 
             codesToProcess = extras.getParcelable(BarcodeProcessorActivity.EXTRA_RESULT);
@@ -152,6 +157,24 @@ public final class OrderDetailsActivity extends BaseActivity {
         }
     }
 
+    @Override
+    public void onRequestPermissionsResult(
+            int requestCode,
+            @NonNull String permissions[],
+            @NonNull int[] grantResults) {
+
+        if (requestCode == REQUEST_CODE_CAMERA_PERMISSION &&
+                grantResults.length > 0 &&
+                grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+            navigateToCamera();
+        } else {
+            DialogUtils.permissionError(
+                    this,
+                    "Aloha");
+        }
+
+    }
 
     private void finishOrder(int resultCode) {
         Intent intent = new Intent();
@@ -205,7 +228,7 @@ public final class OrderDetailsActivity extends BaseActivity {
 
                     @Override
                     public void onError(List<String> errors) {
-                        if(errors != null) {
+                        if (errors != null) {
                             showError(errors.get(0));
                         } else {
                             showCommunicationError();
@@ -417,14 +440,26 @@ public final class OrderDetailsActivity extends BaseActivity {
         builder.show();
     }
 
-    @OnClick(R.id.order_details_fab)
-    void onFabClick() {
+    private void checkPermissionForCamera() {
+        if (PermissionUtils.isCameraEnabled(this)) {
+            navigateToCamera();
+        } else {
+            PermissionUtils.requestPermissionForCamera(this, REQUEST_CODE_CAMERA_PERMISSION);
+        }
+    }
+
+    private void navigateToCamera() {
         startActivityForResult(
                 BarcodeProcessorActivity.getIntentForOrder(
                         this,
                         orderId,
                         codesToProcess),
-                REQUEST_CODE);
+                REQUEST_CODE_PROCESS);
+    }
+
+    @OnClick(R.id.order_details_fab)
+    void onFabClick() {
+        checkPermissionForCamera();
     }
 
     @OnClick(R.id.order_details_finish)

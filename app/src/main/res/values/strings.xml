@@ -70,4 +70,8 @@
     <string name="barcode_processor_items_left">Faltam 0 items</string>
 
     <string name="error_communication">Falha de comunicacão.</string>
+    <string name="error_permission_title">Erro de Permissão!</string>
+    <string name="error_permission_message">Você deve permitir acesso: %1$s</string>
+
+    <string name="permission_name_camera">CAMERA</string>
 </resources>

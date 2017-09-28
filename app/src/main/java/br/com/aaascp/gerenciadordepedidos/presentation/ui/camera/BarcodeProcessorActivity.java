@@ -174,7 +174,7 @@ public class BarcodeProcessorActivity extends BaseActivity
 
         previewLayout.getHolder()
                 .addCallback(
-                        new CameraPreview(cameraSource));
+                        new CameraPreview(cameraSource, this));
     }
 
     private void showProcessing(final @ColorRes int color) {
