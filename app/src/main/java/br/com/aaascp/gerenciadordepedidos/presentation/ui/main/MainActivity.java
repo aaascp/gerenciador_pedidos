@@ -13,9 +13,9 @@ public final class MainActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        OrderDaoMemory.initialize();
+
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-
-        OrderDaoMemory.initialize();
     }
 }

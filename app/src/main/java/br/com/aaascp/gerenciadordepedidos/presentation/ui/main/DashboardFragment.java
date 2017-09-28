@@ -4,6 +4,7 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,11 +15,14 @@ import java.util.HashSet;
 import java.util.List;
 
 import br.com.aaascp.gerenciadordepedidos.R;
+import br.com.aaascp.gerenciadordepedidos.models.Order;
 import br.com.aaascp.gerenciadordepedidos.models.OrderFilterList;
 import br.com.aaascp.gerenciadordepedidos.presentation.custom_views.ValueLabelView;
 import br.com.aaascp.gerenciadordepedidos.presentation.ui.BaseFragment;
 import br.com.aaascp.gerenciadordepedidos.presentation.ui.order.list.OrdersListActivity;
 import br.com.aaascp.gerenciadordepedidos.presentation.utils.DialogUtils;
+import br.com.aaascp.gerenciadordepedidos.repository.OrdersRepository;
+import br.com.aaascp.gerenciadordepedidos.repository.callback.RepositoryCallback;
 import br.com.aaascp.gerenciadordepedidos.repository.filters.OrderFilter;
 import br.com.aaascp.gerenciadordepedidos.repository.filters.IdFilter;
 import br.com.aaascp.gerenciadordepedidos.repository.filters.StatusFilter;
@@ -54,7 +58,30 @@ public class DashboardFragment extends BaseFragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        toProcessButton.setValue("10");
+        setupToProcessButton();
+    }
+
+    private void setupToProcessButton() {
+        OrdersRepository orderRepository = new OrdersRepository();
+        StatusFilter filter = StatusFilter.create(StatusFilter.Status.TO_PROCESS);
+
+        orderRepository.getList(
+                filter,
+                new RepositoryCallback<List<Order>>() {
+                    @Override
+                    public void onSuccess(List<Order> data) {
+                        Log.d("Andre", data.toString());
+                        Log.d("Andre", String.valueOf(data.size()));
+                        toProcessButton.setValue(
+                                String.valueOf(data.size()));
+                    }
+
+                    @Override
+                    public void onError(List<String> errors) {
+                        toProcessButton.setValue("?");
+                    }
+                });
+
     }
 
     private void navigateToOrdersList(OrderFilter filter, boolean processAll) {
