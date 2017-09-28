@@ -162,7 +162,7 @@ public final class OrderDetailsActivity extends BaseActivity {
     @Override
     public void finish() {
         Intent intent = new Intent();
-        intent.putExtra(OrdersListActivity.RESULT_ORDER_PROCESS, current + 1);
+        intent.putExtra(OrdersListActivity.RESULT_ORDER_PROCESS, current);
         setResult(RESULT_OK, intent);
 
         super.finish();
