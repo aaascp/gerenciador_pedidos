@@ -169,9 +169,7 @@ public final class OrderDetailsActivity extends BaseActivity {
 
             navigateToCamera();
         } else {
-            DialogUtils.permissionError(
-                    this,
-                    "Aloha");
+            PermissionUtils.requestPermissionForCamera(this, REQUEST_CODE_CAMERA_PERMISSION);
         }
 
     }
