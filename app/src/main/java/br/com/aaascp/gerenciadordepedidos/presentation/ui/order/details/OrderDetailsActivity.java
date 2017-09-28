@@ -8,11 +8,12 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+
+import java.util.List;
 
 import br.com.aaascp.gerenciadordepedidos.R;
 import br.com.aaascp.gerenciadordepedidos.models.CodesToProcess;
@@ -21,6 +22,7 @@ import br.com.aaascp.gerenciadordepedidos.presentation.custom_views.ValueLabelVi
 import br.com.aaascp.gerenciadordepedidos.presentation.ui.BaseActivity;
 import br.com.aaascp.gerenciadordepedidos.presentation.ui.camera.BarcodeProcessorActivity;
 import br.com.aaascp.gerenciadordepedidos.presentation.ui.order.list.OrdersListActivity;
+import br.com.aaascp.gerenciadordepedidos.presentation.utils.EmptyStateAdapter;
 import br.com.aaascp.gerenciadordepedidos.repository.OrdersRepository;
 import br.com.aaascp.gerenciadordepedidos.repository.callback.RepositoryCallback;
 import br.com.aaascp.gerenciadordepedidos.utils.DateFormatterUtils;
@@ -200,6 +202,15 @@ public final class OrderDetailsActivity extends BaseActivity {
                         checkFinish();
                         showOrder();
                     }
+
+                    @Override
+                    public void onError(List<String> errors) {
+                        if(errors != null) {
+                            showError(errors.get(0));
+                        } else {
+                            showCommunicationError();
+                        }
+                    }
                 }
         );
     }
@@ -278,6 +289,18 @@ public final class OrderDetailsActivity extends BaseActivity {
                         codesToProcess);
 
         recyclerView.setAdapter(orderDetailsAdapter);
+    }
+
+    private void showCommunicationError() {
+        showError(
+                getString(R.string.error_communication));
+    }
+
+    private void showError(String error) {
+        recyclerView.setAdapter(
+                new EmptyStateAdapter(
+                        this,
+                        error));
     }
 
     private void showDetails() {

@@ -17,6 +17,7 @@
     <string name="orders_list_action_process">Processar</string>
     <string name="orders_list_action_details">Detalhes</string>
     <string name="order_list_processed_at_empty">Não processado</string>
+    <string name="order_list_empty">Nenhum pedido.</string>
 
     <string name="more_details_title">Pedido: #%1$d</string>
 
@@ -64,5 +65,5 @@
     <string name="barcode_processor_finish_dialog_message">Voltar para lista.</string>
     <string name="barcode_processor_items_left">Faltam 0 items</string>
 
-
+    <string name="error_communication">Falha de comunicacão.</string>
 </resources>

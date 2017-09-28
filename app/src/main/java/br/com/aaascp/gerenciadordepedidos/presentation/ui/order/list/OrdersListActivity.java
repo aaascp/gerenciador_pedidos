@@ -7,7 +7,6 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 
 import java.util.List;
@@ -17,6 +16,7 @@ import br.com.aaascp.gerenciadordepedidos.models.Order;
 import br.com.aaascp.gerenciadordepedidos.models.OrderFilterList;
 import br.com.aaascp.gerenciadordepedidos.presentation.ui.BaseActivity;
 import br.com.aaascp.gerenciadordepedidos.presentation.ui.order.details.OrderDetailsActivity;
+import br.com.aaascp.gerenciadordepedidos.presentation.utils.EmptyStateAdapter;
 import br.com.aaascp.gerenciadordepedidos.repository.OrdersRepository;
 import br.com.aaascp.gerenciadordepedidos.repository.callback.RepositoryCallback;
 import butterknife.BindView;
@@ -138,7 +138,11 @@ public final class OrdersListActivity extends BaseActivity {
 
                     @Override
                     public void onError(List<String> errors) {
-                        showError();
+                        if(errors != null) {
+                            showError(errors.get(0));
+                        } else {
+                            showCommunicationError();
+                        }
                     }
                 });
     }
@@ -152,6 +156,11 @@ public final class OrdersListActivity extends BaseActivity {
     }
 
     private void showOrdersList() {
+        if(orders.size() == 0) {
+            showEmptyList();
+            return;
+        }
+
         recyclerView.setAdapter(
                 new OrdersListAdapter(
                         this,
@@ -164,11 +173,24 @@ public final class OrdersListActivity extends BaseActivity {
                         }));
     }
 
-    private void showError() {
-//        recyclerView.setAdapter(
-//                new OrdersListAdapter(
-//                        this,
-//                        orders));
+    private void showEmptyList() {
+        recyclerView.setAdapter(
+                new EmptyStateAdapter(
+                        this,
+                        R.drawable.ic_coffee_black_vector,
+                        getString(R.string.order_list_empty)));
+    }
+
+    private void showCommunicationError() {
+        showError(
+                getString(R.string.error_communication));
+    }
+
+    private void showError(String error) {
+        recyclerView.setAdapter(
+                new EmptyStateAdapter(
+                        this,
+                        error));
     }
 
     private void processNext() {

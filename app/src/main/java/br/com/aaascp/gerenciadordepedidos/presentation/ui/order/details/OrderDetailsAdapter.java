@@ -108,7 +108,7 @@ class OrderDetailsAdapter extends RecyclerView.Adapter<OrderDetailsAdapter.ViewH
         notifyDataSetChanged();
     }
 
-    class ViewHolder extends RecyclerView.ViewHolder {
+    static class ViewHolder extends RecyclerView.ViewHolder {
 
         @BindView(R.id.order_item_root)
         View root;

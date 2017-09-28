@@ -11,6 +11,6 @@ public abstract class RepositoryCallback<T> {
     public void onSuccess(T data) {
     }
 
-    public void onError(List<String> error) {
+    public void onError(List<String> errors) {
     }
 }
