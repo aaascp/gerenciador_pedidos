@@ -33,6 +33,8 @@
         android:layout_gravity="right|bottom"
         android:layout_marginBottom="@dimen/fab_margin"
         android:layout_marginRight="@dimen/fab_margin"
-        android:src="@drawable/ic_play_white_vector" />
+        android:src="@drawable/ic_play_white_vector"
+        android:visibility="gone"
+        tools:visibility="visible" />
 
 </android.support.design.widget.CoordinatorLayout>

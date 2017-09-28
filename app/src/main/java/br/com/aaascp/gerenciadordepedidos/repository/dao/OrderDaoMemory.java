@@ -15,6 +15,8 @@ import br.com.aaascp.gerenciadordepedidos.models.ShipmentInfo;
 import br.com.aaascp.gerenciadordepedidos.repository.filters.OrderFilter;
 import br.com.aaascp.gerenciadordepedidos.repository.filters.IdFilter;
 import br.com.aaascp.gerenciadordepedidos.repository.filters.StatusFilter;
+import br.com.aaascp.gerenciadordepedidos.utils.DateFormatterUtils;
+import br.com.aaascp.gerenciadordepedidos.utils.StringUtils;
 
 /**
  * Created by andre on 22/09/17.
@@ -85,13 +87,13 @@ public class OrderDaoMemory implements OrderDao {
     }
 
     public static void initialize() {
-        orders.append(1000, orderFactory(1000));
-        orders.append(1001, orderFactory(1001));
-        orders.append(1002, orderFactory(1002));
-        orders.append(1003, orderFactory(1003));
+        orders.append(1000, orderFactory(1000, false));
+        orders.append(1001, orderFactory(1001, true));
+        orders.append(1002, orderFactory(1002, false));
+        orders.append(1003, orderFactory(1003, false));
     }
 
-    private static Order orderFactory(int id) {
+    private static Order orderFactory(int id, boolean processed) {
         Map<String, OrderItem> items = new HashMap<>();
 
         OrderItem item1 = OrderItem.builder()
@@ -138,7 +140,7 @@ public class OrderDaoMemory implements OrderDao {
                 .customerInfo(customerInfo)
                 .items(items)
                 .size(2)
-                .processedAt(null)
+                .processedAt(processed ? DateFormatterUtils.getDateHourInstance().now() : null)
                 .lastModifiedAt("09/07/2017 às 22:00")
                 .build();
     }

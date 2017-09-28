@@ -53,31 +53,35 @@ public class DashboardFragment extends BaseFragment {
         toProcessButton.setValue("10");
     }
 
-    private void navigateToOrdersList(OrderFilter filter) {
+    private void navigateToOrdersList(OrderFilter filter, boolean processAll) {
         List<OrderFilter> filters = new ArrayList<>();
         filters.add(filter);
 
         OrdersListActivity.startForContext(
                 getContext(),
-                OrderFilterList.create(filters));
+                OrderFilterList.create(filters),
+                processAll);
     }
 
     @OnClick(R.id.dashboard_to_process)
     void toProcessButton() {
         navigateToOrdersList(
-                StatusFilter.create(StatusFilter.Status.TO_PROCESS));
+                StatusFilter.create(StatusFilter.Status.TO_PROCESS),
+                true);
     }
 
     @OnClick(R.id.dashboard_processed)
     void processedButton() {
         navigateToOrdersList(
-                StatusFilter.create(StatusFilter.Status.PROCESSED));
+                StatusFilter.create(StatusFilter.Status.PROCESSED),
+                false);
     }
 
     @OnClick(R.id.dashboard_all)
     void allButton() {
         navigateToOrdersList(
-                StatusFilter.create(StatusFilter.Status.ALL));
+                StatusFilter.create(StatusFilter.Status.ALL),
+                false);
     }
 
     @OnClick(R.id.dashboard_find)
@@ -85,6 +89,8 @@ public class DashboardFragment extends BaseFragment {
         HashSet<Integer> ids = new HashSet<>();
         ids.add(1000);
 
-        navigateToOrdersList(IdFilter.create(ids));
+        navigateToOrdersList(
+                IdFilter.create(ids),
+                false);
     }
 }

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -30,7 +31,11 @@ public final class OrdersListActivity extends BaseActivity {
     public static final String RESULT_ORDER_PROCESS = "RESULT_ORDER_PROCESS";
     private static final int CODE_ORDER_PROCESS = 100;
 
-    private static final String EXTRA_ORDER_FILTERS_EXTRA = "EXTRA_ORDER_FILTERS_EXTRA";
+    private static final String EXTRA_ORDER_FILTERS = "EXTRA_ORDER_FILTERS";
+    private static final String EXTRA_PROCESS_ALL = "EXTRA_PROCESS_ALL";
+
+    @BindView(R.id.orders_list_fab)
+    FloatingActionButton fab;
 
     @BindView(R.id.orders_list_toolbar)
     Toolbar toolbar;
@@ -41,14 +46,20 @@ public final class OrdersListActivity extends BaseActivity {
     private OrdersRepository ordersRepository;
     private OrderFilterList filterList;
     private List<Order> orders;
+    private boolean processAll;
 
-    public static void startForContext(Context context, OrderFilterList filters) {
+    public static void startForContext(
+            Context context,
+            OrderFilterList filters,
+            boolean processAll) {
+
         Intent intent =
                 new Intent(
                         context,
                         OrdersListActivity.class);
 
-        intent.putExtra(EXTRA_ORDER_FILTERS_EXTRA, filters);
+        intent.putExtra(EXTRA_ORDER_FILTERS, filters);
+        intent.putExtra(EXTRA_PROCESS_ALL, processAll);
 
         context.startActivity(intent);
     }
@@ -65,6 +76,7 @@ public final class OrdersListActivity extends BaseActivity {
         extractExtras();
         setupToolbar();
         setupOrdersList();
+        setupFab();
     }
 
     @Override
@@ -87,7 +99,8 @@ public final class OrdersListActivity extends BaseActivity {
     private void extractExtras() {
         Bundle extra = getIntent().getExtras();
         if (extra != null) {
-            filterList = extra.getParcelable(EXTRA_ORDER_FILTERS_EXTRA);
+            filterList = extra.getParcelable(EXTRA_ORDER_FILTERS);
+            processAll = extra.getBoolean(EXTRA_PROCESS_ALL, false);
         }
     }
 
@@ -116,6 +129,14 @@ public final class OrdersListActivity extends BaseActivity {
                         showError();
                     }
                 });
+    }
+
+    private void setupFab() {
+        if (processAll) {
+            fab.setVisibility(View.VISIBLE);
+        } else {
+            fab.setVisibility(View.GONE);
+        }
     }
 
     private void showOrdersList() {
