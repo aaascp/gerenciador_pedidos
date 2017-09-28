@@ -15,9 +15,9 @@ import br.com.aaascp.gerenciadordepedidos.R;
  * Created by andre on 28/09/17.
  */
 
-public class DialogUtils {
+public final class DialogUtils {
 
-    public static void getIntValues(
+    public static void showGetIntValues(
             Context context,
             String title,
             String message,
@@ -87,7 +87,7 @@ public class DialogUtils {
         builder.create().show();
     }
 
-    public static void permissionError(Context context, String permission) {
+    public static void showPermissionError(Context context, String permission) {
         showError(
                 context,
                 context.getString(R.string.error_permission_title),

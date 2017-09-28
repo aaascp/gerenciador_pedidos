@@ -1,14 +1,11 @@
 package br.com.aaascp.gerenciadordepedidos.presentation.ui.main;
 
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -34,7 +31,7 @@ import butterknife.OnClick;
  * Created by andre on 18/09/17.
  */
 
-public class DashboardFragment extends BaseFragment {
+public final class DashboardFragment extends BaseFragment {
 
     @BindView(R.id.dashboard_to_process)
     ValueLabelView toProcessButton;
@@ -95,7 +92,7 @@ public class DashboardFragment extends BaseFragment {
     }
 
     private void getIds() {
-        DialogUtils.getIntValues(
+        DialogUtils.showGetIntValues(
                 getContext(),
                 getString(R.string.dashboard_orders_find_dialog_title),
                 getString(R.string.dashboard_orders_find_dialog_message),

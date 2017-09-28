@@ -9,7 +9,7 @@ import com.squareup.picasso.Picasso;
  * Created by andre on 27/09/17.
  */
 
-public class ImageLoader {
+public final class ImageLoader {
 
     public static void loadImage(
             Context context,

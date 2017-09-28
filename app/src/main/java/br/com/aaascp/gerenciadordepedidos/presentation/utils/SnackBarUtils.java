@@ -8,7 +8,7 @@ import android.widget.TextView;
  * Created by andre on 28/09/17.
  */
 
-public class SnackbarUtils {
+public final class SnackBarUtils {
 
     public static void showWithCenteredText(View parent, String message) {
 

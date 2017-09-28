@@ -18,7 +18,7 @@ import butterknife.ButterKnife;
  * Created by andre on 28/09/17.
  */
 
-public class EmptyStateAdapter extends RecyclerView.Adapter<EmptyStateAdapter.ViewHolder> {
+public final class EmptyStateAdapter extends RecyclerView.Adapter<EmptyStateAdapter.ViewHolder> {
 
     private final static int NULL_DRAWABLE = -1;
     @DrawableRes

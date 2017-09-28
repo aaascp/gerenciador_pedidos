@@ -22,7 +22,7 @@ import br.com.aaascp.gerenciadordepedidos.utils.StringUtils;
  * Created by andre on 22/09/17.
  */
 
-public class OrderDaoMemory implements OrderDao {
+public final class OrderDaoMemory implements OrderDao {
 
     private static SparseArray<Order> orders = new SparseArray<>();
 

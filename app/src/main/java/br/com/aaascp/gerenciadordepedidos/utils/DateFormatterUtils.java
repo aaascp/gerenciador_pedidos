@@ -7,7 +7,7 @@ import java.util.Date;
  * Created by andre on 27/09/17.
  */
 
-public class DateFormatterUtils {
+public final class DateFormatterUtils {
 
     private static final String FORMAT_DATE_HOUR = "dd/MM/yyyyy 'às' HH:mm";
 

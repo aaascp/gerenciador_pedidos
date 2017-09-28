@@ -14,7 +14,7 @@ import br.com.aaascp.gerenciadordepedidos.presentation.utils.DialogUtils;
  * Created by andre on 28/09/17.
  */
 
-public class PermissionUtils {
+public final class PermissionUtils {
 
     public static void requestPermissionForCamera(BaseActivity activity, int requestCode) {
         requestPermissionRationaleForCamera(activity, requestCode);
@@ -40,7 +40,7 @@ public class PermissionUtils {
 
         if (!isEnabled(activity, permission)) {
             if (shouldShowRequestPermissionRationale(activity, permission)) {
-                DialogUtils.permissionError(activity, permissionName);
+                DialogUtils.showPermissionError(activity, permissionName);
             } else {
                 requestPermission(activity, permission, requestCode);
             }

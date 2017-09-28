@@ -5,10 +5,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.support.annotation.ColorRes;
 import android.support.annotation.Nullable;
-import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.Toolbar;
 import android.view.SurfaceView;
@@ -21,7 +19,7 @@ import com.google.android.gms.vision.barcode.BarcodeDetector;
 import br.com.aaascp.gerenciadordepedidos.R;
 import br.com.aaascp.gerenciadordepedidos.models.CodesToProcess;
 import br.com.aaascp.gerenciadordepedidos.presentation.ui.BaseActivity;
-import br.com.aaascp.gerenciadordepedidos.presentation.utils.SnackbarUtils;
+import br.com.aaascp.gerenciadordepedidos.presentation.utils.SnackBarUtils;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -32,7 +30,7 @@ import static android.content.res.Configuration.ORIENTATION_PORTRAIT;
  * Created by andre on 21/09/17.
  */
 
-public class BarcodeProcessorActivity extends BaseActivity
+public final class BarcodeProcessorActivity extends BaseActivity
         implements OnItemProcessedListener {
 
     public static final String EXTRA_RESULT = "EXTRA_RESULT";
@@ -255,7 +253,7 @@ public class BarcodeProcessorActivity extends BaseActivity
                 message += "Erro desconhecido";
         }
 
-        SnackbarUtils.showWithCenteredText(
+        SnackBarUtils.showWithCenteredText(
                 root,
                 String.format(
                         message,

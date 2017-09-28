@@ -21,7 +21,7 @@ import butterknife.ButterKnife;
  * Created by andre on 27/09/17.
  */
 
-public class OrderItemActivity extends BaseActivity {
+public final class OrderItemActivity extends BaseActivity {
 
     public static final String EXTRA_ITEM = "EXTRA_ITEM";
     @BindView(R.id.order_item_toolbar)

@@ -6,7 +6,7 @@ import java.util.Collection;
  * Created by andre on 23/09/17.
  */
 
-public class MathUtils {
+public final class MathUtils {
 
     public static int reduce(Collection<Integer> collection) {
         int acc = 0;

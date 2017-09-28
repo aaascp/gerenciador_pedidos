@@ -20,7 +20,7 @@ import butterknife.ButterKnife;
 /**
  * Created by andre on 10/07/17.
  */
-class OrdersListAdapter extends RecyclerView.Adapter<OrdersListAdapter.ViewHolder> {
+final class OrdersListAdapter extends RecyclerView.Adapter<OrdersListAdapter.ViewHolder> {
 
     private final Context context;
     private final List<Order> orders;
@@ -80,7 +80,7 @@ class OrdersListAdapter extends RecyclerView.Adapter<OrdersListAdapter.ViewHolde
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        listener.onClick(order.id());
+                        listener.onClick(order);
                     }
                 });
     }
@@ -129,6 +129,6 @@ class OrdersListAdapter extends RecyclerView.Adapter<OrdersListAdapter.ViewHolde
     }
 
     interface OnClickListener {
-        void onClick(int id);
+        void onClick(Order order);
     }
 }

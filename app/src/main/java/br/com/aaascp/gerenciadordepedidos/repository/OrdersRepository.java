@@ -14,7 +14,7 @@ import br.com.aaascp.gerenciadordepedidos.repository.filters.OrderFilter;
  * Created by andre on 18/09/17.
  */
 
-public class OrdersRepository {
+public final class OrdersRepository {
 
     private OrderDao orderDao;
 

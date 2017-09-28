@@ -18,7 +18,7 @@ import butterknife.ButterKnife;
  * Created by andre on 27/09/17.
  */
 
-public class OrderMoreDetailsActivity extends BaseActivity {
+public final class OrderMoreDetailsActivity extends BaseActivity {
 
     private static final String EXTRA_ORDER = "EXTRA_ORDER";
 
