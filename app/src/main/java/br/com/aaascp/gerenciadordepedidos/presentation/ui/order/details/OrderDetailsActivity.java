@@ -15,6 +15,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+import java.util.List;
+
 import br.com.aaascp.gerenciadordepedidos.R;
 import br.com.aaascp.gerenciadordepedidos.models.CodesToProcess;
 import br.com.aaascp.gerenciadordepedidos.models.Order;
@@ -22,7 +24,9 @@ import br.com.aaascp.gerenciadordepedidos.presentation.custom_views.ValueLabelVi
 import br.com.aaascp.gerenciadordepedidos.presentation.ui.BaseActivity;
 import br.com.aaascp.gerenciadordepedidos.presentation.ui.camera.BarcodeProcessorActivity;
 import br.com.aaascp.gerenciadordepedidos.presentation.ui.order.list.OrdersListActivity;
+import br.com.aaascp.gerenciadordepedidos.presentation.utils.EmptyStateAdapter;
 import br.com.aaascp.gerenciadordepedidos.repository.OrdersRepository;
+import br.com.aaascp.gerenciadordepedidos.repository.callback.RepositoryCallback;
 import br.com.aaascp.gerenciadordepedidos.utils.DateFormatterUtils;
 import br.com.aaascp.gerenciadordepedidos.utils.PermissionUtils;
 import butterknife.BindView;
@@ -41,8 +45,10 @@ public final class OrderDetailsActivity extends BaseActivity {
     private static final String EXTRA_TOTAL = "EXTRA_TOTAL";
     private static final String EXTRA_CURRENT = "EXTRA_CURRENT";
     private static final String EXTRA_CODES_TO_PROCESS = "EXTRA_CODES_TO_PROCESS";
+    private static final String EXTRA_ORDER_ID = "EXTRA_ORDER_ID";
     private static final String EXTRA_ORDER = "EXTRA_ORDER";
 
+    private static final int INVALID_ORDER_ID = -1;
     private static final int MENU_ITEM_SKIP = 0;
 
     @BindView(R.id.order_details_toolbar)
@@ -66,18 +72,18 @@ public final class OrderDetailsActivity extends BaseActivity {
     @BindView(R.id.order_details_items_left_root)
     View itemsLeftRoot;
 
-    private Order order;
-    private CodesToProcess codesToProcess;
-
     private OrdersRepository ordersRepository;
     private OrderDetailsAdapter orderDetailsAdapter;
 
+    private CodesToProcess codesToProcess;
+    private Order order;
+    private int orderId;
     private int total;
     private int current;
 
     public static Intent getIntentForOrder(
             Context context,
-            Order order,
+            int orderId,
             int current,
             int total) {
 
@@ -85,7 +91,7 @@ public final class OrderDetailsActivity extends BaseActivity {
                 context,
                 OrderDetailsActivity.class);
 
-        intent.putExtra(EXTRA_ORDER, order);
+        intent.putExtra(EXTRA_ORDER_ID, orderId);
         intent.putExtra(EXTRA_TOTAL, total);
         intent.putExtra(EXTRA_CURRENT, current);
 
@@ -113,6 +119,7 @@ public final class OrderDetailsActivity extends BaseActivity {
         outState.putParcelable(EXTRA_ORDER, order);
         outState.putParcelable(EXTRA_CODES_TO_PROCESS, codesToProcess);
 
+        outState.putInt(EXTRA_ORDER_ID, orderId);
         outState.putInt(EXTRA_TOTAL, total);
         outState.putInt(EXTRA_CURRENT, current);
     }
@@ -212,6 +219,8 @@ public final class OrderDetailsActivity extends BaseActivity {
 
     private void extractExtras(Bundle extras) {
         if (extras != null) {
+            orderId = extras.getInt(EXTRA_ORDER_ID, INVALID_ORDER_ID);
+
             order = extras.getParcelable(EXTRA_ORDER);
             codesToProcess = extras.getParcelable(EXTRA_CODES_TO_PROCESS);
 
@@ -221,12 +230,36 @@ public final class OrderDetailsActivity extends BaseActivity {
     }
 
     private void setupOrder() {
-        if(codesToProcess == null) {
-            codesToProcess = order.codesToProcess();
+        if (order != null) {
+            return;
         }
 
-        checkFinish();
-        showOrder();
+        ordersRepository.getOrder(
+                orderId,
+                new RepositoryCallback<Order>() {
+                    @Override
+                    public void onSuccess(Order data) {
+                        order = data;
+                        codesToProcess = order.codesToProcess();
+                        setItemsLeft(codesToProcess.itemsLeft());
+                        showOrder();
+                    }
+
+                    @Override
+                    public void onError(List<String> errors) {
+                        if (errors != null) {
+                            showError(errors.get(0));
+                        } else {
+                            showCommunicationError();
+                        }
+                    }
+                }
+        );
+    }
+
+    private void refreshOrder() {
+        order = null;
+        setupOrder();
     }
 
     private void setupToolbar() {
@@ -305,6 +338,18 @@ public final class OrderDetailsActivity extends BaseActivity {
         recyclerView.setAdapter(orderDetailsAdapter);
     }
 
+    private void showCommunicationError() {
+        showError(
+                getString(R.string.error_communication));
+    }
+
+    private void showError(String error) {
+        recyclerView.setAdapter(
+                new EmptyStateAdapter(
+                        this,
+                        error));
+    }
+
     private void showDetails() {
         if (order == null) {
             return;
@@ -379,7 +424,7 @@ public final class OrderDetailsActivity extends BaseActivity {
                         new AlertDialog.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int id) {
-                                setupOrder();
+                                refreshOrder();
                             }
                         })
                 .setNegativeButton(

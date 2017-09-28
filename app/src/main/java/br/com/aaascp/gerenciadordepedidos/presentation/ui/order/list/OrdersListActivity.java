@@ -167,8 +167,8 @@ public final class OrdersListActivity extends BaseActivity {
                         orders,
                         new OrdersListAdapter.OnClickListener() {
                             @Override
-                            public void onClick(Order order) {
-                                process(order, 1, 1);
+                            public void onClick(int orderId) {
+                                process(orderId, 1, 1);
                             }
                         }));
     }
@@ -200,16 +200,16 @@ public final class OrdersListActivity extends BaseActivity {
             return;
         }
 
-        process(orders.get(current),
+        process(orders.get(current).id(),
                 current + 1,
                 orders.size());
     }
 
-    private void process(Order order, int position, int total) {
+    private void process(int orderId, int position, int total) {
         Intent intent =
                 OrderDetailsActivity.getIntentForOrder(
                         this,
-                        order,
+                        orderId,
                         position,
                         total);
 

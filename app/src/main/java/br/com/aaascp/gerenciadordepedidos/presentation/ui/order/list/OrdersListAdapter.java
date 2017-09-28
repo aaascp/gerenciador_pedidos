@@ -80,7 +80,7 @@ final class OrdersListAdapter extends RecyclerView.Adapter<OrdersListAdapter.Vie
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        listener.onClick(order);
+                        listener.onClick(order.id());
                     }
                 });
     }
@@ -129,6 +129,6 @@ final class OrdersListAdapter extends RecyclerView.Adapter<OrdersListAdapter.Vie
     }
 
     interface OnClickListener {
-        void onClick(Order order);
+        void onClick(int orderId);
     }
 }
