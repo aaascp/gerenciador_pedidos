@@ -1,63 +1,76 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/barcode_processor_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:animateLayoutChanges="true"
+    android:background="@android:color/black">
 
-    <SurfaceView
-        android:id="@+id/barcode_processor_preview"
+    <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="wrap_content">
 
-    <FrameLayout
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/barcode_processor_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@android:color/black">
+
+            <TextView
+                android:id="@+id/barcode_processor_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:textColor="@android:color/white"
+                android:textSize="@dimen/large_title_text_size"
+                android:textStyle="bold|italic"
+                tools:text="#1000" />
+        </android.support.v7.widget.Toolbar>
+
+    </android.support.design.widget.AppBarLayout>
+
+    <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/default_bar_height"
-        android:layout_gravity="top"
-        android:background="@android:color/black">
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        app:layout_dodgeInsetEdges="bottom">
 
-        <ImageView
-            android:id="@+id/barcode_processor_close"
+        <SurfaceView
+            android:id="@+id/barcode_processor_preview"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <View
+            android:id="@+id/barcode_processor_guide"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginLeft="16dp"
-            android:background="@android:color/black"
-            app:srcCompat="@drawable/ic_back_white_vector" />
+            android:layout_height="0dp"
+            android:background="@drawable/gradient_horizontal_white_transparent"
+            android:rotation="0"
+            app:layout_constraintBottom_toTopOf="@+id/barcode_processor_items_left"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/barcode_processor_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
+            android:id="@+id/barcode_processor_items_left"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/default_bar_height"
+            android:layout_gravity="bottom"
+            android:background="@android:color/black"
+            android:gravity="center"
             android:textColor="@android:color/white"
-            android:textSize="@dimen/large_title_text_size"
-            android:textStyle="bold|italic"
-            tools:text="#1000" />
+            android:textSize="@dimen/title_text_size"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            tools:text="Faltam 4 items" />
 
+    </android.support.constraint.ConstraintLayout>
 
-    </FrameLayout>
-
-    <View
-        android:id="@+id/barcode_processor_guide"
-        android:layout_width="2dp"
-        android:layout_height="300dp"
-        android:layout_gravity="center"
-        android:layout_marginTop="@dimen/default_bar_height"
-        android:layout_marginBottom="@dimen/default_bar_height"
-        android:background="@android:color/white" />
-
-    <TextView
-        android:id="@+id/barcode_processor_items_left"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/default_bar_height"
-        android:layout_gravity="bottom"
-        android:background="@android:color/black"
-        android:gravity="center"
-        android:textColor="@android:color/white"
-        android:textSize="@dimen/title_text_size"
-        tools:text="Faltam 4 items" />
-
-</FrameLayout>
+</android.support.design.widget.CoordinatorLayout>

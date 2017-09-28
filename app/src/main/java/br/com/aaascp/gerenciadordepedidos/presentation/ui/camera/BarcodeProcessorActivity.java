@@ -9,6 +9,7 @@ import android.support.annotation.ColorRes;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.Toolbar;
 import android.view.SurfaceView;
 import android.view.View;
 import android.widget.TextView;
@@ -19,9 +20,12 @@ import com.google.android.gms.vision.barcode.BarcodeDetector;
 import br.com.aaascp.gerenciadordepedidos.R;
 import br.com.aaascp.gerenciadordepedidos.models.CodesToProcess;
 import br.com.aaascp.gerenciadordepedidos.presentation.ui.BaseActivity;
+import br.com.aaascp.gerenciadordepedidos.presentation.utils.SnackbarUtils;
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
+
+import static android.content.res.Configuration.ORIENTATION_LANDSCAPE;
+import static android.content.res.Configuration.ORIENTATION_PORTRAIT;
 
 /**
  * Created by andre on 21/09/17.
@@ -38,6 +42,9 @@ public class BarcodeProcessorActivity extends BaseActivity
     private static final int PROCESSING_TIME = 3 * 1000;
 
     private BarcodeDetector barcodeDetector;
+
+    @BindView(R.id.barcode_processor_toolbar)
+    Toolbar toolbar;
 
     @BindView(R.id.barcode_processor_preview)
     SurfaceView previewLayout;
@@ -85,10 +92,26 @@ public class BarcodeProcessorActivity extends BaseActivity
 
         ready = true;
 
-        setupTitle();
+        setupToolbar();
         setItemsLeft();
         setupBarcodeDetector();
         setupCamera();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        int orientation = getResources().getConfiguration().orientation;
+
+        switch (orientation) {
+            case ORIENTATION_LANDSCAPE:
+                guide.setBackgroundResource(R.drawable.gradient_vertical_white_transparent);
+                break;
+            case ORIENTATION_PORTRAIT:
+                guide.setBackgroundResource(R.drawable.gradient_horizontal_white_transparent);
+                break;
+        }
     }
 
     @Override
@@ -128,11 +151,19 @@ public class BarcodeProcessorActivity extends BaseActivity
         }
     }
 
-    private void setupTitle() {
+    private void setupToolbar() {
         title.setText(
                 String.format(
                         getString(R.string.barcode_processor_title),
                         orderId));
+
+        toolbar.setNavigationIcon(R.drawable.ic_back_white_vector);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onBackPressed();
+            }
+        });
     }
 
     private void setItemsLeft() {
@@ -189,12 +220,12 @@ public class BarcodeProcessorActivity extends BaseActivity
                         color);
 
 
-        guide.setBackgroundColor(highlightColor);
+        guide.getBackground().setTint(highlightColor);
 
         root.postDelayed(new Runnable() {
             @Override
             public void run() {
-                guide.setBackgroundColor(normalColor);
+                guide.getBackground().setTint(normalColor);
                 ready = true;
             }
         }, PROCESSING_TIME);
@@ -217,11 +248,11 @@ public class BarcodeProcessorActivity extends BaseActivity
                 message += "Erro desconhecido";
         }
 
-        Snackbar.make(
+        SnackbarUtils.showWithCenteredText(
                 root,
-                String.format(message, code),
-                Snackbar.LENGTH_LONG)
-                .show();
+                String.format(
+                        message,
+                        code));
     }
 
     private void checkFinish() {
@@ -245,10 +276,5 @@ public class BarcodeProcessorActivity extends BaseActivity
                         });
 
         builder.show();
-    }
-
-    @OnClick(R.id.barcode_processor_close)
-    void onCloseClick() {
-        onBackPressed();
     }
 }

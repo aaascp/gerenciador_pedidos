@@ -1,0 +1,27 @@
+package br.com.aaascp.gerenciadordepedidos.presentation.utils;
+
+import android.support.design.widget.Snackbar;
+import android.view.View;
+import android.widget.TextView;
+
+/**
+ * Created by andre on 28/09/17.
+ */
+
+public class SnackbarUtils {
+
+    public static void showWithCenteredText(View parent, String message) {
+
+        Snackbar snackBar = Snackbar.make(
+                parent,
+                message,
+                Snackbar.LENGTH_LONG);
+
+        View view = snackBar.getView();
+
+        TextView snackBarText = view.findViewById(android.support.design.R.id.snackbar_text);
+        snackBarText.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+
+        snackBar.show();
+    }
+}
