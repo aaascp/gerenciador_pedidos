@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.PersistableBundle;
 import android.support.annotation.ColorRes;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
@@ -102,16 +103,22 @@ public class BarcodeProcessorActivity extends BaseActivity
     protected void onStart() {
         super.onStart();
 
-        int orientation = getResources().getConfiguration().orientation;
+        setupOrientation();
+    }
 
-        switch (orientation) {
-            case ORIENTATION_LANDSCAPE:
-                guide.setBackgroundResource(R.drawable.gradient_vertical_white_transparent);
-                break;
-            case ORIENTATION_PORTRAIT:
-                guide.setBackgroundResource(R.drawable.gradient_horizontal_white_transparent);
-                break;
-        }
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        outState.putParcelable(EXTRA_CODES_TO_PROCESS, codesToProcess);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+
+        codesToProcess = savedInstanceState.getParcelable(EXTRA_CODES_TO_PROCESS);
+        setItemsLeft();
     }
 
     @Override
@@ -276,5 +283,18 @@ public class BarcodeProcessorActivity extends BaseActivity
                         });
 
         builder.show();
+    }
+
+    public void setupOrientation() {
+        int orientation = getResources().getConfiguration().orientation;
+
+        switch (orientation) {
+            case ORIENTATION_LANDSCAPE:
+                guide.setBackgroundResource(R.drawable.gradient_vertical_white_transparent);
+                break;
+            case ORIENTATION_PORTRAIT:
+                guide.setBackgroundResource(R.drawable.gradient_horizontal_white_transparent);
+                break;
+        }
     }
 }
