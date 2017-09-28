@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 
 import java.util.List;
@@ -28,8 +29,13 @@ import butterknife.OnClick;
 
 public final class OrdersListActivity extends BaseActivity {
 
-    public static final String RESULT_ORDER_PROCESS = "RESULT_ORDER_PROCESS";
-    private static final int CODE_ORDER_PROCESS = 100;
+    public static final int REQUEST_CODE_ORDER_PROCESS = 100;
+
+    public static final int RESULT_CODE_OK_UNIQUE = 200;
+    public static final int RESULT_CODE_OK = 300;
+    public static final int RESULT_CODE_SKIP = 400;
+    public static final int RESULT_CODE_CLOSE = 500;
+
 
     private static final String EXTRA_ORDER_FILTERS = "EXTRA_ORDER_FILTERS";
     private static final String EXTRA_PROCESS_ALL = "EXTRA_PROCESS_ALL";
@@ -47,6 +53,7 @@ public final class OrdersListActivity extends BaseActivity {
     private OrderFilterList filterList;
     private List<Order> orders;
     private boolean processAll;
+    private int current;
 
     public static void startForContext(
             Context context,
@@ -83,16 +90,19 @@ public final class OrdersListActivity extends BaseActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (data == null) {
-            return;
-        }
+        if (requestCode == REQUEST_CODE_ORDER_PROCESS) {
+            switch (resultCode) {
+                case RESULT_CODE_OK:
+                case RESULT_CODE_SKIP:
+                    ++current;
+                    break;
+                case RESULT_CODE_OK_UNIQUE:
+                case RESULT_CODE_CLOSE:
+                default:
+                    current = -1;
+            }
 
-        Bundle extras = data.getExtras();
-        if (requestCode == CODE_ORDER_PROCESS &&
-                extras != null &&
-                resultCode == RESULT_OK) {
-
-            processOrderAtPosition(extras.getInt(RESULT_ORDER_PROCESS));
+            processNext();
         }
     }
 
@@ -115,6 +125,8 @@ public final class OrdersListActivity extends BaseActivity {
     }
 
     private void setupOrdersList() {
+        current = 0;
+
         ordersRepository.getList(
                 filterList,
                 new RepositoryCallback<List<Order>>() {
@@ -143,7 +155,13 @@ public final class OrdersListActivity extends BaseActivity {
         recyclerView.setAdapter(
                 new OrdersListAdapter(
                         this,
-                        orders));
+                        orders,
+                        new OrdersListAdapter.OnClickListener() {
+                            @Override
+                            public void onClick(int id) {
+                                process(id, 1, 1);
+                            }
+                        }));
     }
 
     private void showError() {
@@ -153,25 +171,31 @@ public final class OrdersListActivity extends BaseActivity {
 //                        orders));
     }
 
-    private void processOrderAtPosition(int position) {
-        if (position >= orders.size()) {
-
+    private void processNext() {
+        if (current >= orders.size() ||
+                current < 0) {
             setupOrdersList();
             return;
         }
 
+        process(orders.get(current).id(),
+                current + 1,
+                orders.size());
+    }
+
+    private void process(int id, int position, int total) {
         Intent intent =
                 OrderDetailsActivity.getIntentForOrder(
                         this,
-                        orders.get(position).id(),
-                        position + 1,
-                        orders.size());
+                        id,
+                        position,
+                        total);
 
-        startActivityForResult(intent, CODE_ORDER_PROCESS);
+        startActivityForResult(intent, REQUEST_CODE_ORDER_PROCESS);
     }
 
     @OnClick(R.id.orders_list_fab)
     void onFabClick() {
-        processOrderAtPosition(0);
+        processNext();
     }
 }

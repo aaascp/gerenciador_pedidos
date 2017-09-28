@@ -1,6 +1,7 @@
 package br.com.aaascp.gerenciadordepedidos.presentation.ui.order.list;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -24,10 +25,16 @@ class OrdersListAdapter extends RecyclerView.Adapter<OrdersListAdapter.ViewHolde
     private final Context context;
     private final List<Order> orders;
     private final LayoutInflater layoutInflater;
+    private final OnClickListener listener;
 
-    OrdersListAdapter(Context context, List<Order> orders) {
+    OrdersListAdapter(
+            Context context,
+            List<Order> orders,
+            OnClickListener listener) {
+
         this.context = context;
         this.orders = orders;
+        this.listener = listener;
 
         layoutInflater = LayoutInflater.from(context);
     }
@@ -69,14 +76,13 @@ class OrdersListAdapter extends RecyclerView.Adapter<OrdersListAdapter.ViewHolde
                 context.getString(
                         isProcessed ? R.string.orders_list_action_details : R.string.orders_list_action_process));
 
-        holder.root.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                OrderDetailsActivity.startForOrder(
-                        context,
-                        order.id());
-            }
-        });
+        holder.root.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        listener.onClick(order.id());
+                    }
+                });
     }
 
     @Override
@@ -120,5 +126,9 @@ class OrdersListAdapter extends RecyclerView.Adapter<OrdersListAdapter.ViewHolde
 
             ButterKnife.bind(this, itemView);
         }
+    }
+
+    interface OnClickListener {
+        void onClick(int id);
     }
 }

@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -87,16 +88,6 @@ public final class OrderDetailsActivity extends BaseActivity {
         return intent;
     }
 
-    public static void startForOrder(Context context, int orderId) {
-        Intent intent = getIntentForOrder(
-                context,
-                orderId,
-                1,
-                1);
-
-        context.startActivity(intent);
-    }
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -159,13 +150,34 @@ public final class OrderDetailsActivity extends BaseActivity {
         }
     }
 
-    @Override
-    public void finish() {
-        Intent intent = new Intent();
-        intent.putExtra(OrdersListActivity.RESULT_ORDER_PROCESS, current);
-        setResult(RESULT_OK, intent);
 
-        super.finish();
+    private void finishOrder(int resultCode) {
+        Intent intent = new Intent();
+        setResult(resultCode, intent);
+
+        finish();
+    }
+
+    private void finishSkip() {
+        finishOrder(OrdersListActivity.RESULT_CODE_SKIP);
+    }
+
+    private void finishClose() {
+        finishOrder(OrdersListActivity.RESULT_CODE_CLOSE);
+    }
+
+    private void finishOk() {
+        ordersRepository.save(
+                order.withProcessedAt(
+                        DateFormatterUtils
+                                .getDateHourInstance()
+                                .now()));
+
+        if (total == 1) {
+            finishOrder(OrdersListActivity.RESULT_CODE_OK_UNIQUE);
+        } else {
+            finishOrder(OrdersListActivity.RESULT_CODE_OK);
+        }
     }
 
     private void extractExtras() {
@@ -190,15 +202,6 @@ public final class OrderDetailsActivity extends BaseActivity {
                     }
                 }
         );
-    }
-
-    private void finishOrder() {
-        ordersRepository.save(
-                order.withProcessedAt(
-                        DateFormatterUtils
-                                .getDateHourInstance()
-                                .now()));
-        finish();
     }
 
     private void setupToolbar() {
@@ -270,9 +273,9 @@ public final class OrderDetailsActivity extends BaseActivity {
     private void showOrder() {
         orderDetailsAdapter =
                 new OrderDetailsAdapter(
-                this,
-                order.items(),
-                codesToProcess);
+                        this,
+                        order.items(),
+                        codesToProcess);
 
         recyclerView.setAdapter(orderDetailsAdapter);
     }
@@ -326,7 +329,7 @@ public final class OrderDetailsActivity extends BaseActivity {
                         new AlertDialog.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int id) {
-                                finish();
+                                finishSkip();
                             }
                         })
                 .setNegativeButton(
@@ -376,8 +379,7 @@ public final class OrderDetailsActivity extends BaseActivity {
                         new AlertDialog.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int id) {
-                                current = total;
-                                finish();
+                                finishClose();
                             }
                         })
                 .setNegativeButton(
@@ -404,12 +406,12 @@ public final class OrderDetailsActivity extends BaseActivity {
 
     @OnClick(R.id.order_details_finish)
     void onFinishedClick() {
-        finishOrder();
+        finishOk();
     }
 
     @OnClick(R.id.order_details_processed)
     void onAlreadyProcessedClick() {
-        finish();
+        finishClose();
     }
 
     @OnClick(R.id.order_details_ship_type)
