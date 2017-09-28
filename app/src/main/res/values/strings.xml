@@ -39,7 +39,7 @@
     <string name="order_details_count_text">%1$d / %2$d</string>
     <string name="order_details_finished">Finalizado:</string>
     <string name="order_details_finished_action">Concluir</string>
-    <string name="order_details_processed_action">Voltar</string>
+    <string name="order_details_processed_action">Fechar</string>
     <string name="order_details_skip_dialog_title">Deseja pular este pedido?</string>
     <string name="order_details_skip_dialog_message">Todo progresso será perdido!</string>
     <string name="order_details_clear_dialog_title">Deseja reiniciar este pedido?</string>

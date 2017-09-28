@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:orientation="vertical">
 
     <android.support.design.widget.AppBarLayout
@@ -18,21 +18,28 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <ImageView
-        android:id="@+id/order_item_image"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="250dp"
-        app:srcCompat="@drawable/ic_image_black_vector" />
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <ImageView
+            android:id="@+id/order_item_image"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="true"
+            app:srcCompat="@drawable/ic_image_black_vector" />
+    </ScrollView>
 
     <TextView
         android:id="@+id/order_item_description"
         android:layout_width="match_parent"
         android:layout_height="70dp"
-        android:padding="8dp"
         android:background="@color/light_grey"
         android:ellipsize="end"
         android:gravity="center"
         android:maxLines="3"
+        android:padding="8dp"
         android:textSize="@dimen/large_text_size"
         tools:text="Descrição do item" />
 </LinearLayout>
