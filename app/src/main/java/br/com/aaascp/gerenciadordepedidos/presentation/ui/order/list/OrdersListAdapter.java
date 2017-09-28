@@ -1,6 +1,7 @@
 package br.com.aaascp.gerenciadordepedidos.presentation.ui.order.list;
 
 import android.content.Context;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -56,6 +57,20 @@ class OrdersListAdapter extends RecyclerView.Adapter<OrdersListAdapter.ViewHolde
 
         holder.lastModifiedAt.setText(order.lastModifiedAt());
 
+
+        int processedColor =
+                ContextCompat.getColor(
+                        context,
+                        R.color.red);
+
+        if (order.isProcessed()) {
+            processedColor =
+                    ContextCompat.getColor(
+                            context,
+                            R.color.green);
+        }
+
+        holder.processedAt.setTextColor(processedColor);
         holder.processedAt.setText(getProcessedAt(order));
 
         holder.root.setOnClickListener(new View.OnClickListener() {

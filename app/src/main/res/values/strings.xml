@@ -51,7 +51,7 @@
 
     <string name="order_item_code_label">Código:</string>
     <string name="order_item_description_label">Descrição:</string>
-    <string name="order_item_quantity_label">Quantidade:</string>
+    <string name="order_item_quantity_label">Processados:</string>
 
     <string name="dashboard_orders_to_process">para processar</string>
     <string name="dashboard_orders_processed">processados</string>

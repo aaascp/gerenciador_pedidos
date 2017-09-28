@@ -62,6 +62,7 @@ public final class OrderDetailsActivity extends BaseActivity {
     @BindView(R.id.order_details_items_left_root)
     View itemsLeftRoot;
 
+    private OrderDetailsAdapter orderDetailsAdapter;
     private CodesToProcess codesToProcess;
     private OrdersRepository ordersRepository;
     private Order order;
@@ -153,6 +154,7 @@ public final class OrderDetailsActivity extends BaseActivity {
                 extras != null) {
 
             codesToProcess = extras.getParcelable(BarcodeProcessorActivity.EXTRA_RESULT);
+            orderDetailsAdapter.updateCodesProcessed(codesToProcess);
             checkFinish();
         }
     }
@@ -266,10 +268,13 @@ public final class OrderDetailsActivity extends BaseActivity {
     }
 
     private void showOrder() {
-        recyclerView.setAdapter(
+        orderDetailsAdapter =
                 new OrderDetailsAdapter(
-                        this,
-                        order.items()));
+                this,
+                order.items(),
+                codesToProcess);
+
+        recyclerView.setAdapter(orderDetailsAdapter);
     }
 
     private void showDetails() {

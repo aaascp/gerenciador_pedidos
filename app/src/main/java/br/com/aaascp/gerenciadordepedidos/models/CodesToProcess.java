@@ -22,7 +22,7 @@ public abstract class CodesToProcess implements Parcelable {
         CODE_INVALID
     }
 
-    abstract Map<String, Integer> codes();
+    public abstract Map<String, Integer> codes();
 
     public Status process(String code) {
         if(!codes().containsKey(code)) {

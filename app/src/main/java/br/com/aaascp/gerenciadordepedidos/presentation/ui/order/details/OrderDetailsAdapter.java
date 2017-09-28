@@ -1,6 +1,7 @@
 package br.com.aaascp.gerenciadordepedidos.presentation.ui.order.details;
 
 import android.content.Context;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 
 import br.com.aaascp.gerenciadordepedidos.R;
+import br.com.aaascp.gerenciadordepedidos.models.CodesToProcess;
 import br.com.aaascp.gerenciadordepedidos.models.OrderItem;
 import br.com.aaascp.gerenciadordepedidos.presentation.utils.ImageLoader;
 import br.com.aaascp.gerenciadordepedidos.utils.StringUtils;
@@ -30,12 +32,16 @@ class OrderDetailsAdapter extends RecyclerView.Adapter<OrderDetailsAdapter.ViewH
     private final List<String> index;
     private final LayoutInflater layoutInflater;
 
+    private CodesToProcess codesProcessed;
+
     OrderDetailsAdapter(
             Context context,
-            Map<String, OrderItem> items) {
+            Map<String, OrderItem> items,
+            CodesToProcess codesProcessed) {
 
         this.context = context;
         this.items = items;
+        this.codesProcessed = codesProcessed;
 
         index = new ArrayList<>();
         index.addAll(items.keySet());
@@ -57,6 +63,9 @@ class OrderDetailsAdapter extends RecyclerView.Adapter<OrderDetailsAdapter.ViewH
         String code = index.get(position);
         final OrderItem item = items.get(code);
 
+        int quantity = item.quantity();
+        int itemsLeft = quantity - codesProcessed.codes().get(item.code());
+
         String imageUrl = item.imageUrl();
         if (!StringUtils.isNullOrEmpty(imageUrl)) {
             ImageLoader.loadImage(
@@ -68,8 +77,24 @@ class OrderDetailsAdapter extends RecyclerView.Adapter<OrderDetailsAdapter.ViewH
         holder.code.setText(
                 String.valueOf(item.code()));
 
+        int processedColor =
+                ContextCompat.getColor(
+                        context,
+                        R.color.red);
+
+        if (itemsLeft == quantity) {
+            processedColor =
+                    ContextCompat.getColor(
+                            context,
+                            R.color.green);
+        }
+
+        holder.quantity.setTextColor(processedColor);
         holder.quantity.setText(
-                String.valueOf(item.quantity()));
+                String.format(
+                        context.getString(R.string.order_details_count_text),
+                        itemsLeft,
+                        quantity));
 
         holder.description.setText(item.description());
 
@@ -84,6 +109,11 @@ class OrderDetailsAdapter extends RecyclerView.Adapter<OrderDetailsAdapter.ViewH
     @Override
     public int getItemCount() {
         return items.size();
+    }
+
+    public void updateCodesProcessed(CodesToProcess codesProcessed) {
+        this.codesProcessed = codesProcessed;
+        notifyDataSetChanged();
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
