@@ -77,19 +77,11 @@ class OrderDetailsAdapter extends RecyclerView.Adapter<OrderDetailsAdapter.ViewH
         holder.code.setText(
                 String.valueOf(item.code()));
 
-        int processedColor =
+        holder.quantity.setTextColor(
                 ContextCompat.getColor(
                         context,
-                        R.color.red);
+                        itemsLeft == quantity ? R.color.green : R.color.red));
 
-        if (itemsLeft == quantity) {
-            processedColor =
-                    ContextCompat.getColor(
-                            context,
-                            R.color.green);
-        }
-
-        holder.quantity.setTextColor(processedColor);
         holder.quantity.setText(
                 String.format(
                         context.getString(R.string.order_details_count_text),

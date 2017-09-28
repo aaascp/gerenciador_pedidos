@@ -44,6 +44,7 @@ class OrdersListAdapter extends RecyclerView.Adapter<OrdersListAdapter.ViewHolde
     @Override
     public void onBindViewHolder(ViewHolder holder, final int position) {
         final Order order = orders.get(position);
+        boolean isProcessed = order.isProcessed();
 
         holder.id.setText(
                 String.valueOf(
@@ -57,21 +58,16 @@ class OrdersListAdapter extends RecyclerView.Adapter<OrdersListAdapter.ViewHolde
 
         holder.lastModifiedAt.setText(order.lastModifiedAt());
 
-
-        int processedColor =
+        holder.processedAt.setTextColor(
                 ContextCompat.getColor(
                         context,
-                        R.color.red);
+                        isProcessed ? R.color.green : R.color.red));
 
-        if (order.isProcessed()) {
-            processedColor =
-                    ContextCompat.getColor(
-                            context,
-                            R.color.green);
-        }
-
-        holder.processedAt.setTextColor(processedColor);
         holder.processedAt.setText(getProcessedAt(order));
+
+        holder.action.setText(
+                context.getString(
+                        isProcessed ? R.string.orders_list_action_details : R.string.orders_list_action_process));
 
         holder.root.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -115,6 +111,9 @@ class OrdersListAdapter extends RecyclerView.Adapter<OrdersListAdapter.ViewHolde
 
         @BindView(R.id.order_last_modification_date_value)
         TextView lastModifiedAt;
+
+        @BindView(R.id.order_action_text)
+        TextView action;
 
         ViewHolder(View itemView) {
             super(itemView);
