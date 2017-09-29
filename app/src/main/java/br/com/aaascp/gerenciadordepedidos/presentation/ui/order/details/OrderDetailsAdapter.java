@@ -16,6 +16,7 @@ import java.util.Map;
 import br.com.aaascp.gerenciadordepedidos.R;
 import br.com.aaascp.gerenciadordepedidos.entity.CodesToProcess;
 import br.com.aaascp.gerenciadordepedidos.entity.OrderItem;
+import br.com.aaascp.gerenciadordepedidos.presentation.ui.order.item.OrderItemActivity;
 import br.com.aaascp.gerenciadordepedidos.presentation.util.ImageLoader;
 import br.com.aaascp.gerenciadordepedidos.util.StringUtils;
 import butterknife.BindView;

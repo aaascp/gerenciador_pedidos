@@ -1,8 +1,9 @@
-package br.com.aaascp.gerenciadordepedidos.presentation.ui.order.details;
+package br.com.aaascp.gerenciadordepedidos.presentation.ui.order.item;
 
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -13,7 +14,6 @@ import br.com.aaascp.gerenciadordepedidos.R;
 import br.com.aaascp.gerenciadordepedidos.entity.OrderItem;
 import br.com.aaascp.gerenciadordepedidos.presentation.ui.BaseActivity;
 import br.com.aaascp.gerenciadordepedidos.presentation.util.ImageLoader;
-import br.com.aaascp.gerenciadordepedidos.util.StringUtils;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -21,9 +21,10 @@ import butterknife.ButterKnife;
  * Created by andre on 27/09/17.
  */
 
-public final class OrderItemActivity extends BaseActivity {
+public final class OrderItemActivity extends BaseActivity implements OrderItemContract.View {
 
     public static final String EXTRA_ITEM = "EXTRA_ITEM";
+
     @BindView(R.id.order_item_toolbar)
     Toolbar toolbar;
 
@@ -33,7 +34,7 @@ public final class OrderItemActivity extends BaseActivity {
     @BindView(R.id.order_item_description)
     TextView descriptionView;
 
-    private OrderItem item;
+    private OrderItemContract.Presenter presenter;
 
     public static void startForItem(Context context, OrderItem item) {
         Intent intent = new Intent(context, OrderItemActivity.class);
@@ -50,20 +51,28 @@ public final class OrderItemActivity extends BaseActivity {
         setContentView(R.layout.activity_order_item);
         ButterKnife.bind(this);
 
-        extractExtras();
-        setupToolbar();
-        bindView();
+        new OrderItemPresenter(this, getOrderItemExtra());
     }
 
-    private void extractExtras() {
+    private OrderItem getOrderItemExtra() {
         Bundle extras = getIntent().getExtras();
 
         if (extras != null) {
-            item = extras.getParcelable(EXTRA_ITEM);
+            return extras.getParcelable(EXTRA_ITEM);
         }
+
+        return null;
     }
 
-    private void setupToolbar() {
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        presenter.start();
+    }
+
+    @Override
+    public void setupToolbar(String code) {
         toolbar.setNavigationIcon(R.drawable.ic_close_white_vector);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -75,18 +84,24 @@ public final class OrderItemActivity extends BaseActivity {
         toolbar.setTitle(
                 String.format(
                         getString(R.string.order_item_title),
-                        item.code()));
+                        code));
     }
 
-    private void bindView() {
-        String imageUrl = item.imageUrl();
-        if (!StringUtils.isNullOrEmpty(imageUrl)) {
-            ImageLoader.loadImage(
-                    this,
-                    imageUrl,
-                    imageView);
-        }
+    @Override
+    public void loadImage(@NonNull String imageUrl) {
+        ImageLoader.loadImage(
+                this,
+                imageUrl,
+                imageView);
+    }
 
-        descriptionView.setText(item.description());
+    @Override
+    public void setDescription(String description) {
+        descriptionView.setText(description);
+    }
+
+    @Override
+    public void setPresenter(@NonNull OrderItemContract.Presenter presenter) {
+        this.presenter = presenter;
     }
 }
