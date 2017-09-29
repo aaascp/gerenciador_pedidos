@@ -138,8 +138,7 @@ public final class OrderDetailsActivity extends BaseActivity {
                 extras != null) {
 
             codesToProcess = extras.getParcelable(BarcodeProcessorActivity.EXTRA_RESULT);
-            orderDetailsAdapter.updateCodesProcessed(codesToProcess);
-            checkFinish();
+            updateCodesProcessed();
         }
     }
 
@@ -188,35 +187,6 @@ public final class OrderDetailsActivity extends BaseActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private void finishOrder(int resultCode) {
-        Intent intent = new Intent();
-        setResult(resultCode, intent);
-
-        finish();
-    }
-
-    private void finishSkip() {
-        finishOrder(OrdersListActivity.RESULT_CODE_SKIP);
-    }
-
-    private void finishClose() {
-        finishOrder(OrdersListActivity.RESULT_CODE_CLOSE);
-    }
-
-    private void finishOk() {
-        ordersRepository.save(
-                order.withProcessedAt(
-                        DateFormatterUtils
-                                .getDateHourInstance()
-                                .now()));
-
-        if (total == 1) {
-            finishOrder(OrdersListActivity.RESULT_CODE_OK_UNIQUE);
-        } else {
-            finishOrder(OrdersListActivity.RESULT_CODE_OK);
-        }
-    }
-
     private void extractExtras(Bundle extras) {
         if (extras != null) {
             orderId = extras.getInt(EXTRA_ORDER_ID, INVALID_ORDER_ID);
@@ -231,6 +201,7 @@ public final class OrderDetailsActivity extends BaseActivity {
 
     private void setupOrder() {
         if (order != null) {
+            showOrder();
             return;
         }
 
@@ -241,7 +212,7 @@ public final class OrderDetailsActivity extends BaseActivity {
                     public void onSuccess(Order data) {
                         order = data;
                         codesToProcess = order.codesToProcess();
-                        setItemsLeft(codesToProcess.itemsLeft());
+
                         showOrder();
                     }
 
@@ -260,6 +231,11 @@ public final class OrderDetailsActivity extends BaseActivity {
     private void refreshOrder() {
         order = null;
         setupOrder();
+    }
+
+    private void updateCodesProcessed() {
+        orderDetailsAdapter.updateCodesProcessed(codesToProcess);
+        checkFinish();
     }
 
     private void setupToolbar() {
@@ -301,23 +277,6 @@ public final class OrderDetailsActivity extends BaseActivity {
                         total));
     }
 
-    private void checkFinish() {
-        int itemsLeftCount = codesToProcess.itemsLeft();
-
-        finishRoot.setVisibility(View.GONE);
-        itemsLeftRoot.setVisibility(View.GONE);
-        alreadyProcessedRoot.setVisibility(View.GONE);
-
-        if (order.isProcessed()) {
-            alreadyProcessedRoot.setVisibility(View.VISIBLE);
-        } else if (itemsLeftCount == 0) {
-            finishRoot.setVisibility(View.VISIBLE);
-        } else {
-            itemsLeftRoot.setVisibility(View.VISIBLE);
-            setItemsLeft(itemsLeftCount);
-        }
-    }
-
     private void setItemsLeft(int itemsLeftCount) {
         int total = order.size();
 
@@ -329,6 +288,8 @@ public final class OrderDetailsActivity extends BaseActivity {
     }
 
     private void showOrder() {
+        checkFinish();
+
         orderDetailsAdapter =
                 new OrderDetailsAdapter(
                         this,
@@ -356,6 +317,52 @@ public final class OrderDetailsActivity extends BaseActivity {
         }
 
         OrderMoreDetailsActivity.startForOrder(this, order);
+    }
+
+    private void checkFinish() {
+        int itemsLeftCount = codesToProcess.itemsLeft();
+
+        finishRoot.setVisibility(View.GONE);
+        itemsLeftRoot.setVisibility(View.GONE);
+        alreadyProcessedRoot.setVisibility(View.GONE);
+
+        if (order.isProcessed()) {
+            alreadyProcessedRoot.setVisibility(View.VISIBLE);
+        } else if (itemsLeftCount == 0) {
+            finishRoot.setVisibility(View.VISIBLE);
+        } else {
+            itemsLeftRoot.setVisibility(View.VISIBLE);
+            setItemsLeft(itemsLeftCount);
+        }
+    }
+
+    private void finishOrder(int resultCode) {
+        Intent intent = new Intent();
+        setResult(resultCode, intent);
+
+        finish();
+    }
+
+    private void finishSkip() {
+        finishOrder(OrdersListActivity.RESULT_CODE_SKIP);
+    }
+
+    private void finishClose() {
+        finishOrder(OrdersListActivity.RESULT_CODE_CLOSE);
+    }
+
+    private void finishOk() {
+        ordersRepository.save(
+                order.withProcessedAt(
+                        DateFormatterUtils
+                                .getDateHourInstance()
+                                .now()));
+
+        if (total == 1) {
+            finishOrder(OrdersListActivity.RESULT_CODE_OK_UNIQUE);
+        } else {
+            finishOrder(OrdersListActivity.RESULT_CODE_OK);
+        }
     }
 
     @Override
