@@ -1,4 +1,4 @@
-package br.com.aaascp.gerenciadordepedidos.models;
+package br.com.aaascp.gerenciadordepedidos.entity;
 
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
@@ -8,7 +8,7 @@ import com.google.auto.value.AutoValue;
 import java.util.HashMap;
 import java.util.Map;
 
-import br.com.aaascp.gerenciadordepedidos.utils.StringUtils;
+import br.com.aaascp.gerenciadordepedidos.util.StringUtils;
 
 /**
  * Created by andre on 10/07/17.

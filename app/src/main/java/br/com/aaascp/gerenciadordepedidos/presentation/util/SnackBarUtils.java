@@ -1,4 +1,4 @@
-package br.com.aaascp.gerenciadordepedidos.presentation.utils;
+package br.com.aaascp.gerenciadordepedidos.presentation.util;
 
 import android.support.design.widget.Snackbar;
 import android.view.View;

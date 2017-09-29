@@ -1,7 +1,6 @@
 package br.com.aaascp.gerenciadordepedidos.presentation.ui.order.list;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -12,8 +11,7 @@ import android.widget.TextView;
 import java.util.List;
 
 import br.com.aaascp.gerenciadordepedidos.R;
-import br.com.aaascp.gerenciadordepedidos.models.Order;
-import br.com.aaascp.gerenciadordepedidos.presentation.ui.order.details.OrderDetailsActivity;
+import br.com.aaascp.gerenciadordepedidos.entity.Order;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 

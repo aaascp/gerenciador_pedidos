@@ -1,4 +1,4 @@
-package br.com.aaascp.gerenciadordepedidos.utils;
+package br.com.aaascp.gerenciadordepedidos.util;
 
 import android.Manifest;
 import android.content.Context;
@@ -8,7 +8,7 @@ import android.support.v4.content.ContextCompat;
 
 import br.com.aaascp.gerenciadordepedidos.R;
 import br.com.aaascp.gerenciadordepedidos.presentation.ui.BaseActivity;
-import br.com.aaascp.gerenciadordepedidos.presentation.utils.DialogUtils;
+import br.com.aaascp.gerenciadordepedidos.presentation.util.DialogUtils;
 
 /**
  * Created by andre on 28/09/17.

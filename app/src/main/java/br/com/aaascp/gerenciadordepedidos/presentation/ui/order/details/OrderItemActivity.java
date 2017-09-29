@@ -10,10 +10,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import br.com.aaascp.gerenciadordepedidos.R;
-import br.com.aaascp.gerenciadordepedidos.models.OrderItem;
+import br.com.aaascp.gerenciadordepedidos.entity.OrderItem;
 import br.com.aaascp.gerenciadordepedidos.presentation.ui.BaseActivity;
-import br.com.aaascp.gerenciadordepedidos.presentation.utils.ImageLoader;
-import br.com.aaascp.gerenciadordepedidos.utils.StringUtils;
+import br.com.aaascp.gerenciadordepedidos.presentation.util.ImageLoader;
+import br.com.aaascp.gerenciadordepedidos.util.StringUtils;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 

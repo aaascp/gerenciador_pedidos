@@ -1,4 +1,4 @@
-package br.com.aaascp.gerenciadordepedidos.models;
+package br.com.aaascp.gerenciadordepedidos.entity;
 
 import android.os.Parcelable;
 

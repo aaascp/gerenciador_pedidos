@@ -14,10 +14,10 @@ import java.util.List;
 import java.util.Map;
 
 import br.com.aaascp.gerenciadordepedidos.R;
-import br.com.aaascp.gerenciadordepedidos.models.CodesToProcess;
-import br.com.aaascp.gerenciadordepedidos.models.OrderItem;
-import br.com.aaascp.gerenciadordepedidos.presentation.utils.ImageLoader;
-import br.com.aaascp.gerenciadordepedidos.utils.StringUtils;
+import br.com.aaascp.gerenciadordepedidos.entity.CodesToProcess;
+import br.com.aaascp.gerenciadordepedidos.entity.OrderItem;
+import br.com.aaascp.gerenciadordepedidos.presentation.util.ImageLoader;
+import br.com.aaascp.gerenciadordepedidos.util.StringUtils;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 

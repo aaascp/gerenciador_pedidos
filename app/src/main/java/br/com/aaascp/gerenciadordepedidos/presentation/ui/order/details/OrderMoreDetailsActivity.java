@@ -9,7 +9,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import br.com.aaascp.gerenciadordepedidos.R;
-import br.com.aaascp.gerenciadordepedidos.models.Order;
+import br.com.aaascp.gerenciadordepedidos.entity.Order;
 import br.com.aaascp.gerenciadordepedidos.presentation.ui.BaseActivity;
 import butterknife.BindView;
 import butterknife.ButterKnife;

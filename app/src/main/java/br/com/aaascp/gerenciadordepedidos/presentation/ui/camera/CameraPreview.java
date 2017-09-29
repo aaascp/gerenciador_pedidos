@@ -8,7 +8,7 @@ import com.google.android.gms.vision.CameraSource;
 import java.io.IOException;
 
 import br.com.aaascp.gerenciadordepedidos.presentation.ui.BaseActivity;
-import br.com.aaascp.gerenciadordepedidos.utils.PermissionUtils;
+import br.com.aaascp.gerenciadordepedidos.util.PermissionUtils;
 
 /**
  * Created by andre on 21/09/17.

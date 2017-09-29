@@ -1,4 +1,4 @@
-package br.com.aaascp.gerenciadordepedidos.utils;
+package br.com.aaascp.gerenciadordepedidos.util;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;

@@ -17,9 +17,9 @@ import com.google.android.gms.vision.CameraSource;
 import com.google.android.gms.vision.barcode.BarcodeDetector;
 
 import br.com.aaascp.gerenciadordepedidos.R;
-import br.com.aaascp.gerenciadordepedidos.models.CodesToProcess;
+import br.com.aaascp.gerenciadordepedidos.entity.CodesToProcess;
 import br.com.aaascp.gerenciadordepedidos.presentation.ui.BaseActivity;
-import br.com.aaascp.gerenciadordepedidos.presentation.utils.SnackBarUtils;
+import br.com.aaascp.gerenciadordepedidos.presentation.util.SnackBarUtils;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 

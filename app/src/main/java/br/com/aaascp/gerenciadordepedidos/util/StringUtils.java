@@ -1,4 +1,4 @@
-package br.com.aaascp.gerenciadordepedidos.utils;
+package br.com.aaascp.gerenciadordepedidos.util;
 
 /**
  * Created by andre on 22/09/17.

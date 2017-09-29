@@ -1,4 +1,4 @@
-package br.com.aaascp.gerenciadordepedidos.presentation.custom_views;
+package br.com.aaascp.gerenciadordepedidos.presentation.custom;
 
 import android.content.Context;
 import android.content.res.TypedArray;

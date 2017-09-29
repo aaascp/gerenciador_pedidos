@@ -7,16 +7,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import br.com.aaascp.gerenciadordepedidos.models.CustomerInfo;
-import br.com.aaascp.gerenciadordepedidos.models.Order;
-import br.com.aaascp.gerenciadordepedidos.models.OrderFilterList;
-import br.com.aaascp.gerenciadordepedidos.models.OrderItem;
-import br.com.aaascp.gerenciadordepedidos.models.ShipmentInfo;
-import br.com.aaascp.gerenciadordepedidos.repository.filters.OrderFilter;
-import br.com.aaascp.gerenciadordepedidos.repository.filters.IdFilter;
-import br.com.aaascp.gerenciadordepedidos.repository.filters.StatusFilter;
-import br.com.aaascp.gerenciadordepedidos.utils.DateFormatterUtils;
-import br.com.aaascp.gerenciadordepedidos.utils.StringUtils;
+import br.com.aaascp.gerenciadordepedidos.entity.CustomerInfo;
+import br.com.aaascp.gerenciadordepedidos.entity.Order;
+import br.com.aaascp.gerenciadordepedidos.entity.OrderFilterList;
+import br.com.aaascp.gerenciadordepedidos.entity.OrderItem;
+import br.com.aaascp.gerenciadordepedidos.entity.ShipmentInfo;
+import br.com.aaascp.gerenciadordepedidos.repository.filter.OrderFilter;
+import br.com.aaascp.gerenciadordepedidos.repository.filter.IdFilter;
+import br.com.aaascp.gerenciadordepedidos.repository.filter.StatusFilter;
+import br.com.aaascp.gerenciadordepedidos.util.DateFormatterUtils;
 
 /**
  * Created by andre on 22/09/17.

@@ -1,4 +1,4 @@
-package br.com.aaascp.gerenciadordepedidos.presentation.utils;
+package br.com.aaascp.gerenciadordepedidos.presentation.util;
 
 import android.content.Context;
 import android.widget.ImageView;

@@ -1,4 +1,4 @@
-package br.com.aaascp.gerenciadordepedidos.models;
+package br.com.aaascp.gerenciadordepedidos.entity;
 
 import android.os.Parcelable;
 
@@ -6,7 +6,7 @@ import com.google.auto.value.AutoValue;
 
 import java.util.List;
 
-import br.com.aaascp.gerenciadordepedidos.repository.filters.OrderFilter;
+import br.com.aaascp.gerenciadordepedidos.repository.filter.OrderFilter;
 
 /**
  * Created by andre on 27/09/17.

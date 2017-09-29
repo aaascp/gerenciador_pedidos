@@ -12,11 +12,11 @@ import android.view.View;
 import java.util.List;
 
 import br.com.aaascp.gerenciadordepedidos.R;
-import br.com.aaascp.gerenciadordepedidos.models.Order;
-import br.com.aaascp.gerenciadordepedidos.models.OrderFilterList;
+import br.com.aaascp.gerenciadordepedidos.entity.Order;
+import br.com.aaascp.gerenciadordepedidos.entity.OrderFilterList;
 import br.com.aaascp.gerenciadordepedidos.presentation.ui.BaseActivity;
 import br.com.aaascp.gerenciadordepedidos.presentation.ui.order.details.OrderDetailsActivity;
-import br.com.aaascp.gerenciadordepedidos.presentation.utils.EmptyStateAdapter;
+import br.com.aaascp.gerenciadordepedidos.presentation.util.EmptyStateAdapter;
 import br.com.aaascp.gerenciadordepedidos.repository.OrdersRepository;
 import br.com.aaascp.gerenciadordepedidos.repository.callback.RepositoryCallback;
 import butterknife.BindView;
