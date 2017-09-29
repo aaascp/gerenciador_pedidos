@@ -22,7 +22,7 @@
 
     <fragment
         android:id="@+id/main_dashboard"
-        android:name="br.com.aaascp.gerenciadordepedidos.presentation.ui.main.DashboardFragment"
+        android:name="br.com.aaascp.gerenciadordepedidos.presentation.ui.main.dashboard.DashboardFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
