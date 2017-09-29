@@ -1,4 +1,4 @@
-package br.com.aaascp.gerenciadordepedidos.presentation.ui.order.details;
+package br.com.aaascp.gerenciadordepedidos.presentation.ui.order.info;
 
 import android.content.Context;
 import android.content.Intent;
@@ -18,40 +18,40 @@ import butterknife.ButterKnife;
  * Created by andre on 27/09/17.
  */
 
-public final class OrderMoreDetailsActivity extends BaseActivity {
+public final class OrderInfoActivity extends BaseActivity {
 
     private static final String EXTRA_ORDER = "EXTRA_ORDER";
 
 
-    @BindView(R.id.order_details_more_details_toolbar)
+    @BindView(R.id.order_info_toolbar)
     Toolbar toolbar;
 
-    @BindView(R.id.more_details_order_size_value)
+    @BindView(R.id.info_order_size_value)
     TextView orderSize;
 
-    @BindView(R.id.more_details_order_processed_at_value)
+    @BindView(R.id.info_order_processed_at_value)
     TextView orderProcessedAt;
 
-    @BindView(R.id.more_details_order_last_modification_value)
+    @BindView(R.id.info_order_last_modification_value)
     TextView orderLastModification;
 
-    @BindView(R.id.more_details_shipment_type_value)
+    @BindView(R.id.info_shipment_type_value)
     TextView shipmentType;
 
-    @BindView(R.id.more_details_shipment_address_value)
+    @BindView(R.id.info_shipment_address_value)
     TextView shipmentAddress;
 
-    @BindView(R.id.more_details_customer_id_value)
+    @BindView(R.id.info_customer_id_value)
     TextView customerId;
 
-    @BindView(R.id.more_details_customer_name_value)
+    @BindView(R.id.info_customer_name_value)
     TextView customerName;
 
     private Order order;
 
 
     public static void startForOrder(Context context, Order order) {
-        Intent intent = new Intent(context, OrderMoreDetailsActivity.class);
+        Intent intent = new Intent(context, OrderInfoActivity.class);
 
         intent.putExtra(EXTRA_ORDER, order);
 
@@ -62,7 +62,7 @@ public final class OrderMoreDetailsActivity extends BaseActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.activity_order_details_more_details);
+        setContentView(R.layout.activity_order_info);
         ButterKnife.bind(this);
 
         extractExtras();
@@ -81,7 +81,7 @@ public final class OrderMoreDetailsActivity extends BaseActivity {
     private void setupTitle() {
         toolbar.setTitle(
                 String.format(
-                        getString(R.string.more_details_title),
+                        getString(R.string.info_title),
                         order.id()));
         toolbar.setNavigationIcon(R.drawable.ic_back_white_vector);
 
@@ -112,6 +112,6 @@ public final class OrderMoreDetailsActivity extends BaseActivity {
             return order.processedAt();
         }
 
-        return getString(R.string.more_details_order_processed_at_empty);
+        return getString(R.string.info_order_processed_at_empty);
     }
 }

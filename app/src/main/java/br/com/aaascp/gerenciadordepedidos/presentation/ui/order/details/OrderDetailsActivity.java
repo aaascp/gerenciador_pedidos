@@ -23,6 +23,7 @@ import br.com.aaascp.gerenciadordepedidos.entity.Order;
 import br.com.aaascp.gerenciadordepedidos.presentation.custom.ValueLabelView;
 import br.com.aaascp.gerenciadordepedidos.presentation.ui.BaseActivity;
 import br.com.aaascp.gerenciadordepedidos.presentation.ui.camera.BarcodeProcessorActivity;
+import br.com.aaascp.gerenciadordepedidos.presentation.ui.order.info.OrderInfoActivity;
 import br.com.aaascp.gerenciadordepedidos.presentation.ui.order.list.OrdersListActivity;
 import br.com.aaascp.gerenciadordepedidos.presentation.util.EmptyStateAdapter;
 import br.com.aaascp.gerenciadordepedidos.repository.OrdersRepository;
@@ -316,7 +317,7 @@ public final class OrderDetailsActivity extends BaseActivity {
             return;
         }
 
-        OrderMoreDetailsActivity.startForOrder(this, order);
+        OrderInfoActivity.startForOrder(this, order);
     }
 
     private void checkFinish() {

@@ -9,7 +9,7 @@
         android:layout_height="wrap_content">
 
         <android.support.v7.widget.Toolbar
-            android:id="@+id/order_details_more_details_toolbar"
+            android:id="@+id/order_info_toolbar"
             style="@style/ToolbarStyle"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
@@ -27,11 +27,11 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-            <include layout="@layout/include_more_details_order" />
+            <include layout="@layout/include_info_order" />
 
-            <include layout="@layout/include_more_details_shipment" />
+            <include layout="@layout/include_info_shipment" />
 
-            <include layout="@layout/include_more_details_customer" />
+            <include layout="@layout/include_info_customer" />
         </LinearLayout>
 
     </android.support.v4.widget.NestedScrollView>

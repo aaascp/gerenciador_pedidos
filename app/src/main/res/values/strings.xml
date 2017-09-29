@@ -19,21 +19,21 @@
     <string name="order_list_processed_at_empty">Não processado</string>
     <string name="order_list_empty">Nenhum pedido.</string>
 
-    <string name="more_details_title">Pedido: #%1$d</string>
+    <string name="info_title">Pedido: #%1$d</string>
 
-    <string name="more_details_order_title">Detalhes do pedido</string>
-    <string name="more_details_order_size_label">Items</string>
-    <string name="more_details_order_processed_at_label">Processado em:</string>
-    <string name="more_details_order_last_modification_label">Última modificação</string>
-    <string name="more_details_order_processed_at_empty">Não processado</string>
+    <string name="info_order_title">Detalhes do pedido</string>
+    <string name="info_order_size_label">Items</string>
+    <string name="info_order_processed_at_label">Processado em:</string>
+    <string name="info_order_last_modification_label">Última modificação</string>
+    <string name="info_order_processed_at_empty">Não processado</string>
 
-    <string name="more_details_shipment_title">Detalhes de entrega</string>
-    <string name="more_details_shipment_type_label">Tipo:</string>
-    <string name="more_details_shipment_address_label">Endereço:</string>
+    <string name="info_shipment_title">Detalhes de entrega</string>
+    <string name="info_shipment_type_label">Tipo:</string>
+    <string name="info_shipment_address_label">Endereço:</string>
 
-    <string name="more_details_customer_title">Detalhes do consumidor</string>
-    <string name="more_details_customer_id_label">ID:</string>
-    <string name="more_details_customer_name_label">Nome:</string>
+    <string name="info_customer_title">Detalhes do consumidor</string>
+    <string name="info_customer_id_label">ID:</string>
+    <string name="info_customer_name_label">Nome:</string>
 
     <string name="order_details_count">Items processados:</string>
     <string name="order_details_count_text">%1$d / %2$d</string>

@@ -12,7 +12,7 @@
         android:layout_gravity="center_vertical"
         android:gravity="center_vertical"
         android:paddingLeft="8dp"
-        android:text="@string/more_details_shipment_title"
+        android:text="@string/info_shipment_title"
         android:textSize="@dimen/large_text_size"
         android:textStyle="bold"
         tools:ignore="RtlSymmetry" />
@@ -30,40 +30,40 @@
             android:layout_height="wrap_content">
 
             <TextView
-                android:id="@+id/more_details_shipment_type_label"
+                android:id="@+id/info_shipment_type_label"
                 style="@style/OrdersList.Labels"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="8dp"
                 android:layout_marginTop="8dp"
-                android:text="@string/more_details_shipment_type_label"
-                app:layout_constraintBottom_toTopOf="@+id/more_details_shipment_address_label"
+                android:text="@string/info_shipment_type_label"
+                app:layout_constraintBottom_toTopOf="@+id/info_shipment_address_label"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-                android:id="@+id/more_details_shipment_address_label"
+                android:id="@+id/info_shipment_address_label"
                 style="@style/OrdersList.Labels"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:text="@string/more_details_shipment_address_label"
-                app:layout_constraintBottom_toTopOf="@+id/more_details_shipment_address_value"
-                app:layout_constraintLeft_toLeftOf="@+id/more_details_shipment_type_label"
-                app:layout_constraintTop_toBottomOf="@+id/more_details_shipment_type_label" />
+                android:text="@string/info_shipment_address_label"
+                app:layout_constraintBottom_toTopOf="@+id/info_shipment_address_value"
+                app:layout_constraintLeft_toLeftOf="@+id/info_shipment_type_label"
+                app:layout_constraintTop_toBottomOf="@+id/info_shipment_type_label" />
 
             <TextView
-                android:id="@+id/more_details_shipment_type_value"
+                android:id="@+id/info_shipment_type_value"
                 style="@style/OrdersList.Values"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="4dp"
-                app:layout_constraintLeft_toRightOf="@+id/more_details_shipment_type_label"
-                app:layout_constraintTop_toTopOf="@+id/more_details_shipment_type_label"
+                app:layout_constraintLeft_toRightOf="@+id/info_shipment_type_label"
+                app:layout_constraintTop_toTopOf="@+id/info_shipment_type_label"
                 tools:text="Transportadora" />
 
             <TextView
-                android:id="@+id/more_details_shipment_address_value"
+                android:id="@+id/info_shipment_address_value"
                 style="@style/OrdersList.Values"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -73,9 +73,9 @@
                 android:ellipsize="end"
                 android:maxLines="3"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintLeft_toLeftOf="@+id/more_details_shipment_type_label"
+                app:layout_constraintLeft_toLeftOf="@+id/info_shipment_type_label"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/more_details_shipment_address_label"
+                app:layout_constraintTop_toBottomOf="@+id/info_shipment_address_label"
                 tools:text="Avenida Engenheiro Max de Souza, 1293, Coqueiros" />
 
 
