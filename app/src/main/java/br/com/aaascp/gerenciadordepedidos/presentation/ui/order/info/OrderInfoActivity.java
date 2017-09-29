@@ -3,6 +3,7 @@ package br.com.aaascp.gerenciadordepedidos.presentation.ui.order.info;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -18,10 +19,9 @@ import butterknife.ButterKnife;
  * Created by andre on 27/09/17.
  */
 
-public final class OrderInfoActivity extends BaseActivity {
+public final class OrderInfoActivity extends BaseActivity implements OrderInfoContract.View {
 
     private static final String EXTRA_ORDER = "EXTRA_ORDER";
-
 
     @BindView(R.id.order_info_toolbar)
     Toolbar toolbar;
@@ -47,8 +47,7 @@ public final class OrderInfoActivity extends BaseActivity {
     @BindView(R.id.info_customer_name_value)
     TextView customerName;
 
-    private Order order;
-
+    private OrderInfoContract.Presenter presenter;
 
     public static void startForOrder(Context context, Order order) {
         Intent intent = new Intent(context, OrderInfoActivity.class);
@@ -65,24 +64,33 @@ public final class OrderInfoActivity extends BaseActivity {
         setContentView(R.layout.activity_order_info);
         ButterKnife.bind(this);
 
-        extractExtras();
-        bindView();
-        setupTitle();
+        new OrderInfoPresenter(this, getOrderExtra());
     }
 
-    private void extractExtras() {
+    private Order getOrderExtra() {
         Bundle extras = getIntent().getExtras();
 
         if (extras != null) {
-            order = extras.getParcelable(EXTRA_ORDER);
+            return extras.getParcelable(EXTRA_ORDER);
         }
+
+        return null;
     }
 
-    private void setupTitle() {
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        presenter.start();
+    }
+
+    @Override
+    public void setupToolbar(int id) {
         toolbar.setTitle(
                 String.format(
                         getString(R.string.info_title),
-                        order.id()));
+                        id));
+
         toolbar.setNavigationIcon(R.drawable.ic_back_white_vector);
 
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
@@ -93,25 +101,39 @@ public final class OrderInfoActivity extends BaseActivity {
         });
     }
 
-    private void bindView() {
-        orderSize.setText(String.valueOf(order.size()));
-        orderProcessedAt.setText(getProcessedAt());
-        orderLastModification.setText(order.lastModifiedAt());
-
-        shipmentType.setText(order.shipmentInfo().shipType());
-        shipmentAddress.setText(order.shipmentInfo().address());
-
-        customerId.setText(
-                String.valueOf(
-                        order.customerInfo().id()));
-        customerName.setText(order.customerInfo().name());
+    @Override
+    public void setProcessedOrderInfo(String size, String processedAt, String lastModification) {
+        setOrderInfo(size, processedAt, lastModification);
     }
 
-    private String getProcessedAt() {
-        if (order.isProcessed()) {
-            return order.processedAt();
-        }
+    @Override
+    public void setNotProcessedOrderInfo(String size, String lastModification) {
+        setOrderInfo(
+                size,
+                getString(R.string.info_order_processed_at_empty),
+                lastModification);
+    }
 
-        return getString(R.string.info_order_processed_at_empty);
+    @Override
+    public void setShipmentInfo(String type, String address) {
+        shipmentType.setText(type);
+        shipmentAddress.setText(address);
+    }
+
+    @Override
+    public void setCustomerInfo(String id, String name) {
+        customerId.setText(id);
+        customerName.setText(name);
+    }
+
+    @Override
+    public void setPresenter(@NonNull OrderInfoContract.Presenter presenter) {
+        this.presenter = presenter;
+    }
+
+    private void setOrderInfo(String size, String processedAt, String lastModification) {
+        orderSize.setText(size);
+        orderProcessedAt.setText(processedAt);
+        orderLastModification.setText(lastModification);
     }
 }
