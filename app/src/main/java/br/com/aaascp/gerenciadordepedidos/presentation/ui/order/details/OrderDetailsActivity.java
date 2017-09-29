@@ -484,7 +484,6 @@ public final class OrderDetailsActivity extends BaseActivity {
         startActivityForResult(
                 BarcodeProcessorActivity.getIntentForOrder(
                         this,
-                        order.id(),
                         codesToProcess),
                 REQUEST_CODE_PROCESS);
     }

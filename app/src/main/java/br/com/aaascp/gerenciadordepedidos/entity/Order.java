@@ -40,7 +40,7 @@ public abstract class Order implements Parcelable {
                     isProcessed() ? 0 : items().get(code).quantity());
         }
 
-        return CodesToProcess.create(codes);
+        return CodesToProcess.create(codes, id());
     }
 
     public boolean isProcessed() {

@@ -24,6 +24,8 @@ public abstract class CodesToProcess implements Parcelable {
 
     public abstract Map<String, Integer> codes();
 
+    public abstract int orderId();
+
     public Status process(String code) {
         if(!codes().containsKey(code)) {
             return Status.CODE_INVALID;
@@ -44,7 +46,7 @@ public abstract class CodesToProcess implements Parcelable {
     }
 
 
-    public static CodesToProcess create(Map<String, Integer> codes) {
-        return new AutoValue_CodesToProcess(codes);
+    public static CodesToProcess create(Map<String, Integer> codes, int orderId) {
+        return new AutoValue_CodesToProcess(codes, orderId);
     }
 }

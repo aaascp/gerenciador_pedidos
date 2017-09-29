@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.ColorRes;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.Toolbar;
@@ -31,12 +32,11 @@ import static android.content.res.Configuration.ORIENTATION_PORTRAIT;
  */
 
 public final class BarcodeProcessorActivity extends BaseActivity
-        implements OnItemProcessedListener {
+        implements OnItemProcessedListener, BarcodeProcessorContract.View {
 
     public static final String EXTRA_RESULT = "EXTRA_RESULT";
 
     private static final String EXTRA_CODES_TO_PROCESS = "EXTRA_CODES_TO_PROCESS";
-    private static final String EXTRA_ORDER_ID = "EXTRA_ORDER_ID";
 
     private static final int PROCESSING_TIME = 3 * 1000;
 
@@ -60,13 +60,10 @@ public final class BarcodeProcessorActivity extends BaseActivity
     @BindView(R.id.barcode_processor_items_left)
     TextView itemsLeft;
 
-    private CodesToProcess codesToProcess;
-    private int orderId;
-    private boolean ready;
+    private BarcodeProcessorContract.Presenter presenter;
 
     public static Intent getIntentForOrder(
             Context context,
-            int orderId,
             CodesToProcess codesToProcess) {
 
         Intent intent = new Intent(
@@ -74,7 +71,6 @@ public final class BarcodeProcessorActivity extends BaseActivity
                 BarcodeProcessorActivity.class);
 
         intent.putExtra(EXTRA_CODES_TO_PROCESS, codesToProcess);
-        intent.putExtra(EXTRA_ORDER_ID, orderId);
 
         return intent;
     }
@@ -87,12 +83,10 @@ public final class BarcodeProcessorActivity extends BaseActivity
 
         ButterKnife.bind(this);
 
-        extractExtras();
+        new BarcodeProcessorPresenter(
+                this,
+                getCodesToProcessExtra());
 
-        ready = true;
-
-        setupToolbar();
-        setItemsLeft();
         setupBarcodeDetector();
         setupCamera();
     }
@@ -102,61 +96,16 @@ public final class BarcodeProcessorActivity extends BaseActivity
         super.onStart();
 
         setupOrientation();
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-
-        outState.putParcelable(EXTRA_CODES_TO_PROCESS, codesToProcess);
-    }
-
-    @Override
-    protected void onRestoreInstanceState(Bundle savedInstanceState) {
-        super.onRestoreInstanceState(savedInstanceState);
-
-        codesToProcess = savedInstanceState.getParcelable(EXTRA_CODES_TO_PROCESS);
-        setItemsLeft();
-    }
-
-    @Override
-    public void finish() {
-        Intent result = new Intent();
-        result.putExtra(EXTRA_RESULT, codesToProcess);
-        setResult(RESULT_OK, result);
-
-        super.finish();
+        presenter.start();
     }
 
     @Override
     public void onItemProcessed(String code) {
-        if (!ready) {
-            return;
-        }
-
-        ready = false;
-
-        CodesToProcess.Status status = codesToProcess.process(code);
-        showMessage(status, code);
-
-        if (status == CodesToProcess.Status.SUCCESS) {
-            showProcessing(R.color.green);
-            setItemsLeft();
-            checkFinish();
-        } else {
-            showProcessing(R.color.red);
-        }
+        presenter.onItemProcessed(code);
     }
 
-    private void extractExtras() {
-        Bundle extras = getIntent().getExtras();
-        if (extras != null) {
-            codesToProcess = extras.getParcelable(EXTRA_CODES_TO_PROCESS);
-            orderId = extras.getInt(EXTRA_ORDER_ID);
-        }
-    }
-
-    private void setupToolbar() {
+    @Override
+    public void setupToolbar(int orderId) {
         title.setText(
                 String.format(
                         getString(R.string.barcode_processor_title),
@@ -171,18 +120,13 @@ public final class BarcodeProcessorActivity extends BaseActivity
         });
     }
 
-    private void setItemsLeft() {
-        int itemsLeftCount = codesToProcess.itemsLeft();
-
+    @Override
+    public void setItemsLeft(int itemsLeftCount) {
         String itemsLeftText =
                 getResources()
                         .getQuantityString(
                                 R.plurals.barcode_processor_items_left,
                                 itemsLeftCount);
-
-        if (itemsLeftCount == 0) {
-            itemsLeftText = getString(R.string.barcode_processor_items_left);
-        }
 
         itemsLeft.setText(
                 String.format(
@@ -190,27 +134,68 @@ public final class BarcodeProcessorActivity extends BaseActivity
                         itemsLeftCount));
     }
 
-    private void setupBarcodeDetector() {
-        barcodeDetector =
-                new BarcodeDetector.Builder(this)
-                        .build();
-
-        if (!barcodeDetector.isOperational()) {
-            return;
-        }
-
-        barcodeDetector.setProcessor(new BarcodeProcessor(this, this));
+    @Override
+    public void setZeroItemsLeft() {
+        itemsLeft.setText(
+                getString(R.string.barcode_processor_items_left));
     }
 
-    private void setupCamera() {
-        CameraSource cameraSource = new CameraSource
-                .Builder(this, barcodeDetector)
-                .setAutoFocusEnabled(true)
-                .build();
+    @Override
+    public void showProcessError() {
+        showProcessing(R.color.red);
+    }
 
-        previewLayout.getHolder()
-                .addCallback(
-                        new CameraPreview(cameraSource, this));
+    @Override
+    public void showProcessSuccess() {
+        showProcessing(R.color.green);
+    }
+
+    @Override
+    public void showMessage(String message) {
+        SnackBarUtils.showWithCenteredText(
+                root,
+                message);
+    }
+
+    @Override
+    public void showFinishDialog() {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        builder.setTitle(R.string.barcode_processor_finish_dialog_title)
+                .setMessage(R.string.barcode_processor_finish_dialog_message)
+                .setPositiveButton(
+                        R.string.dialog_ok,
+                        new AlertDialog.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int id) {
+                                presenter.onFinish();
+                            }
+                        });
+
+        builder.show();
+    }
+
+    @Override
+    public void close(CodesToProcess codesToProcess) {
+        Intent result = new Intent();
+        result.putExtra(EXTRA_RESULT, codesToProcess);
+        setResult(RESULT_OK, result);
+
+        finish();
+    }
+
+    @Override
+    public void setPresenter(@NonNull BarcodeProcessorContract.Presenter presenter) {
+        this.presenter = presenter;
+    }
+
+    private CodesToProcess getCodesToProcessExtra() {
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            return extras.getParcelable(EXTRA_CODES_TO_PROCESS);
+        }
+
+        return null;
     }
 
     private void showProcessing(final @ColorRes int color) {
@@ -224,63 +209,15 @@ public final class BarcodeProcessorActivity extends BaseActivity
                         this,
                         color);
 
-
         guide.getBackground().setTint(highlightColor);
 
         root.postDelayed(new Runnable() {
             @Override
             public void run() {
                 guide.getBackground().setTint(normalColor);
-                ready = true;
+                presenter.onProcessingDone();
             }
         }, PROCESSING_TIME);
-    }
-
-    private void showMessage(CodesToProcess.Status status, String code) {
-        String message = "%s: ";
-
-        switch (status) {
-            case SUCCESS:
-                message += "Sucesso";
-                break;
-            case CODE_ALREADY_PROCESSED:
-                message += "Código já processado";
-                break;
-            case CODE_INVALID:
-                message += "Código Inválido";
-                break;
-            default:
-                message += "Erro desconhecido";
-        }
-
-        SnackBarUtils.showWithCenteredText(
-                root,
-                String.format(
-                        message,
-                        code));
-    }
-
-    private void checkFinish() {
-        if (codesToProcess.itemsLeft() == 0) {
-            showFinishDialog();
-        }
-    }
-
-    private void showFinishDialog() {
-        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
-
-        builder.setTitle(R.string.barcode_processor_finish_dialog_title)
-                .setMessage(R.string.barcode_processor_finish_dialog_message)
-                .setPositiveButton(
-                        R.string.dialog_ok,
-                        new AlertDialog.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int id) {
-                                finish();
-                            }
-                        });
-
-        builder.show();
     }
 
     public void setupOrientation() {
@@ -294,5 +231,29 @@ public final class BarcodeProcessorActivity extends BaseActivity
                 guide.setBackgroundResource(R.drawable.gradient_horizontal_white_transparent);
                 break;
         }
+    }
+
+    private void setupBarcodeDetector() {
+        barcodeDetector =
+                new BarcodeDetector.Builder(this)
+                        .build();
+
+        if (!barcodeDetector.isOperational()) {
+            return;
+        }
+
+        barcodeDetector.setProcessor(
+                new BarcodeProcessor(this, this));
+    }
+
+    private void setupCamera() {
+        CameraSource cameraSource = new CameraSource
+                .Builder(this, barcodeDetector)
+                .setAutoFocusEnabled(true)
+                .build();
+
+        previewLayout.getHolder()
+                .addCallback(
+                        new CameraPreview(cameraSource, this));
     }
 }
