@@ -3,6 +3,7 @@ package br.com.aaascp.gerenciadordepedidos.presentation.ui.order.list;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.RecyclerView;
@@ -12,6 +13,7 @@ import android.view.View;
 import java.util.List;
 
 import br.com.aaascp.gerenciadordepedidos.R;
+import br.com.aaascp.gerenciadordepedidos.entity.NullOrderFilterList;
 import br.com.aaascp.gerenciadordepedidos.entity.Order;
 import br.com.aaascp.gerenciadordepedidos.entity.OrderFilterList;
 import br.com.aaascp.gerenciadordepedidos.presentation.ui.BaseActivity;
@@ -27,7 +29,7 @@ import butterknife.OnClick;
  * Created by andre on 09/07/17.
  */
 
-public final class OrdersListActivity extends BaseActivity {
+public final class OrdersListActivity extends BaseActivity implements OrdersListContract.View {
 
     public static final int REQUEST_CODE_ORDER_PROCESS = 100;
 
@@ -35,7 +37,6 @@ public final class OrdersListActivity extends BaseActivity {
     public static final int RESULT_CODE_OK = 300;
     public static final int RESULT_CODE_SKIP = 400;
     public static final int RESULT_CODE_CLOSE = 500;
-
 
     private static final String EXTRA_ORDER_FILTERS = "EXTRA_ORDER_FILTERS";
     private static final String EXTRA_PROCESS_ALL = "EXTRA_PROCESS_ALL";
@@ -49,11 +50,7 @@ public final class OrdersListActivity extends BaseActivity {
     @BindView(R.id.orders_list_recycler)
     RecyclerView recyclerView;
 
-    private OrdersRepository ordersRepository;
-    private OrderFilterList filterList;
-    private List<Order> orders;
-    private boolean processAll;
-    private int current;
+    OrdersListContract.Presenter presenter;
 
     public static void startForContext(
             Context context,
@@ -78,12 +75,25 @@ public final class OrdersListActivity extends BaseActivity {
         setContentView(R.layout.activity_orders_list);
         ButterKnife.bind(this);
 
-        ordersRepository = new OrdersRepository();
+        Bundle extras = getIntent().getExtras();
+        if(extras  != null) {
+            new OrdersListPresenter(
+                    this,
+                    getOrderFilterListExtra(extras),
+                    getProcessAllExtra(extras));
+        } else {
+            new OrdersListPresenter(
+                    this,
+                    NullOrderFilterList.create(),
+                    false);
+        }
+    }
 
-        extractExtras();
-        setupToolbar();
-        setupOrdersList();
-        setupFab();
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        presenter.start();
     }
 
     @Override
@@ -94,27 +104,26 @@ public final class OrdersListActivity extends BaseActivity {
             switch (resultCode) {
                 case RESULT_CODE_OK:
                 case RESULT_CODE_SKIP:
-                    ++current;
+                    presenter.onResultNext();
                     break;
                 case RESULT_CODE_OK_UNIQUE:
                 case RESULT_CODE_CLOSE:
                 default:
-                    current = -1;
+                    presenter.onResultClose();
             }
-
-            processNext();
         }
     }
 
-    private void extractExtras() {
-        Bundle extra = getIntent().getExtras();
-        if (extra != null) {
-            filterList = extra.getParcelable(EXTRA_ORDER_FILTERS);
-            processAll = extra.getBoolean(EXTRA_PROCESS_ALL, false);
-        }
+    private OrderFilterList getOrderFilterListExtra(Bundle extras) {
+        return extras.getParcelable(EXTRA_ORDER_FILTERS);
     }
 
-    private void setupToolbar() {
+    private boolean getProcessAllExtra(Bundle extras) {
+        return extras.getBoolean(EXTRA_PROCESS_ALL, false);
+    }
+
+    @Override
+    public void setupToolbar() {
         toolbar.setNavigationIcon(R.drawable.ic_back_white_vector);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -124,56 +133,32 @@ public final class OrdersListActivity extends BaseActivity {
         });
     }
 
-    private void setupOrdersList() {
-        current = 0;
-
-        ordersRepository.getList(
-                filterList,
-                new RepositoryCallback<List<Order>>() {
-                    @Override
-                    public void onSuccess(List<Order> result) {
-                        orders = result;
-                        showOrdersList();
-                    }
-
-                    @Override
-                    public void onError(List<String> errors) {
-                        if(errors != null) {
-                            showError(errors.get(0));
-                        } else {
-                            showCommunicationError();
-                        }
-                    }
-                });
+    @Override
+    public void showFab() {
+        fab.setVisibility(View.VISIBLE);
     }
 
-    private void setupFab() {
-        if (processAll) {
-            fab.setVisibility(View.VISIBLE);
-        } else {
-            fab.setVisibility(View.GONE);
-        }
+    @Override
+    public void hideFab() {
+        fab.setVisibility(View.GONE);
     }
 
-    private void showOrdersList() {
-        if(orders.size() == 0) {
-            showEmptyList();
-            return;
-        }
-
-        recyclerView.setAdapter(
+    @Override
+    public void showOrdersList(List<Order> orders) {
+      recyclerView.setAdapter(
                 new OrdersListAdapter(
                         this,
                         orders,
                         new OrdersListAdapter.OnClickListener() {
                             @Override
                             public void onClick(int orderId) {
-                                process(orderId, 1, 1);
+                                presenter.onOrderClicked(orderId);
                             }
                         }));
     }
 
-    private void showEmptyList() {
+    @Override
+    public void showEmptyList() {
         recyclerView.setAdapter(
                 new EmptyStateAdapter(
                         this,
@@ -181,31 +166,22 @@ public final class OrdersListActivity extends BaseActivity {
                         getString(R.string.order_list_empty)));
     }
 
-    private void showCommunicationError() {
+    @Override
+    public void showCommunicationError() {
         showError(
                 getString(R.string.error_communication));
     }
 
-    private void showError(String error) {
+    @Override
+    public void showError(String error) {
         recyclerView.setAdapter(
                 new EmptyStateAdapter(
                         this,
                         error));
     }
 
-    private void processNext() {
-        if (current >= orders.size() ||
-                current < 0) {
-            setupOrdersList();
-            return;
-        }
-
-        process(orders.get(current).id(),
-                current + 1,
-                orders.size());
-    }
-
-    private void process(int orderId, int position, int total) {
+    @Override
+    public void navigateToOrderDetails(int orderId, int position, int total) {
         Intent intent =
                 OrderDetailsActivity.getIntentForOrder(
                         this,
@@ -216,8 +192,13 @@ public final class OrdersListActivity extends BaseActivity {
         startActivityForResult(intent, REQUEST_CODE_ORDER_PROCESS);
     }
 
+    @Override
+    public void setPresenter(@NonNull OrdersListContract.Presenter presenter) {
+        this.presenter = presenter;
+    }
+
     @OnClick(R.id.orders_list_fab)
     void onFabClick() {
-        processNext();
+        presenter.onFabCLick();
     }
 }
