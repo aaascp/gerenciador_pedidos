@@ -9,7 +9,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
@@ -35,13 +34,9 @@ public final class OrderDetailsActivity extends BaseActivity implements OrderDet
 
     private static final int REQUEST_CODE_PROCESS = 100;
 
+    private static final String EXTRA_ORDER_ID = "EXTRA_ORDER_ID";
     private static final String EXTRA_TOTAL = "EXTRA_TOTAL";
     private static final String EXTRA_CURRENT = "EXTRA_CURRENT";
-    private static final String EXTRA_ORDER_ID = "EXTRA_ORDER_ID";
-
-    private static final int INVALID_ORDER_ID = -1;
-    private static final int MENU_ITEM_SKIP = 0;
-    private static final int MENU_ITEM_CLOSE = 2;
 
     @BindView(R.id.order_details_toolbar)
     Toolbar toolbar;
@@ -102,7 +97,7 @@ public final class OrderDetailsActivity extends BaseActivity implements OrderDet
         } else {
             new OrderDetailsPresenter(
                     this,
-                    INVALID_ORDER_ID,
+                    Order.INVALID_ORDER_ID,
                     1,
                     1);
         }
@@ -130,41 +125,48 @@ public final class OrderDetailsActivity extends BaseActivity implements OrderDet
     }
 
     @Override
-    public void hideClearButton() {
-        Menu menu = toolbar.getMenu();
-        MenuItem item = menu.getItem(MENU_ITEM_CLOSE);
-        item.setVisible(false);
-    }
-
-    @Override
-    public void hideSkipButton() {
-        Menu menu = toolbar.getMenu();
-        MenuItem item = menu.getItem(MENU_ITEM_SKIP);
-        item.setVisible(false);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-
-        if (id == R.id.menu_order_details_more_details) {
-            presenter.onInfoClicked();
-            return true;
-        } else if (id == R.id.menu_order_details_clear) {
-            presenter.onClearClicked();
-            return true;
-        } else if (id == R.id.menu_order_details_skip) {
-            presenter.onSkipClicked();
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
     protected void onStart() {
         super.onStart();
 
         presenter.start();
+    }
+
+    @Override
+    public void setupMenu() {
+        toolbar.inflateMenu(R.menu.menu_order_details);
+
+        toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                int id = item.getItemId();
+
+                if (id == R.id.menu_order_details_more_details) {
+                    presenter.onInfoClicked();
+                    return true;
+                } else if (id == R.id.menu_order_details_clear) {
+                    presenter.onClearClicked();
+                    return true;
+                } else if (id == R.id.menu_order_details_skip) {
+                    presenter.onSkipClicked();
+                    return true;
+                }
+                return false;
+            }
+        });
+
+        presenter.onMenuCreated();
+    }
+
+    @Override
+    public void hideClearButton() {
+        toolbar.getMenu()
+                .findItem(R.id.menu_order_details_clear).setVisible(false);
+    }
+
+    @Override
+    public void hideSkipButton() {
+        toolbar.getMenu()
+                .findItem(R.id.menu_order_details_skip).setVisible(false);
     }
 
     @Override
@@ -211,7 +213,6 @@ public final class OrderDetailsActivity extends BaseActivity implements OrderDet
                         total);
 
         toolbar.setTitle(titleFormatted);
-        setSupportActionBar(toolbar);
     }
 
     @Override

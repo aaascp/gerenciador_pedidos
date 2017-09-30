@@ -20,7 +20,7 @@ final class OrderDetailsPresenter implements OrderDetailsContract.Presenter {
 
     private final int orderId;
     private final int total;
-    private int current;
+    private final int current;
 
     private CodesToProcess codesToProcess;
     private Order order;
@@ -39,13 +39,19 @@ final class OrderDetailsPresenter implements OrderDetailsContract.Presenter {
         ordersRepository = new OrdersRepository();
 
         view.setPresenter(this);
+        setupToolbar();
     }
 
     @Override
     public void start() {
-        setupToolbar();
         setupOrder();
-        setupMenu();
+    }
+
+    @Override
+    public void onMenuCreated() {
+        if (total == current) {
+            view.hideSkipButton();
+        }
     }
 
     @Override
@@ -185,24 +191,18 @@ final class OrderDetailsPresenter implements OrderDetailsContract.Presenter {
             view.showFinishLabel();
         } else {
             view.showItemsLeftLabel();
-            view.setItemsLeft(total, itemsLeft);
+            view.setItemsLeft(order.size(), itemsLeft);
         }
     }
 
-
     private void setupToolbar() {
+        view.setupMenu();
         view.setupTitle(orderId, current, total);
 
         if (total > 1) {
             view.setupCloseToolbar();
         } else {
             view.setupBackToolbar();
-        }
-    }
-
-    private void setupMenu() {
-        if (total == current) {
-            view.hideSkipButton();
         }
     }
 }

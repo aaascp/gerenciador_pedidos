@@ -16,6 +16,8 @@ interface OrderDetailsContract {
 
         void hideSkipButton();
 
+        void setupMenu();
+
         void setupCloseToolbar();
 
         void setupBackToolbar();
@@ -66,6 +68,8 @@ interface OrderDetailsContract {
     }
 
     interface Presenter extends BasePresenter {
+
+        void onMenuCreated();
 
         void onBackPressed();
 
