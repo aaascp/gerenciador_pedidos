@@ -455,32 +455,4 @@ public final class OrderDetailsActivity extends BaseActivity implements OrderDet
 
         finish();
     }
-
-    //    @Override
-//    public void onRequestPermissionsResult(
-//            int requestCode,
-//            @NonNull String permissions[],
-//            @NonNull int[] grantResults) {
-//
-//        if (requestCode == REQUEST_CODE_CAMERA_PERMISSION &&
-//                grantResults.length > 0 &&
-//                grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-//
-////            navigateToCamera();
-//            presenter.onPermissionGranted();
-//        } else {
-////            PermissionUtils.requestPermissionForCamera(this, REQUEST_CODE_CAMERA_PERMISSION);
-//            presenter.onPermissionDenied();
-//        }
-//    }
-
-
-//    private void checkPermissionForCamera() {
-//        if (PermissionUtils.isCameraEnabled(this)) {
-//            navigateToCamera();
-//        } else {
-//            PermissionUtils.requestPermissionForCamera(this, REQUEST_CODE_CAMERA_PERMISSION);
-//        }
-//    }
-
 }

@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.ColorRes;
 import android.support.annotation.NonNull;
@@ -21,6 +22,7 @@ import br.com.aaascp.gerenciadordepedidos.R;
 import br.com.aaascp.gerenciadordepedidos.entity.CodesToProcess;
 import br.com.aaascp.gerenciadordepedidos.presentation.ui.BaseActivity;
 import br.com.aaascp.gerenciadordepedidos.presentation.util.SnackBarUtils;
+import br.com.aaascp.gerenciadordepedidos.util.PermissionUtils;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -34,6 +36,8 @@ import static android.content.res.Configuration.ORIENTATION_PORTRAIT;
 public final class BarcodeProcessorActivity extends BaseActivity
         implements OnItemProcessedListener, BarcodeProcessorContract.View {
 
+
+    private static final int REQUEST_CODE_CAMERA_PERMISSION = 100;
     public static final String EXTRA_RESULT = "EXTRA_RESULT";
 
     private static final String EXTRA_CODES_TO_PROCESS = "EXTRA_CODES_TO_PROCESS";
@@ -91,12 +95,41 @@ public final class BarcodeProcessorActivity extends BaseActivity
         setupCamera();
     }
 
+
+    @Override
+    public void onRequestPermissionsResult(
+            int requestCode,
+            @NonNull String permissions[],
+            @NonNull int[] grantResults) {
+
+        if (requestCode == REQUEST_CODE_CAMERA_PERMISSION &&
+                grantResults.length > 0 &&
+                grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+            presenter.onPermissionGranted();
+        } else {
+            presenter.onPermissionDenied();
+        }
+    }
+
     @Override
     protected void onStart() {
         super.onStart();
 
         setupOrientation();
         presenter.start();
+    }
+
+    @Override
+    public void setupCamera() {
+        CameraSource cameraSource = new CameraSource
+                .Builder(this, barcodeDetector)
+                .setAutoFocusEnabled(true)
+                .build();
+
+        previewLayout.getHolder()
+                .addCallback(
+                        new CameraPreview(cameraSource, this));
     }
 
     @Override
@@ -138,6 +171,13 @@ public final class BarcodeProcessorActivity extends BaseActivity
     public void setZeroItemsLeft() {
         itemsLeft.setText(
                 getString(R.string.barcode_processor_items_left));
+    }
+
+    @Override
+    public void showCameraPermission() {
+        PermissionUtils.requestPermissionForCamera(
+                this,
+                REQUEST_CODE_CAMERA_PERMISSION);
     }
 
     @Override
@@ -244,16 +284,5 @@ public final class BarcodeProcessorActivity extends BaseActivity
 
         barcodeDetector.setProcessor(
                 new BarcodeProcessor(this, this));
-    }
-
-    private void setupCamera() {
-        CameraSource cameraSource = new CameraSource
-                .Builder(this, barcodeDetector)
-                .setAutoFocusEnabled(true)
-                .build();
-
-        previewLayout.getHolder()
-                .addCallback(
-                        new CameraPreview(cameraSource, this));
     }
 }
