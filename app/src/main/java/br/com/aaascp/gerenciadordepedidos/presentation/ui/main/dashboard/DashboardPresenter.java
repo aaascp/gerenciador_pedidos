@@ -72,6 +72,13 @@ final class DashboardPresenter implements DashboardContract.Presenter {
 
     @Override
     public void onAllButtonClicked() {
+        navigateToOrdersList(
+                StatusFilter.create(StatusFilter.Status.ALL),
+                false);
+    }
+
+    @Override
+    public void onFindButtonClicked() {
         view.showGetIdsDialog(new DialogUtils.IntValuesListener() {
             @Override
             public void onValues(HashSet<Integer> values) {
@@ -85,13 +92,6 @@ final class DashboardPresenter implements DashboardContract.Presenter {
                 view.showErrorGettingIds();
             }
         });
-    }
-
-    @Override
-    public void onFindButtonClicked() {
-        navigateToOrdersList(
-                StatusFilter.create(StatusFilter.Status.ALL),
-                false);
     }
 
     private void navigateToOrdersList(OrderFilter filter, boolean showProcessAll) {

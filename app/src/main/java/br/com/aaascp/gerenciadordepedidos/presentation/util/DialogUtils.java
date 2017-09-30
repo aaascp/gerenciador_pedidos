@@ -2,6 +2,7 @@ package br.com.aaascp.gerenciadordepedidos.presentation.util;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.support.annotation.StringRes;
 import android.support.v7.app.AlertDialog;
 import android.text.InputType;
 import android.text.method.DigitsKeyListener;
@@ -17,57 +18,88 @@ import br.com.aaascp.gerenciadordepedidos.R;
 
 public final class DialogUtils {
 
+    private static AlertDialog.Builder getGenericBuilder(
+            Context context,
+            @StringRes int title,
+            @StringRes int message) {
+
+        final AlertDialog.Builder builder = new AlertDialog.Builder(context);
+
+        builder.setTitle(title)
+                .setMessage(message)
+                .setNegativeButton(
+                        R.string.dialog_cancel,
+                        new android.app.AlertDialog.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.dismiss();
+                            }
+                        });
+
+        return builder;
+    }
+
+    public static void showGenericDialog(
+            Context context,
+            @StringRes int title,
+            @StringRes int message,
+            DialogInterface.OnClickListener positiveListener) {
+
+        getGenericBuilder(
+                context,
+                title,
+                message)
+                .setPositiveButton(
+                        R.string.dialog_ok,
+                        positiveListener)
+                .show();
+    }
+
     public static void showGetIntValues(
             Context context,
-            String title,
-            String message,
+            @StringRes int title,
+            @StringRes int message,
             final IntValuesListener listener) {
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(context);
 
         final EditText editText = new EditText(context);
         editText.setInputType(InputType.TYPE_CLASS_NUMBER);
         editText.setKeyListener(DigitsKeyListener.getInstance("0123456789,"));
 
-        builder.setTitle(title)
-                .setMessage(message)
-                .setView(editText);
+        getGenericBuilder(
+                context,
+                title,
+                message)
+                .setView(editText)
+                .setPositiveButton(
+                        R.string.dialog_ok,
+                        new DialogInterface.OnClickListener() {
 
-        builder.setPositiveButton(
-                R.string.dialog_ok,
-                new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int id) {
+                                final String[] valuesText = editText.getText()
+                                        .toString()
+                                        .split(",");
 
-                    @Override
-                    public void onClick(DialogInterface dialog, int id) {
-                        final String[] valuesText = editText.getText()
-                                .toString()
-                                .split(",");
+                                HashSet<Integer> values = new HashSet<>();
+                                boolean error = false;
 
-                        HashSet<Integer> values = new HashSet<>();
-                        boolean error = false;
+                                for (String value : valuesText) {
+                                    try {
+                                        int intValue = Integer.valueOf(value);
+                                        values.add(intValue);
+                                    } catch (NumberFormatException exception) {
+                                        listener.onError();
+                                        error = true;
+                                        break;
+                                    }
+                                }
 
-                        for (String value : valuesText) {
-                            try {
-                                int intValue = Integer.valueOf(value);
-                                values.add(intValue);
-                            } catch (NumberFormatException exception) {
-                                listener.onError();
-                                error = true;
-                                break;
+                                if (!error) {
+                                    listener.onValues(values);
+                                }
                             }
-                        }
-
-                        if (!error) {
-                            listener.onValues(values);
-                        }
-                    }
-                });
-
-        builder.setNegativeButton(
-                R.string.dialog_cancel,
-                new DismissListener());
-
-        builder.create().show();
+                        })
+                .show();
     }
 
     public static void showError(

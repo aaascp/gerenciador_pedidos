@@ -63,6 +63,7 @@ public final class DashboardFragment extends BaseFragment implements DashboardCo
         toProcessButton.setValue(count);
     }
 
+    @Override
     public void navigateToOrdersList(OrderFilterList filters, boolean processAll) {
         OrdersListActivity.startForContext(
                 getContext(),
@@ -70,15 +71,17 @@ public final class DashboardFragment extends BaseFragment implements DashboardCo
                 processAll);
     }
 
+    @Override
     public void showGetIdsDialog(DialogUtils.IntValuesListener listener) {
         DialogUtils.showGetIntValues(
                 getContext(),
-                getString(R.string.dashboard_orders_find_dialog_title),
-                getString(R.string.dashboard_orders_find_dialog_message),
+                R.string.dashboard_orders_find_dialog_title,
+                R.string.dashboard_orders_find_dialog_message,
                 listener);
 
     }
 
+    @Override
     public void showErrorGettingIds() {
         DialogUtils.showError(
                 getContext(),
@@ -99,7 +102,6 @@ public final class DashboardFragment extends BaseFragment implements DashboardCo
     @OnClick(R.id.dashboard_all)
     void allButton() {
         presenter.onAllButtonClicked();
-
     }
 
     @OnClick(R.id.dashboard_find)

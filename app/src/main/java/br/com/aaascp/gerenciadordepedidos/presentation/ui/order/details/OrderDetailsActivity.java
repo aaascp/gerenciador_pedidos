@@ -21,6 +21,7 @@ import br.com.aaascp.gerenciadordepedidos.presentation.ui.BaseActivity;
 import br.com.aaascp.gerenciadordepedidos.presentation.ui.camera.BarcodeProcessorActivity;
 import br.com.aaascp.gerenciadordepedidos.presentation.ui.order.info.OrderInfoActivity;
 import br.com.aaascp.gerenciadordepedidos.presentation.ui.order.list.OrdersListActivity;
+import br.com.aaascp.gerenciadordepedidos.presentation.util.DialogUtils;
 import br.com.aaascp.gerenciadordepedidos.presentation.util.EmptyStateAdapter;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -314,106 +315,62 @@ public final class OrderDetailsActivity extends BaseActivity implements OrderDet
 
     @Override
     public void showBackDialog() {
-        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
-
-        builder.setTitle(R.string.order_details_back_dialog_title)
-                .setMessage(R.string.order_details_back_dialog_message)
-                .setPositiveButton(
-                        R.string.dialog_ok,
-                        new AlertDialog.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int id) {
-                                presenter.onBackDialogOk();
-                            }
-                        })
-                .setNegativeButton(
-                        R.string.dialog_cancel,
-                        new AlertDialog.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int id) {
-                                dialog.dismiss();
-                            }
-                        });
-
-        builder.show();
+        DialogUtils.showGenericDialog(
+                this,
+                R.string.order_details_back_dialog_title,
+                R.string.order_details_back_dialog_message,
+                new AlertDialog.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int id) {
+                        presenter.onBackDialogOk();
+                    }
+                }
+        );
     }
 
     @Override
     public void showSkipDialog() {
-        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
-
-        builder.setTitle(R.string.order_details_skip_dialog_title)
-                .setMessage(R.string.order_details_skip_dialog_message)
-                .setPositiveButton(
-                        R.string.dialog_ok,
-                        new AlertDialog.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int id) {
-                                presenter.onSkipDialogOk();
-                            }
-                        })
-                .setNegativeButton(
-                        R.string.dialog_cancel,
-                        new AlertDialog.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int id) {
-                                dialog.dismiss();
-                            }
-                        });
-
-        builder.show();
+        DialogUtils.showGenericDialog(
+                this,
+                R.string.order_details_skip_dialog_title,
+                R.string.order_details_skip_dialog_message,
+                new AlertDialog.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int id) {
+                        presenter.onSkipDialogOk();
+                    }
+                }
+        );
     }
 
     @Override
     public void showClearDialog() {
-        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
-
-        builder.setTitle(R.string.order_details_clear_dialog_title)
-                .setMessage(R.string.order_details_clear_dialog_message)
-                .setPositiveButton(
-                        R.string.dialog_ok,
-                        new AlertDialog.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int id) {
-                                presenter.onClearDialogOk();
-                            }
-                        })
-                .setNegativeButton(
-                        R.string.dialog_cancel,
-                        new AlertDialog.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int id) {
-                                dialog.dismiss();
-                            }
-                        });
-
-        builder.show();
+        DialogUtils.showGenericDialog(
+                this,
+                R.string.order_details_clear_dialog_title,
+                R.string.order_details_clear_dialog_message,
+                new AlertDialog.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int id) {
+                        presenter.onClearDialogOk();
+                    }
+                }
+        );
     }
 
     @Override
     public void showCloseDialog() {
-        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
-
-        builder.setTitle(R.string.order_details_close_dialog_title)
-                .setMessage(R.string.order_details_close_dialog_message)
-                .setPositiveButton(
-                        R.string.dialog_ok,
-                        new AlertDialog.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int id) {
-                                presenter.onCloseDialogOk();
-                            }
-                        })
-                .setNegativeButton(
-                        R.string.dialog_cancel,
-                        new AlertDialog.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int id) {
-                                dialog.dismiss();
-                            }
-                        });
-
-        builder.show();
+        DialogUtils.showGenericDialog(
+                this,
+                R.string.order_details_close_dialog_title,
+                R.string.order_details_close_dialog_message,
+                new AlertDialog.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int id) {
+                        presenter.onCloseDialogOk();
+                    }
+                }
+        );
     }
 
     @Override
