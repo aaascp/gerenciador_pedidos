@@ -16,6 +16,8 @@ import br.com.aaascp.gerenciadordepedidos.util.StringUtils;
 @AutoValue
 public abstract class Order implements Parcelable {
 
+    public static final int INVALID_ORDER_ID = -1;
+
     public abstract int id();
 
     public abstract ShipmentInfo shipmentInfo();

@@ -4,7 +4,6 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -15,8 +14,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
-import java.util.List;
-
 import br.com.aaascp.gerenciadordepedidos.R;
 import br.com.aaascp.gerenciadordepedidos.entity.CodesToProcess;
 import br.com.aaascp.gerenciadordepedidos.entity.Order;
@@ -26,10 +23,6 @@ import br.com.aaascp.gerenciadordepedidos.presentation.ui.camera.BarcodeProcesso
 import br.com.aaascp.gerenciadordepedidos.presentation.ui.order.info.OrderInfoActivity;
 import br.com.aaascp.gerenciadordepedidos.presentation.ui.order.list.OrdersListActivity;
 import br.com.aaascp.gerenciadordepedidos.presentation.util.EmptyStateAdapter;
-import br.com.aaascp.gerenciadordepedidos.repository.OrdersRepository;
-import br.com.aaascp.gerenciadordepedidos.repository.callback.RepositoryCallback;
-import br.com.aaascp.gerenciadordepedidos.util.DateFormatterUtils;
-import br.com.aaascp.gerenciadordepedidos.util.PermissionUtils;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -38,19 +31,17 @@ import butterknife.OnClick;
  * Created by andre on 09/07/17.
  */
 
-public final class OrderDetailsActivity extends BaseActivity {
+public final class OrderDetailsActivity extends BaseActivity implements OrderDetailsContract.View {
 
     private static final int REQUEST_CODE_PROCESS = 100;
-    private static final int REQUEST_CODE_CAMERA_PERMISSION = 200;
 
     private static final String EXTRA_TOTAL = "EXTRA_TOTAL";
     private static final String EXTRA_CURRENT = "EXTRA_CURRENT";
-    private static final String EXTRA_CODES_TO_PROCESS = "EXTRA_CODES_TO_PROCESS";
     private static final String EXTRA_ORDER_ID = "EXTRA_ORDER_ID";
-    private static final String EXTRA_ORDER = "EXTRA_ORDER";
 
     private static final int INVALID_ORDER_ID = -1;
     private static final int MENU_ITEM_SKIP = 0;
+    private static final int MENU_ITEM_CLOSE = 2;
 
     @BindView(R.id.order_details_toolbar)
     Toolbar toolbar;
@@ -73,14 +64,8 @@ public final class OrderDetailsActivity extends BaseActivity {
     @BindView(R.id.order_details_items_left_root)
     View itemsLeftRoot;
 
-    private OrdersRepository ordersRepository;
+    OrderDetailsContract.Presenter presenter;
     private OrderDetailsAdapter orderDetailsAdapter;
-
-    private CodesToProcess codesToProcess;
-    private Order order;
-    private int orderId;
-    private int total;
-    private int current;
 
     public static Intent getIntentForOrder(
             Context context,
@@ -106,23 +91,21 @@ public final class OrderDetailsActivity extends BaseActivity {
         setContentView(R.layout.activity_order_details);
         ButterKnife.bind(this);
 
-        ordersRepository = new OrdersRepository();
+        Bundle extras = getIntent().getExtras();
 
-        extractExtras(savedInstanceState == null ? getIntent().getExtras() : savedInstanceState);
-        setupOrder();
-        setupToolbar();
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-
-        outState.putParcelable(EXTRA_ORDER, order);
-        outState.putParcelable(EXTRA_CODES_TO_PROCESS, codesToProcess);
-
-        outState.putInt(EXTRA_ORDER_ID, orderId);
-        outState.putInt(EXTRA_TOTAL, total);
-        outState.putInt(EXTRA_CURRENT, current);
+        if (extras != null) {
+            new OrderDetailsPresenter(
+                    this,
+                    extras.getInt(EXTRA_ORDER_ID, Order.INVALID_ORDER_ID),
+                    extras.getInt(EXTRA_TOTAL, 1),
+                    extras.getInt(EXTRA_CURRENT, 1));
+        } else {
+            new OrderDetailsPresenter(
+                    this,
+                    INVALID_ORDER_ID,
+                    1,
+                    1);
+        }
     }
 
     @Override
@@ -138,37 +121,26 @@ public final class OrderDetailsActivity extends BaseActivity {
                 requestCode == REQUEST_CODE_PROCESS &&
                 extras != null) {
 
-            codesToProcess = extras.getParcelable(BarcodeProcessorActivity.EXTRA_RESULT);
-            updateCodesProcessed();
+            CodesToProcess codesToProcess =
+                    extras.getParcelable(
+                            BarcodeProcessorActivity.EXTRA_RESULT);
+
+            presenter.onProcessorResult(codesToProcess);
         }
     }
 
     @Override
-    public void onRequestPermissionsResult(
-            int requestCode,
-            @NonNull String permissions[],
-            @NonNull int[] grantResults) {
-
-        if (requestCode == REQUEST_CODE_CAMERA_PERMISSION &&
-                grantResults.length > 0 &&
-                grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-
-            navigateToCamera();
-        } else {
-            PermissionUtils.requestPermissionForCamera(this, REQUEST_CODE_CAMERA_PERMISSION);
-        }
+    public void hideClearButton() {
+        Menu menu = toolbar.getMenu();
+        MenuItem item = menu.getItem(MENU_ITEM_CLOSE);
+        item.setVisible(false);
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_order_details, menu);
-
-        if (total == current) {
-            MenuItem item = menu.getItem(MENU_ITEM_SKIP);
-            item.setVisible(false);
-        }
-
-        return true;
+    public void hideSkipButton() {
+        Menu menu = toolbar.getMenu();
+        MenuItem item = menu.getItem(MENU_ITEM_SKIP);
+        item.setVisible(false);
     }
 
     @Override
@@ -176,111 +148,79 @@ public final class OrderDetailsActivity extends BaseActivity {
         int id = item.getItemId();
 
         if (id == R.id.menu_order_details_more_details) {
-            showDetails();
+            presenter.onInfoClicked();
             return true;
         } else if (id == R.id.menu_order_details_clear) {
-            showClearDialog();
+            presenter.onClearClicked();
             return true;
         } else if (id == R.id.menu_order_details_skip) {
-            showSkipDialog();
+            presenter.onSkipClicked();
             return true;
         }
         return super.onOptionsItemSelected(item);
     }
 
-    private void extractExtras(Bundle extras) {
-        if (extras != null) {
-            orderId = extras.getInt(EXTRA_ORDER_ID, INVALID_ORDER_ID);
+    @Override
+    protected void onStart() {
+        super.onStart();
 
-            order = extras.getParcelable(EXTRA_ORDER);
-            codesToProcess = extras.getParcelable(EXTRA_CODES_TO_PROCESS);
-
-            total = extras.getInt(EXTRA_TOTAL, 1);
-            current = extras.getInt(EXTRA_CURRENT, 1);
-        }
+        presenter.start();
     }
 
-    private void setupOrder() {
-        if (order != null) {
-            showOrder();
-            return;
-        }
-
-        ordersRepository.getOrder(
-                orderId,
-                new RepositoryCallback<Order>() {
-                    @Override
-                    public void onSuccess(Order data) {
-                        order = data;
-                        codesToProcess = order.codesToProcess();
-
-                        showOrder();
-                    }
-
-                    @Override
-                    public void onError(List<String> errors) {
-                        if (errors != null) {
-                            showError(errors.get(0));
-                        } else {
-                            showCommunicationError();
-                        }
-                    }
-                }
-        );
-    }
-
-    private void refreshOrder() {
-        order = null;
-        setupOrder();
-    }
-
-    private void updateCodesProcessed() {
+    @Override
+    public void updateCodesProcessed(CodesToProcess codesToProcess) {
         orderDetailsAdapter.updateCodesProcessed(codesToProcess);
-        checkFinish();
     }
 
-    private void setupToolbar() {
-        setupTitle();
-        setSupportActionBar(toolbar);
-
-        if (total > 1) {
-            toolbar.setNavigationIcon(R.drawable.ic_close_white_vector);
-            toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    showCloseDialog();
-                }
-            });
-        } else {
-            toolbar.setNavigationIcon(R.drawable.ic_back_white_vector);
-            toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    onBackPressed();
-                }
-            });
-        }
-
-        shipTypeView.setValue(order.shipmentInfo().shipType());
+    @Override
+    public void setupCloseToolbar() {
+        toolbar.setNavigationIcon(R.drawable.ic_close_white_vector);
+        toolbar.setNavigationOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        presenter.onCloseClicked();
+                    }
+                });
     }
 
-    private void setupTitle() {
+    @Override
+    public void setupBackToolbar() {
+        toolbar.setNavigationIcon(R.drawable.ic_back_white_vector);
+        toolbar.setNavigationOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        presenter.onBackPressed();
+                    }
+                });
+    }
+
+    @Override
+    public void setupTitle(int id, int current, int total) {
         String title =
                 getResources().getQuantityString(
                         R.plurals.order_details_title,
                         total);
 
-        toolbar.setTitle(
+        String titleFormatted =
                 String.format(
                         title,
-                        order.id(),
+                        id,
                         current,
-                        total));
+                        total);
+
+        toolbar.setTitle(titleFormatted);
+        setSupportActionBar(toolbar);
     }
 
-    private void setItemsLeft(int itemsLeftCount) {
-        int total = order.size();
+    @Override
+    public void setShipType(String shipType) {
+        shipTypeView.setValue(shipType);
+    }
 
+    @Override
+    public void setItemsLeft(int total, int itemsLeftCount) {
         itemsLeftView.setText(
                 String.format(
                         getString(R.string.order_details_count_text),
@@ -288,9 +228,8 @@ public final class OrderDetailsActivity extends BaseActivity {
                         total));
     }
 
-    private void showOrder() {
-        checkFinish();
-
+    @Override
+    public void showOrder(Order order, CodesToProcess codesToProcess) {
         orderDetailsAdapter =
                 new OrderDetailsAdapter(
                         this,
@@ -300,79 +239,80 @@ public final class OrderDetailsActivity extends BaseActivity {
         recyclerView.setAdapter(orderDetailsAdapter);
     }
 
-    private void showCommunicationError() {
-        showError(
-                getString(R.string.error_communication));
-    }
-
-    private void showError(String error) {
+    @Override
+    public void showError(String error) {
         recyclerView.setAdapter(
                 new EmptyStateAdapter(
                         this,
                         error));
     }
 
-    private void showDetails() {
-        if (order == null) {
-            return;
-        }
-
-        OrderInfoActivity.startForOrder(this, order);
-    }
-
-    private void checkFinish() {
-        int itemsLeftCount = codesToProcess.itemsLeft();
-
-        finishRoot.setVisibility(View.GONE);
-        itemsLeftRoot.setVisibility(View.GONE);
-        alreadyProcessedRoot.setVisibility(View.GONE);
-
-        if (order.isProcessed()) {
-            alreadyProcessedRoot.setVisibility(View.VISIBLE);
-        } else if (itemsLeftCount == 0) {
-            finishRoot.setVisibility(View.VISIBLE);
-        } else {
-            itemsLeftRoot.setVisibility(View.VISIBLE);
-            setItemsLeft(itemsLeftCount);
-        }
-    }
-
-    private void finishOrder(int resultCode) {
-        Intent intent = new Intent();
-        setResult(resultCode, intent);
-
-        finish();
-    }
-
-    private void finishSkip() {
-        finishOrder(OrdersListActivity.RESULT_CODE_SKIP);
-    }
-
-    private void finishClose() {
-        finishOrder(OrdersListActivity.RESULT_CODE_CLOSE);
-    }
-
-    private void finishOk() {
-        ordersRepository.save(
-                order.withProcessedAt(
-                        DateFormatterUtils
-                                .getDateHourInstance()
-                                .now()));
-
-        if (total == 1) {
-            finishOrder(OrdersListActivity.RESULT_CODE_OK_UNIQUE);
-        } else {
-            finishOrder(OrdersListActivity.RESULT_CODE_OK);
-        }
+    @Override
+    public void showCommunicationError() {
+        showError(
+                getString(R.string.error_communication));
     }
 
     @Override
-    public void onBackPressed() {
-        if (order.isProcessed()) {
-            super.onBackPressed();
-            return;
-        }
+    public void hideLabels() {
+        finishRoot.setVisibility(View.GONE);
+        itemsLeftRoot.setVisibility(View.GONE);
+        alreadyProcessedRoot.setVisibility(View.GONE);
+    }
 
+    @Override
+    public void showFinishLabel() {
+        finishRoot.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void showItemsLeftLabel() {
+        itemsLeftRoot.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void showAlreadyProcessedLabel() {
+        alreadyProcessedRoot.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void navigateToDetails(Order order) {
+        OrderInfoActivity.startForOrder(this, order);
+    }
+
+    @Override
+    public void finishSkip() {
+        finishOrder(OrdersListActivity.RESULT_CODE_SKIP);
+    }
+
+    @Override
+    public void finishClose() {
+        finishOrder(OrdersListActivity.RESULT_CODE_CLOSE);
+    }
+
+    @Override
+    public void finishOk() {
+        finishOrder(OrdersListActivity.RESULT_CODE_OK);
+    }
+
+    @Override
+    public void finishOkUnique() {
+        finishOrder(OrdersListActivity.RESULT_CODE_OK_UNIQUE);
+    }
+
+
+    @Override
+    public void onBackPressed() {
+        presenter.onBackPressed();
+    }
+
+    @Override
+    public void finishBack() {
+        super.onBackPressed();
+    }
+
+    @Override
+    public void showBackDialog() {
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
         builder.setTitle(R.string.order_details_back_dialog_title)
@@ -382,7 +322,7 @@ public final class OrderDetailsActivity extends BaseActivity {
                         new AlertDialog.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int id) {
-                                OrderDetailsActivity.super.onBackPressed();
+                                presenter.onBackDialogOk();
                             }
                         })
                 .setNegativeButton(
@@ -397,7 +337,8 @@ public final class OrderDetailsActivity extends BaseActivity {
         builder.show();
     }
 
-    private void showSkipDialog() {
+    @Override
+    public void showSkipDialog() {
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
         builder.setTitle(R.string.order_details_skip_dialog_title)
@@ -407,7 +348,7 @@ public final class OrderDetailsActivity extends BaseActivity {
                         new AlertDialog.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int id) {
-                                finishSkip();
+                                presenter.onSkipDialogOk();
                             }
                         })
                 .setNegativeButton(
@@ -422,7 +363,8 @@ public final class OrderDetailsActivity extends BaseActivity {
         builder.show();
     }
 
-    private void showClearDialog() {
+    @Override
+    public void showClearDialog() {
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
         builder.setTitle(R.string.order_details_clear_dialog_title)
@@ -432,7 +374,7 @@ public final class OrderDetailsActivity extends BaseActivity {
                         new AlertDialog.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int id) {
-                                refreshOrder();
+                                presenter.onClearDialogOk();
                             }
                         })
                 .setNegativeButton(
@@ -447,7 +389,8 @@ public final class OrderDetailsActivity extends BaseActivity {
         builder.show();
     }
 
-    private void showCloseDialog() {
+    @Override
+    public void showCloseDialog() {
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
         builder.setTitle(R.string.order_details_close_dialog_title)
@@ -457,7 +400,7 @@ public final class OrderDetailsActivity extends BaseActivity {
                         new AlertDialog.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int id) {
-                                finishClose();
+                                presenter.onCloseDialogOk();
                             }
                         })
                 .setNegativeButton(
@@ -472,15 +415,8 @@ public final class OrderDetailsActivity extends BaseActivity {
         builder.show();
     }
 
-    private void checkPermissionForCamera() {
-        if (PermissionUtils.isCameraEnabled(this)) {
-            navigateToCamera();
-        } else {
-            PermissionUtils.requestPermissionForCamera(this, REQUEST_CODE_CAMERA_PERMISSION);
-        }
-    }
-
-    private void navigateToCamera() {
+    @Override
+    public void navigateToProcessor(CodesToProcess codesToProcess) {
         startActivityForResult(
                 BarcodeProcessorActivity.getIntentForOrder(
                         this,
@@ -490,21 +426,61 @@ public final class OrderDetailsActivity extends BaseActivity {
 
     @OnClick(R.id.order_details_fab)
     void onFabClick() {
-        checkPermissionForCamera();
+        presenter.onFabClicked();
     }
 
     @OnClick(R.id.order_details_finish)
     void onFinishedClick() {
-        finishOk();
+        presenter.onFinishClicked();
     }
 
     @OnClick(R.id.order_details_processed)
     void onAlreadyProcessedClick() {
-        finishClose();
+        presenter.onAlreadyProcessedClicked();
     }
 
     @OnClick(R.id.order_details_ship_type)
     void onShipTypeClick() {
-        showDetails();
+        presenter.onShipTypeClicked();
     }
+
+    @Override
+    public void setPresenter(@NonNull OrderDetailsContract.Presenter presenter) {
+        this.presenter = presenter;
+    }
+
+    private void finishOrder(int resultCode) {
+        Intent intent = new Intent();
+        setResult(resultCode, intent);
+
+        finish();
+    }
+
+    //    @Override
+//    public void onRequestPermissionsResult(
+//            int requestCode,
+//            @NonNull String permissions[],
+//            @NonNull int[] grantResults) {
+//
+//        if (requestCode == REQUEST_CODE_CAMERA_PERMISSION &&
+//                grantResults.length > 0 &&
+//                grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+//
+////            navigateToCamera();
+//            presenter.onPermissionGranted();
+//        } else {
+////            PermissionUtils.requestPermissionForCamera(this, REQUEST_CODE_CAMERA_PERMISSION);
+//            presenter.onPermissionDenied();
+//        }
+//    }
+
+
+//    private void checkPermissionForCamera() {
+//        if (PermissionUtils.isCameraEnabled(this)) {
+//            navigateToCamera();
+//        } else {
+//            PermissionUtils.requestPermissionForCamera(this, REQUEST_CODE_CAMERA_PERMISSION);
+//        }
+//    }
+
 }
