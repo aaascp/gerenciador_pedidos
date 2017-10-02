@@ -51,6 +51,18 @@ public final class OrdersListActivity extends BaseActivity implements OrdersList
 
     OrdersListContract.Presenter presenter;
 
+    public static Intent getIntent(
+            OrderFilterList filters,
+            boolean processAll) {
+
+        Intent intent = new Intent();
+
+        intent.putExtra(EXTRA_ORDER_FILTERS, filters);
+        intent.putExtra(EXTRA_PROCESS_ALL, processAll);
+
+        return intent;
+    }
+
     public static void startForContext(
             Context context,
             OrderFilterList filters,
@@ -88,6 +100,8 @@ public final class OrdersListActivity extends BaseActivity implements OrdersList
                     new OrdersRepository(),
                     false);
         }
+
+        setupToolbar();
     }
 
     @Override
@@ -123,8 +137,7 @@ public final class OrdersListActivity extends BaseActivity implements OrdersList
         return extras.getBoolean(EXTRA_PROCESS_ALL, false);
     }
 
-    @Override
-    public void setupToolbar() {
+    private void setupToolbar() {
         toolbar.setNavigationIcon(R.drawable.ic_back_white_vector);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override

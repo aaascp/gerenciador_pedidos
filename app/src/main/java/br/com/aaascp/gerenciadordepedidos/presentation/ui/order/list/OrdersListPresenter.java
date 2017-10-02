@@ -33,7 +33,6 @@ final class OrdersListPresenter implements OrdersListContract.Presenter {
         this.processAll = processAll;
 
         view.setPresenter(this);
-        view.setupToolbar();
         setupFab();
     }
 

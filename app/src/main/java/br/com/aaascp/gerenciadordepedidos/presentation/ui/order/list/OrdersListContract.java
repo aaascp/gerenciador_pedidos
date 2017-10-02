@@ -12,8 +12,6 @@ import br.com.aaascp.gerenciadordepedidos.presentation.BaseView;
 
 interface OrdersListContract {
     interface View extends BaseView<Presenter> {
-        void setupToolbar();
-
         void showOrdersList(List<Order> orders);
 
         void showEmptyList();

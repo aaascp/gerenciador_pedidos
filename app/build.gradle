@@ -16,6 +16,39 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+
+        debug {
+            // Run code coverage reports by default on debug builds.
+            // testCoverageEnabled = true
+        }
+    }
+
+    buildTypes {
+
+    }
+
+    productFlavors {
+        mock {
+            applicationIdSuffix = ".mock"
+        }
+
+        prod {
+
+        }
+    }
+
+    android.variantFilter { variant ->
+        if (variant.buildType.name == 'release'
+                && variant.getFlavors().get(0).name == 'mock') {
+            variant.setIgnore(true);
+        }
+    }
+
+    // Always show the result of every unit test, even if it passes.
+    testOptions.unitTests.all {
+        testLogging {
+            events 'passed', 'skipped', 'failed', 'standardOut', 'standardError'
+        }
     }
 }
 
@@ -34,9 +67,6 @@ ext {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
-        exclude group: 'com.android.support', module: 'support-annotations'
-    })
 
     compile "com.android.support.constraint:constraint-layout:1.0.2"
     compile "com.android.support:appcompat-v7:$supportLibraryVersion"
@@ -67,8 +97,18 @@ dependencies {
     // Dependencies for local unit tests
     testCompile "junit:junit:$junitVersion"
     testCompile "org.mockito:mockito-all:$mockitoVersion"
-//    testCompile "org.hamcrest:hamcrest-all:$hamcrestVersion"
+    testCompile "org.hamcrest:hamcrest-all:$hamcrestVersion"
 //    testCompile "org.powermock:powermock-module-junit4:$powerMockito"
 //    testCompile "org.powermock:powermock-api-mockito:$powerMockito"
+
+    // Espresso UI Testing dependencies.
+    androidTestCompile("com.android.support.test.espresso:espresso-core:$espressoVersion", {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
+    androidTestCompile("com.android.support.test:rules:$rulesVersion", {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
+//    androidTestCompile "com.android.support.test.espresso:espresso-contrib:$espressoVersion"
+
 
 }
