@@ -19,6 +19,7 @@ import br.com.aaascp.gerenciadordepedidos.entity.OrderFilterList;
 import br.com.aaascp.gerenciadordepedidos.presentation.ui.BaseActivity;
 import br.com.aaascp.gerenciadordepedidos.presentation.ui.order.details.OrderDetailsActivity;
 import br.com.aaascp.gerenciadordepedidos.presentation.util.EmptyStateAdapter;
+import br.com.aaascp.gerenciadordepedidos.repository.OrdersRepository;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -78,11 +79,13 @@ public final class OrdersListActivity extends BaseActivity implements OrdersList
             new OrdersListPresenter(
                     this,
                     getOrderFilterListExtra(extras),
+                    new OrdersRepository(),
                     getProcessAllExtra(extras));
         } else {
             new OrdersListPresenter(
                     this,
                     NullOrderFilterList.create(),
+                    new OrdersRepository(),
                     false);
         }
     }

@@ -24,13 +24,13 @@ final class OrdersListPresenter implements OrdersListContract.Presenter {
     OrdersListPresenter(
             OrdersListContract.View view,
             OrderFilterList filters,
+            OrdersRepository ordersRepository,
             boolean processAll) {
 
         this.view = view;
         this.filters = filters;
+        this.ordersRepository = ordersRepository;
         this.processAll = processAll;
-
-        ordersRepository = new OrdersRepository();
 
         view.setPresenter(this);
         view.setupToolbar();
@@ -77,7 +77,11 @@ final class OrdersListPresenter implements OrdersListContract.Presenter {
                     @Override
                     public void onSuccess(List<Order> result) {
                         orders = result;
-                        view.showOrdersList(orders);
+                        if (result.size() == 0) {
+                            view.showEmptyList();
+                        } else {
+                            view.showOrdersList(orders);
+                        }
                     }
 
                     @Override
