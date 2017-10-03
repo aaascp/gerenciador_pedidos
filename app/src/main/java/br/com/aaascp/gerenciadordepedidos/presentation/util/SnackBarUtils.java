@@ -19,7 +19,7 @@ public final class SnackBarUtils {
 
         View view = snackBar.getView();
 
-        TextView snackBarText = view.findViewById(android.support.design.R.id.snackbar_text);
+        TextView snackBarText = (TextView) view.findViewById(android.support.design.R.id.snackbar_text);
         snackBarText.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
 
         snackBar.show();

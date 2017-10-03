@@ -62,11 +62,8 @@ public final class EmptyStateAdapter extends RecyclerView.Adapter<EmptyStateAdap
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-
-        Drawable drawable = context.getDrawable(image);
-
-        if (drawable != null) {
-            holder.image.setImageDrawable(drawable);
+        if (image != NULL_DRAWABLE) {
+            holder.image.setImageResource(image);
         }
 
         holder.message.setText(message);

@@ -33,6 +33,11 @@ public class OrdersRepository {
                     public void onSuccess(Order data) {
                         callback.onSuccess(data);
                     }
+
+                    @Override
+                    public void onError(List<String> errors) {
+                        callback.onError(errors);
+                    }
                 });
     }
 
@@ -56,6 +61,11 @@ public class OrdersRepository {
                     @Override
                     public void onSuccess(List<Order> data) {
                         callback.onSuccess(data);
+                    }
+
+                    @Override
+                    public void onError(List<String> errors) {
+                        callback.onError(errors);
                     }
                 });
     }

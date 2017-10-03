@@ -59,7 +59,7 @@ public final class OrdersMemoryDataSource implements OrdersDataSource {
                     boolean isFiltered;
 
                     for (OrderFilter filter : filters) {
-                        isFiltered = filter.accept(this, order);
+                        isFiltered = filter.accept(OrdersMemoryDataSource.this, order);
 
                         if (isFiltered) {
                             filteredOrders.add(copyOrder(order));

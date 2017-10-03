@@ -59,7 +59,7 @@ final class OrdersListAdapter extends RecyclerView.Adapter<OrdersListAdapter.Vie
 
         holder.itemsCount.setText(
                 String.valueOf(
-                        order.items().size()));
+                        order.size()));
 
         holder.lastModifiedAt.setText(order.lastModifiedAt());
 
