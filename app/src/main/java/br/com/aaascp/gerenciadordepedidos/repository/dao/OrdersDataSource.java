@@ -4,17 +4,18 @@ import java.util.List;
 
 import br.com.aaascp.gerenciadordepedidos.entity.Order;
 import br.com.aaascp.gerenciadordepedidos.entity.OrderFilterList;
+import br.com.aaascp.gerenciadordepedidos.repository.callback.DataSourceCallback;
 import br.com.aaascp.gerenciadordepedidos.repository.filter.OrderVisitor;
 
 /**
  * Created by andre on 27/09/17.
  */
 
-public interface OrderDao extends OrderVisitor {
+public interface OrdersDataSource extends OrderVisitor {
 
     void save(Order order);
 
-    List<Order> load(OrderFilterList filterList);
+    void load(OrderFilterList filterList, DataSourceCallback<List<Order>> callback);
 
-    Order load(int id);
+    void load(int id, DataSourceCallback<Order> callback);
 }

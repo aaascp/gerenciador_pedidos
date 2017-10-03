@@ -5,9 +5,9 @@ import java.util.List;
 
 import br.com.aaascp.gerenciadordepedidos.entity.Order;
 import br.com.aaascp.gerenciadordepedidos.entity.OrderFilterList;
+import br.com.aaascp.gerenciadordepedidos.repository.callback.DataSourceCallback;
 import br.com.aaascp.gerenciadordepedidos.repository.callback.RepositoryCallback;
-import br.com.aaascp.gerenciadordepedidos.repository.dao.OrderDao;
-import br.com.aaascp.gerenciadordepedidos.repository.dao.OrderDaoMemory;
+import br.com.aaascp.gerenciadordepedidos.repository.dao.OrdersDataSource;
 import br.com.aaascp.gerenciadordepedidos.repository.filter.OrderFilter;
 
 /**
@@ -16,17 +16,24 @@ import br.com.aaascp.gerenciadordepedidos.repository.filter.OrderFilter;
 
 public class OrdersRepository {
 
-    private OrderDao orderDao;
+    private OrdersDataSource ordersDataSource;
 
-    public OrdersRepository() {
-        this.orderDao = new OrderDaoMemory();
+    public OrdersRepository(OrdersDataSource ordersDataSource) {
+        this.ordersDataSource = ordersDataSource;
     }
 
     public void getOrder(
             int id,
-            RepositoryCallback<Order> callback) {
+            final RepositoryCallback<Order> callback) {
 
-        callback.onSuccess(orderDao.load(id));
+        ordersDataSource.load(
+                id,
+                new DataSourceCallback<Order>() {
+                    @Override
+                    public void onSuccess(Order data) {
+                        callback.onSuccess(data);
+                    }
+                });
     }
 
     public void getList(
@@ -41,13 +48,19 @@ public class OrdersRepository {
 
     public void getList(
             OrderFilterList filterList,
-            RepositoryCallback<List<Order>> callback) {
+            final RepositoryCallback<List<Order>> callback) {
 
-        callback.onSuccess(
-                orderDao.load(filterList));
+        ordersDataSource.load(
+                filterList,
+                new DataSourceCallback<List<Order>>() {
+                    @Override
+                    public void onSuccess(List<Order> data) {
+                        callback.onSuccess(data);
+                    }
+                });
     }
 
     public void save(Order order) {
-        orderDao.save(order);
+        ordersDataSource.save(order);
     }
 }

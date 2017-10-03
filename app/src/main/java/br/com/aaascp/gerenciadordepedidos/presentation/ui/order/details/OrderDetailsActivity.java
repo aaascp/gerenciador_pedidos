@@ -13,6 +13,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+import br.com.aaascp.gerenciadordepedidos.Inject;
 import br.com.aaascp.gerenciadordepedidos.R;
 import br.com.aaascp.gerenciadordepedidos.entity.CodesToProcess;
 import br.com.aaascp.gerenciadordepedidos.entity.Order;
@@ -92,12 +93,14 @@ public final class OrderDetailsActivity extends BaseActivity implements OrderDet
         if (extras != null) {
             new OrderDetailsPresenter(
                     this,
+                    Inject.provideOrdersRepository(),
                     extras.getInt(EXTRA_ORDER_ID, Order.INVALID_ORDER_ID),
                     extras.getInt(EXTRA_TOTAL, 1),
                     extras.getInt(EXTRA_CURRENT, 1));
         } else {
             new OrderDetailsPresenter(
                     this,
+                    Inject.provideOrdersRepository(),
                     Order.INVALID_ORDER_ID,
                     1,
                     1);

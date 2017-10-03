@@ -27,16 +27,18 @@ final class OrderDetailsPresenter implements OrderDetailsContract.Presenter {
 
     OrderDetailsPresenter(
             OrderDetailsContract.View view,
+            OrdersRepository ordersRepository,
             int orderId,
             int total,
             int current) {
 
         this.view = view;
+        this.ordersRepository = ordersRepository;
+
         this.orderId = orderId;
         this.total = total;
         this.current = current;
 
-        ordersRepository = new OrdersRepository();
 
         view.setPresenter(this);
         setupToolbar();

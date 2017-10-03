@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
+import br.com.aaascp.gerenciadordepedidos.Inject;
 import br.com.aaascp.gerenciadordepedidos.entity.Order;
 import br.com.aaascp.gerenciadordepedidos.entity.OrderFilterList;
 import br.com.aaascp.gerenciadordepedidos.presentation.util.DialogUtils;
@@ -25,7 +26,7 @@ final class DashboardPresenter implements DashboardContract.Presenter {
     DashboardPresenter(DashboardContract.View view) {
         this.view = view;
 
-        ordersRepository = new OrdersRepository();
+        ordersRepository = Inject.provideOrdersRepository();
 
         view.setPresenter(this);
     }
