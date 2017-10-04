@@ -20,7 +20,9 @@ final class OrderInfoPresenter implements OrderInfoContract.Presenter {
 
     @Override
     public void start() {
-        setupInfo();
+        if (order != null) {
+            setupInfo();
+        }
     }
 
     private void setupInfo() {
@@ -28,8 +30,7 @@ final class OrderInfoPresenter implements OrderInfoContract.Presenter {
         setOrderInfo();
 
         view.setCustomerInfo(
-                String.valueOf(
-                        order.customerInfo().id()),
+                String.valueOf(order.customerInfo().id()),
                 order.customerInfo().name());
 
         view.setShipmentInfo(

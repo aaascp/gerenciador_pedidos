@@ -11,6 +11,9 @@ import br.com.aaascp.gerenciadordepedidos.entity.ShipmentInfo;
 import br.com.aaascp.gerenciadordepedidos.presentation.ui.order.factories.OrdersFactory;
 import br.com.aaascp.gerenciadordepedidos.util.DateFormatterUtils;
 
+import static org.mockito.Matchers.anyInt;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 
 /**
@@ -49,6 +52,16 @@ public class OrderInfoPresenterTest {
         verify(view).setPresenter(presenter);
 
         presenter.start();
+    }
+
+    @Test
+    public void start_null() {
+        start(null);
+        verify(view, never()).setupToolbar(anyInt());
+        verify(view, never()).setCustomerInfo(anyString(), anyString());
+        verify(view, never()).setShipmentInfo(anyString(), anyString());
+        verify(view, never()).setProcessedOrderInfo(anyString(), anyString(), anyString());
+        verify(view, never()).setNotProcessedOrderInfo(anyString(), anyString());
     }
 
     @Test
