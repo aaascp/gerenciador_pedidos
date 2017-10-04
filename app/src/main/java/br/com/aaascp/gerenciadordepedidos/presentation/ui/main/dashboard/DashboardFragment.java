@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import br.com.aaascp.gerenciadordepedidos.Inject;
 import br.com.aaascp.gerenciadordepedidos.R;
 import br.com.aaascp.gerenciadordepedidos.entity.OrderFilterList;
 import br.com.aaascp.gerenciadordepedidos.presentation.custom.ValueLabelView;
@@ -33,7 +34,7 @@ public final class DashboardFragment extends BaseFragment implements DashboardCo
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        new DashboardPresenter(this);
+        new DashboardPresenter(this, Inject.provideOrdersRepository());
     }
 
     @Nullable

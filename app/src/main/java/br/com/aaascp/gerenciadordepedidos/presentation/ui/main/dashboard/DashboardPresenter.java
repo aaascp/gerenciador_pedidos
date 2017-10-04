@@ -23,10 +23,12 @@ final class DashboardPresenter implements DashboardContract.Presenter {
     private final DashboardContract.View view;
     private final OrdersRepository ordersRepository;
 
-    DashboardPresenter(DashboardContract.View view) {
-        this.view = view;
+    DashboardPresenter(
+            DashboardContract.View view,
+            OrdersRepository ordersRepository) {
 
-        ordersRepository = Inject.provideOrdersRepository();
+        this.view = view;
+        this.ordersRepository = ordersRepository;
 
         view.setPresenter(this);
     }
@@ -50,8 +52,7 @@ final class DashboardPresenter implements DashboardContract.Presenter {
 
                     @Override
                     public void onError(List<String> errors) {
-                        view.setToProcessCount(
-                                String.valueOf('?'));
+                        view.setToProcessCount("?");
                     }
                 });
 
