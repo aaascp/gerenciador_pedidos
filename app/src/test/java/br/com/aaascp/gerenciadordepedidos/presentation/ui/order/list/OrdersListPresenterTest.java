@@ -4,7 +4,7 @@ import com.google.common.collect.Lists;
 
 import br.com.aaascp.gerenciadordepedidos.entity.Order;
 import br.com.aaascp.gerenciadordepedidos.entity.OrderFilterList;
-import br.com.aaascp.gerenciadordepedidos.presentation.ui.order.list.factories.OrdersListFactory;
+import br.com.aaascp.gerenciadordepedidos.presentation.ui.order.factories.OrdersListFactory;
 import br.com.aaascp.gerenciadordepedidos.repository.OrdersRepository;
 import br.com.aaascp.gerenciadordepedidos.repository.callback.RepositoryCallback;
 

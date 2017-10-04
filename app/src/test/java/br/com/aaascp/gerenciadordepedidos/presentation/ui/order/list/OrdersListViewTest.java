@@ -24,7 +24,7 @@ import br.com.aaascp.gerenciadordepedidos.entity.CustomerInfo;
 import br.com.aaascp.gerenciadordepedidos.entity.Order;
 import br.com.aaascp.gerenciadordepedidos.entity.ShipmentInfo;
 import br.com.aaascp.gerenciadordepedidos.presentation.ui.order.details.OrderDetailsActivity;
-import br.com.aaascp.gerenciadordepedidos.presentation.ui.order.list.factories.OrdersListFactory;
+import br.com.aaascp.gerenciadordepedidos.presentation.ui.order.factories.OrdersListFactory;
 import br.com.aaascp.gerenciadordepedidos.presentation.util.EmptyStateAdapter;
 import br.com.aaascp.gerenciadordepedidos.util.DateFormatterUtils;
 

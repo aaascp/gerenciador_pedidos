@@ -1,4 +1,4 @@
-package br.com.aaascp.gerenciadordepedidos.presentation.ui.order.list.factories;
+package br.com.aaascp.gerenciadordepedidos.presentation.ui.order.factories;
 
 import java.util.ArrayList;
 import java.util.HashMap;
