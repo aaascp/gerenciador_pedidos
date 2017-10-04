@@ -104,6 +104,7 @@ dependencies {
     testCompile "junit:junit:$junitVersion"
     testCompile "org.mockito:mockito-all:$mockitoVersion"
     testCompile "org.hamcrest:hamcrest-all:$hamcrestVersion"
+    testCompile "org.robolectric:robolectric:3.4.2"
 
     // Espresso UI Testing dependencies.
     androidTestCompile "com.android.support.test.espresso:espresso-core:$espressoVersion"

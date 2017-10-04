@@ -27,7 +27,7 @@ import static org.mockito.Mockito.verify;
 public class OrdersListPresenterTest {
 
     private static int ORDERS_SIZE = 2;
-    private static List<Order> ORDERS = createOrdersList(ORDERS_SIZE, 0.6);
+    private static List<Order> ORDERS = createOrdersList(ORDERS_SIZE, 0.5);
     private static List<Order> ORDERS_EMPTY = new ArrayList<>(0);
     private static List<String> ERRORS = Lists.newArrayList("Error");
     private static List<String> ERRORS_EMPTY = null;

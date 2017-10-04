@@ -24,7 +24,6 @@ public final class EmptyStateAdapter extends RecyclerView.Adapter<EmptyStateAdap
     @DrawableRes
     private final int image;
 
-    private final Context context;
     private final String message;
     private final LayoutInflater inflater;
 
@@ -33,7 +32,6 @@ public final class EmptyStateAdapter extends RecyclerView.Adapter<EmptyStateAdap
             @DrawableRes int image,
             String message) {
 
-        this.context = context;
         this.image = image;
         this.message = message;
 
@@ -44,7 +42,6 @@ public final class EmptyStateAdapter extends RecyclerView.Adapter<EmptyStateAdap
             Context context,
             String message) {
 
-        this.context = context;
         this.image = NULL_DRAWABLE;
         this.message = message;
 
@@ -74,7 +71,7 @@ public final class EmptyStateAdapter extends RecyclerView.Adapter<EmptyStateAdap
         return 1;
     }
 
-    static class ViewHolder extends RecyclerView.ViewHolder {
+    public static class ViewHolder extends RecyclerView.ViewHolder {
 
         @BindView(R.id.empty_state_image)
         ImageView image;
@@ -86,6 +83,14 @@ public final class EmptyStateAdapter extends RecyclerView.Adapter<EmptyStateAdap
             super(itemView);
 
             ButterKnife.bind(this, itemView);
+        }
+
+        public ImageView getImage() {
+            return image;
+        }
+
+        public TextView getMessage() {
+            return message;
         }
     }
 }
