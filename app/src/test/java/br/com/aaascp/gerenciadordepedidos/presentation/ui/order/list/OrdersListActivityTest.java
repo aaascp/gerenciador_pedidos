@@ -24,7 +24,7 @@ import br.com.aaascp.gerenciadordepedidos.entity.CustomerInfo;
 import br.com.aaascp.gerenciadordepedidos.entity.Order;
 import br.com.aaascp.gerenciadordepedidos.entity.ShipmentInfo;
 import br.com.aaascp.gerenciadordepedidos.presentation.ui.order.details.OrderDetailsActivity;
-import br.com.aaascp.gerenciadordepedidos.presentation.ui.order.factories.OrdersListFactory;
+import br.com.aaascp.gerenciadordepedidos.presentation.ui.order.factories.OrdersFactory;
 import br.com.aaascp.gerenciadordepedidos.presentation.util.EmptyStateAdapter;
 import br.com.aaascp.gerenciadordepedidos.util.DateFormatterUtils;
 
@@ -41,7 +41,7 @@ import static org.robolectric.Shadows.shadowOf;
 public class OrdersListActivityTest {
 
     private static Order ORDER_PROCESSED =
-            OrdersListFactory.createOrder(
+            OrdersFactory.createOrder(
                     1000,
                     ShipmentInfo.builder().address("Endereço").shipType("Sedex").build(),
                     CustomerInfo.builder().id(1).name("Customer").build(),
@@ -50,7 +50,7 @@ public class OrdersListActivityTest {
                     DateFormatterUtils.getDateHourInstance().now());
 
     private static Order ORDER_NOT_PROCESSED =
-            OrdersListFactory.createOrder(
+            OrdersFactory.createOrder(
                     1001,
                     ShipmentInfo.builder().address("Endereço").shipType("Transportadora").build(),
                     CustomerInfo.builder().id(1).name("Customer").build(),

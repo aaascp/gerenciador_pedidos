@@ -8,7 +8,6 @@ import org.mockito.MockitoAnnotations;
 
 import br.com.aaascp.gerenciadordepedidos.entity.OrderItem;
 
-import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
@@ -50,7 +49,7 @@ public class OrderItemPresenterTest {
 
 
     @Before
-    public void init() {
+    public void setup() {
         MockitoAnnotations.initMocks(this);
     }
 

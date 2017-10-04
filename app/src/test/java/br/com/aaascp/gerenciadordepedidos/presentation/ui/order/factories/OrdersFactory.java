@@ -14,7 +14,7 @@ import br.com.aaascp.gerenciadordepedidos.util.DateFormatterUtils;
 /**
  * Created by andre on 02/10/17.
  */
-public class OrdersListFactory {
+public class OrdersFactory {
 
     public static List<Order> getOrders(int size, double processedProbability) {
         List<Order> orders = new ArrayList<>();
