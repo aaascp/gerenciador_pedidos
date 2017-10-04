@@ -16,7 +16,7 @@ import br.com.aaascp.gerenciadordepedidos.R;
  * Created by andre on 28/09/17.
  */
 
-public final class DialogUtils {
+public class DialogUtils {
 
     private static AlertDialog.Builder getGenericBuilder(
             Context context,

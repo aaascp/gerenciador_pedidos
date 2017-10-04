@@ -1,6 +1,7 @@
 package br.com.aaascp.gerenciadordepedidos.presentation.ui;
 
-import android.support.v4.app.Fragment;
+
+import android.app.Fragment;
 
 /**
  * Created by andre on 18/09/17.

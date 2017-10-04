@@ -29,7 +29,6 @@ public final class DashboardFragment extends BaseFragment implements DashboardCo
 
     private DashboardContract.Presenter presenter;
 
-
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -67,7 +66,7 @@ public final class DashboardFragment extends BaseFragment implements DashboardCo
     @Override
     public void navigateToOrdersList(OrderFilterList filters, boolean processAll) {
         OrdersListActivity.startForContext(
-                getContext(),
+                getActivity(),
                 filters,
                 processAll);
     }
@@ -75,17 +74,16 @@ public final class DashboardFragment extends BaseFragment implements DashboardCo
     @Override
     public void showGetIdsDialog(DialogUtils.IntValuesListener listener) {
         DialogUtils.showGetIntValues(
-                getContext(),
+                getActivity(),
                 R.string.dashboard_orders_find_dialog_title,
                 R.string.dashboard_orders_find_dialog_message,
                 listener);
-
     }
 
     @Override
     public void showErrorGettingIds() {
         DialogUtils.showError(
-                getContext(),
+                getActivity(),
                 getString(R.string.dashboard_orders_find_dialog_error_title),
                 getString(R.string.dashboard_orders_find_dialog_erro_message));
     }

@@ -37,8 +37,8 @@ public final class OrdersListActivity extends BaseActivity implements OrdersList
     public static final int RESULT_CODE_SKIP = 400;
     public static final int RESULT_CODE_CLOSE = 500;
 
-    private static final String EXTRA_ORDER_FILTERS = "EXTRA_ORDER_FILTERS";
-    private static final String EXTRA_PROCESS_ALL = "EXTRA_PROCESS_ALL";
+    public static final String EXTRA_ORDER_FILTERS = "EXTRA_ORDER_FILTERS";
+    public static final String EXTRA_PROCESS_ALL = "EXTRA_PROCESS_ALL";
 
     @BindView(R.id.orders_list_fab)
     FloatingActionButton fab;

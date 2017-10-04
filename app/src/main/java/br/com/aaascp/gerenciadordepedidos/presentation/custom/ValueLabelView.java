@@ -101,4 +101,8 @@ public class ValueLabelView extends ConstraintLayout {
             setBackground(background);
         }
     }
+
+    public String getValue() {
+        return valueView.getText().toString();
+    }
 }
