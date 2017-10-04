@@ -38,7 +38,7 @@ import static org.robolectric.Shadows.shadowOf;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(constants = BuildConfig.class)
-public class OrdersListViewTest {
+public class OrdersListActivityTest {
 
     private static Order ORDER_PROCESSED =
             OrdersListFactory.createOrder(
@@ -64,11 +64,17 @@ public class OrdersListViewTest {
     OrdersListContract.Presenter presenter;
 
     @Before
-    public void setUp() throws Exception {
+    public void setup() throws Exception {
         MockitoAnnotations.initMocks(this);
         activity = Robolectric.setupActivity(OrdersListActivity.class);
 
         activity.setPresenter(presenter);
+    }
+
+    @Test
+    public void onStart_startPresenter() throws Exception {
+        activity.onStart();
+        verify(presenter).start();
     }
 
     @Test

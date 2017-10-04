@@ -7,7 +7,7 @@ import br.com.aaascp.gerenciadordepedidos.util.StringUtils;
  * Created by andre on 28/09/17.
  */
 
-final class OrderItemPresenter implements OrderItemContract.Presenter {
+class OrderItemPresenter implements OrderItemContract.Presenter {
 
     private final OrderItemContract.View view;
     private final OrderItem item;
@@ -24,10 +24,12 @@ final class OrderItemPresenter implements OrderItemContract.Presenter {
 
     @Override
     public void start() {
-        setupOrder();
+        if(item != null) {
+            setupItem();
+        }
     }
 
-    private void setupOrder() {
+    private void setupItem() {
         view.setupToolbar(item.code());
         view.setDescription(item.description());
         setupImage();

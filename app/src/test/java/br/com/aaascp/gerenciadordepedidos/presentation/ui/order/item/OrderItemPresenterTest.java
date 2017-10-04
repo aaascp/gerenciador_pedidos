@@ -8,6 +8,7 @@ import org.mockito.MockitoAnnotations;
 
 import br.com.aaascp.gerenciadordepedidos.entity.OrderItem;
 
+import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
@@ -66,6 +67,14 @@ public class OrderItemPresenterTest {
         start(ITEM_WITH_IMAGE);
         verify(view).setupToolbar(ITEM_WITH_IMAGE.code());
         verify(view).setDescription(ITEM_WITH_IMAGE.description());
+    }
+
+    @Test
+    public void start_nullItem() {
+        start(null);
+        verify(view, never()).setupToolbar(anyString());
+        verify(view, never()).setDescription(anyString());
+        verify(view, never()).loadImage(anyString());
     }
 
     @Test

@@ -105,6 +105,11 @@ dependencies {
     testCompile "org.mockito:mockito-all:$mockitoVersion"
     testCompile "org.hamcrest:hamcrest-all:$hamcrestVersion"
     testCompile "org.robolectric:robolectric:3.4.2"
+    testCompile "org.powermock:powermock-module-junit4:1.6.4"
+    testCompile "org.powermock:powermock-module-junit4-rule:1.6.4"
+    testCompile "org.powermock:powermock-api-mockito:1.6.4"
+    testCompile "org.powermock:powermock-classloading-xstream:1.6.4"
+
 
     // Espresso UI Testing dependencies.
     androidTestCompile "com.android.support.test.espresso:espresso-core:$espressoVersion"
