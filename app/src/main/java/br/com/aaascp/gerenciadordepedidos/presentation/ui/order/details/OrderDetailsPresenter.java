@@ -181,7 +181,7 @@ final class OrderDetailsPresenter implements OrderDetailsContract.Presenter {
         view.showOrder(order, codesToProcess);
     }
 
-    private void checkFinish() {
+    void checkFinish() {
         int itemsLeft = codesToProcess.itemsLeft();
 
         view.hideLabels();
