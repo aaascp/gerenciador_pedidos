@@ -40,7 +40,7 @@ public final class BarcodeProcessorActivity extends BaseActivity
     private static final int REQUEST_CODE_CAMERA_PERMISSION = 100;
     public static final String EXTRA_RESULT = "EXTRA_RESULT";
 
-    private static final String EXTRA_CODES_TO_PROCESS = "EXTRA_CODES_TO_PROCESS";
+    public static final String EXTRA_CODES_TO_PROCESS = "EXTRA_CODES_TO_PROCESS";
 
     private static final int PROCESSING_TIME = 3 * 1000;
 
@@ -148,9 +148,14 @@ public final class BarcodeProcessorActivity extends BaseActivity
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                onBackPressed();
+                presenter.onFinish();
             }
         });
+    }
+
+    @Override
+    public void onBackPressed() {
+        presenter.onFinish();
     }
 
     @Override

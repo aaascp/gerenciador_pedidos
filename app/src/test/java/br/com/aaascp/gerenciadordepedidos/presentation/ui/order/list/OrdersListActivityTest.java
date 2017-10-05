@@ -136,23 +136,23 @@ public class OrdersListActivityTest {
     @Test
     public void hideFab() throws Exception {
         activity.hideFab();
-        assertEquals(activity.findViewById(R.id.orders_list_fab).getVisibility(), View.GONE);
+
+        assertEquals(activity.fab.getVisibility(), View.GONE);
     }
 
     @Test
     public void showFab() throws Exception {
         activity.showFab();
-        assertEquals(activity.findViewById(R.id.orders_list_fab).getVisibility(), View.VISIBLE);
+
+        assertEquals(activity.fab.getVisibility(), View.VISIBLE);
     }
 
     @Test
     public void showOrdersList() throws Exception {
         activity.showOrdersList(Arrays.asList(ORDER_PROCESSED, ORDER_NOT_PROCESSED));
 
-        RecyclerView recyclerView = (RecyclerView) activity.findViewById(R.id.orders_list_recycler);
-
         OrdersListAdapter.ViewHolder holder =
-                (OrdersListAdapter.ViewHolder) recyclerView.findViewHolderForAdapterPosition(0);
+                (OrdersListAdapter.ViewHolder) activity.recyclerView.findViewHolderForAdapterPosition(0);
 
         assertEquals(holder.id.getText().toString(), String.valueOf(ORDER_PROCESSED.id()));
         assertEquals(holder.shipType.getText().toString(), ORDER_PROCESSED.shipmentInfo().shipType());
@@ -162,7 +162,7 @@ public class OrdersListActivityTest {
         assertEquals(holder.lastModifiedAt.getText().toString(), ORDER_PROCESSED.lastModifiedAt());
         assertEquals(holder.action.getText().toString(), String.valueOf(activity.getString(R.string.orders_list_action_details)));
 
-        holder = (OrdersListAdapter.ViewHolder) recyclerView.findViewHolderForAdapterPosition(1);
+        holder = (OrdersListAdapter.ViewHolder) activity.recyclerView.findViewHolderForAdapterPosition(1);
 
         assertEquals(holder.id.getText().toString(), String.valueOf(ORDER_NOT_PROCESSED.id()));
         assertEquals(holder.shipType.getText().toString(), ORDER_NOT_PROCESSED.shipmentInfo().shipType());
@@ -176,10 +176,9 @@ public class OrdersListActivityTest {
     @Test
     public void showEmptyList() throws Exception {
         activity.showEmptyList();
-        RecyclerView recyclerView = (RecyclerView) activity.findViewById(R.id.orders_list_recycler);
 
         EmptyStateAdapter.ViewHolder holder =
-                (EmptyStateAdapter.ViewHolder) recyclerView.findViewHolderForAdapterPosition(0);
+                (EmptyStateAdapter.ViewHolder) activity.recyclerView.findViewHolderForAdapterPosition(0);
 
         String message = activity.getString(R.string.order_list_empty);
         assertEquals(holder.getMessage().getText().toString(), message);
@@ -190,10 +189,8 @@ public class OrdersListActivityTest {
         String error = "Error";
         activity.showError(error);
 
-        RecyclerView recyclerView = (RecyclerView) activity.findViewById(R.id.orders_list_recycler);
-
         EmptyStateAdapter.ViewHolder holder =
-                (EmptyStateAdapter.ViewHolder) recyclerView.findViewHolderForAdapterPosition(0);
+                (EmptyStateAdapter.ViewHolder) activity.recyclerView.findViewHolderForAdapterPosition(0);
 
         assertEquals(holder.getMessage().getText().toString(), error);
     }
@@ -202,10 +199,9 @@ public class OrdersListActivityTest {
     @Test
     public void showCommunicationError() throws Exception {
         activity.showCommunicationError();
-        RecyclerView recyclerView = (RecyclerView) activity.findViewById(R.id.orders_list_recycler);
 
         EmptyStateAdapter.ViewHolder holder =
-                (EmptyStateAdapter.ViewHolder) recyclerView.findViewHolderForAdapterPosition(0);
+                (EmptyStateAdapter.ViewHolder) activity.recyclerView.findViewHolderForAdapterPosition(0);
 
         String message = activity.getString(R.string.error_communication);
         assertEquals(holder.getMessage().getText().toString(), message);
@@ -216,10 +212,8 @@ public class OrdersListActivityTest {
     public void navigateToOrderDetails_unique() throws Exception {
         activity.showOrdersList(Collections.singletonList(ORDER_PROCESSED));
 
-        RecyclerView recyclerView = (RecyclerView) activity.findViewById(R.id.orders_list_recycler);
-
         OrdersListAdapter.ViewHolder holder =
-                (OrdersListAdapter.ViewHolder) recyclerView.findViewHolderForAdapterPosition(0);
+                (OrdersListAdapter.ViewHolder) activity.recyclerView.findViewHolderForAdapterPosition(0);
 
         holder.root.performClick();
 

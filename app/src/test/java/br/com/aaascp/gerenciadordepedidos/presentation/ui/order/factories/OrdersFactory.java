@@ -21,7 +21,7 @@ public class OrdersFactory {
 
         for (int i = 0; i < size; i++) {
             double rand = Math.random();
-            orders.add(orderFactory(1000 + i, rand < processedProbability));
+            orders.add(createOrder(1000 + i, rand < processedProbability));
         }
 
         return orders;
@@ -95,7 +95,7 @@ public class OrdersFactory {
                 .build();
     }
 
-    private static Order orderFactory(int id, boolean processed) {
+    public static Order createOrder(int id, boolean processed) {
       return createOrder(
               id,
               ShipmentInfo.builder().shipType("Sedex").address("Endereco").build(),

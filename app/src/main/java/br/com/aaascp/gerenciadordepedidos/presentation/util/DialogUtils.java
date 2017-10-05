@@ -1,9 +1,9 @@
 package br.com.aaascp.gerenciadordepedidos.presentation.util;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.support.annotation.StringRes;
-import android.support.v7.app.AlertDialog;
 import android.text.InputType;
 import android.text.method.DigitsKeyListener;
 import android.widget.EditText;

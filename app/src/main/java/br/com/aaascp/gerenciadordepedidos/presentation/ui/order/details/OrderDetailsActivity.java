@@ -32,9 +32,9 @@ import butterknife.OnClick;
  * Created by andre on 09/07/17.
  */
 
-public final class OrderDetailsActivity extends BaseActivity implements OrderDetailsContract.View {
+public class OrderDetailsActivity extends BaseActivity implements OrderDetailsContract.View {
 
-    private static final int REQUEST_CODE_PROCESS = 100;
+    static final int REQUEST_CODE_PROCESS = 100;
 
     public static final String EXTRA_ORDER_ID = "EXTRA_ORDER_ID";
     public static final String EXTRA_TOTAL = "EXTRA_TOTAL";

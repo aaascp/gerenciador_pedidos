@@ -26,7 +26,7 @@ import butterknife.ButterKnife;
  * Created by andre on 20/09/17.
  */
 
-final class OrderDetailsAdapter extends RecyclerView.Adapter<OrderDetailsAdapter.ViewHolder> {
+class OrderDetailsAdapter extends RecyclerView.Adapter<OrderDetailsAdapter.ViewHolder> {
 
     private final Context context;
     private final Map<String, OrderItem> items;

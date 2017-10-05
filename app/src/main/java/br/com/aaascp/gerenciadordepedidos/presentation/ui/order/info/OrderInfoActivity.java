@@ -21,7 +21,7 @@ import butterknife.ButterKnife;
 
 public final class OrderInfoActivity extends BaseActivity implements OrderInfoContract.View {
 
-    private static final String EXTRA_ORDER = "EXTRA_ORDER";
+    public static final String EXTRA_ORDER = "EXTRA_ORDER";
 
     @BindView(R.id.order_info_toolbar)
     Toolbar toolbar;
