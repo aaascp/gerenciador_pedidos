@@ -25,8 +25,7 @@
                 android:layout_marginTop="?attr/actionBarSize"
                 app:backgroundImage="@drawable/circle_transparent_white_border_4dp"
                 app:color="@android:color/white"
-                app:label="entrega"
-                app:value="TRANSPORTADORA" />
+                app:label="entrega" />
 
             <android.support.v7.widget.Toolbar
                 android:id="@+id/order_details_toolbar"

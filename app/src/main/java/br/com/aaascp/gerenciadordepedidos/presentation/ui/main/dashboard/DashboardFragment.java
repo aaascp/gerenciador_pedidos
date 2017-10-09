@@ -1,19 +1,29 @@
 package br.com.aaascp.gerenciadordepedidos.presentation.ui.main.dashboard;
 
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+
 import br.com.aaascp.gerenciadordepedidos.Inject;
 import br.com.aaascp.gerenciadordepedidos.R;
+import br.com.aaascp.gerenciadordepedidos.entity.Order;
 import br.com.aaascp.gerenciadordepedidos.entity.OrderFilterList;
 import br.com.aaascp.gerenciadordepedidos.presentation.custom.ValueLabelView;
 import br.com.aaascp.gerenciadordepedidos.presentation.ui.BaseFragment;
 import br.com.aaascp.gerenciadordepedidos.presentation.ui.order.list.OrdersListActivity;
 import br.com.aaascp.gerenciadordepedidos.presentation.util.DialogUtils;
+import br.com.aaascp.gerenciadordepedidos.repository.OrdersRepository;
+import br.com.aaascp.gerenciadordepedidos.repository.callback.RepositoryCallback;
+import br.com.aaascp.gerenciadordepedidos.repository.filter.OrderFilter;
+import br.com.aaascp.gerenciadordepedidos.repository.filter.IdFilter;
+import br.com.aaascp.gerenciadordepedidos.repository.filter.StatusFilter;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -22,19 +32,10 @@ import butterknife.OnClick;
  * Created by andre on 18/09/17.
  */
 
-public final class DashboardFragment extends BaseFragment implements DashboardContract.View {
+public final class DashboardFragment extends BaseFragment {
 
     @BindView(R.id.dashboard_to_process)
     ValueLabelView toProcessButton;
-
-    private DashboardContract.Presenter presenter;
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        new DashboardPresenter(this, Inject.provideOrdersRepository());
-    }
 
     @Nullable
     @Override
@@ -55,33 +56,63 @@ public final class DashboardFragment extends BaseFragment implements DashboardCo
     public void onStart() {
         super.onStart();
 
-        presenter.start();
+        setupToProcessButton();
     }
 
-    @Override
-    public void setToProcessCount(String count) {
-        toProcessButton.setValue(count);
+    private void setupToProcessButton() {
+        OrdersRepository orderRepository = Inject.provideOrdersRepository();
+        StatusFilter filter = StatusFilter.create(StatusFilter.Status.TO_PROCESS);
+
+        orderRepository.getList(
+                filter,
+                new RepositoryCallback<List<Order>>() {
+                    @Override
+                    public void onSuccess(List<Order> data) {
+                        Log.d("Andre", data.toString());
+                        Log.d("Andre", String.valueOf(data.size()));
+                        toProcessButton.setValue(
+                                String.valueOf(data.size()));
+                    }
+
+                    @Override
+                    public void onError(List<String> errors) {
+                        toProcessButton.setValue("?");
+                    }
+                });
+
     }
 
-    @Override
-    public void navigateToOrdersList(OrderFilterList filters, boolean processAll) {
+    private void navigateToOrdersList(OrderFilter filter, boolean processAll) {
+        List<OrderFilter> filters = new ArrayList<>();
+        filters.add(filter);
+
         OrdersListActivity.startForContext(
                 getActivity(),
-                filters,
+                OrderFilterList.create(filters),
                 processAll);
     }
 
-    @Override
-    public void showGetIdsDialog(DialogUtils.IntValuesListener listener) {
+    private void getIds() {
         DialogUtils.showGetIntValues(
                 getActivity(),
                 R.string.dashboard_orders_find_dialog_title,
                 R.string.dashboard_orders_find_dialog_message,
-                listener);
+                new DialogUtils.IntValuesListener() {
+                    @Override
+                    public void onValues(HashSet<Integer> values) {
+                        navigateToOrdersList(
+                                IdFilter.create(values),
+                                values.size() > 1);
+                    }
+
+                    @Override
+                    public void onError() {
+                        showErrorGettingIds();
+                    }
+                });
     }
 
-    @Override
-    public void showErrorGettingIds() {
+    private void showErrorGettingIds() {
         DialogUtils.showError(
                 getActivity(),
                 getString(R.string.dashboard_orders_find_dialog_error_title),
@@ -90,26 +121,27 @@ public final class DashboardFragment extends BaseFragment implements DashboardCo
 
     @OnClick(R.id.dashboard_to_process)
     void toProcessButton() {
-        presenter.onToProcessButtonClicked();
+        navigateToOrdersList(
+                StatusFilter.create(StatusFilter.Status.TO_PROCESS),
+                true);
     }
 
     @OnClick(R.id.dashboard_processed)
     void processedButton() {
-        presenter.onProcessedButtonClicked();
+        navigateToOrdersList(
+                StatusFilter.create(StatusFilter.Status.PROCESSED),
+                false);
     }
 
     @OnClick(R.id.dashboard_all)
     void allButton() {
-        presenter.onAllButtonClicked();
+        navigateToOrdersList(
+                StatusFilter.create(StatusFilter.Status.ALL),
+                false);
     }
 
     @OnClick(R.id.dashboard_find)
     void findButton() {
-        presenter.onFindButtonClicked();
-    }
-
-    @Override
-    public void setPresenter(@NonNull DashboardContract.Presenter presenter) {
-        this.presenter = presenter;
+        getIds();
     }
 }
