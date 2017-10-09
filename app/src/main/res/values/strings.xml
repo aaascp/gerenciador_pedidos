@@ -68,6 +68,9 @@
     <string name="barcode_processor_finish_dialog_title">Todos os items foram processados!</string>
     <string name="barcode_processor_finish_dialog_message">Voltar para lista.</string>
     <string name="barcode_processor_items_left">Faltam 0 items</string>
+    <string name="barcode_processor_success_message">Sucesso [%1$s]</string>
+    <string name="barcode_processor_already_processed_message">Código já processado  [%1$s]</string>
+    <string name="barcode_processor_invalid_message">Código Inválido [%1$s]</string>
 
     <string name="error_communication">Falha de comunicacão.</string>
     <string name="error_permission_title">Erro de Permissão!</string>

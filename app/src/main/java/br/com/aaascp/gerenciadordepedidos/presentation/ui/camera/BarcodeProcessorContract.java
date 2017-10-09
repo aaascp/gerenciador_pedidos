@@ -25,7 +25,11 @@ interface BarcodeProcessorContract {
 
         void showProcessSuccess();
 
-        void showMessage(String message);
+        void showSuccessMessage(String code);
+
+        void showCodeAlreadyProcessedMessage(String code);
+
+        void showCodeInvalidMessage(String code);
 
         void showFinishDialog();
 

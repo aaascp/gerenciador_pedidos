@@ -196,10 +196,24 @@ public final class BarcodeProcessorActivity extends BaseActivity
     }
 
     @Override
-    public void showMessage(String message) {
-        SnackBarUtils.showWithCenteredText(
-                root,
-                message);
+    public void showSuccessMessage(String code) {
+        showMessage(String.format(
+                getString(R.string.barcode_processor_success_message),
+                code));
+    }
+
+    @Override
+    public void showCodeAlreadyProcessedMessage(String code) {
+        showMessage(String.format(
+                getString(R.string.barcode_processor_already_processed_message),
+                code));
+    }
+
+    @Override
+    public void showCodeInvalidMessage(String code) {
+        showMessage(String.format(
+                getString(R.string.barcode_processor_invalid_message),
+                code));
     }
 
     @Override
@@ -289,5 +303,11 @@ public final class BarcodeProcessorActivity extends BaseActivity
 
         barcodeDetector.setProcessor(
                 new BarcodeProcessor(this, this));
+    }
+
+    private void showMessage(String message) {
+        SnackBarUtils.showWithCenteredText(
+                root,
+                message);
     }
 }

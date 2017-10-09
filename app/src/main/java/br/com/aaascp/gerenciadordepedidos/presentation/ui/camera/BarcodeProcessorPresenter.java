@@ -89,23 +89,17 @@ final class BarcodeProcessorPresenter implements BarcodeProcessorContract.Presen
     }
 
     private void showProcessMessage(CodesToProcess.Status status, String code) {
-        String message = "%s: ";
-
         switch (status) {
             case SUCCESS:
-                message += "Sucesso";
+                view.showSuccessMessage(code);
                 break;
             case CODE_ALREADY_PROCESSED:
-                message += "Código já processado";
+                view.showCodeAlreadyProcessedMessage(code);
                 break;
             case CODE_INVALID:
-                message += "Código Inválido";
+                view.showCodeInvalidMessage(code);
                 break;
-            default:
-                message += "Erro desconhecido";
         }
-
-        view.showMessage(String.format(message, code));
     }
 
     private void checkFinish() {
