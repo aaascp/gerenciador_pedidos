@@ -91,26 +91,6 @@ public class BarcodeProcessorPresenterTest {
     }
 
     @Test
-    public void onPermissionGranted() {
-        CodesToProcess codesToProcess = getCodesToProcess("1234", 1);
-        init(codesToProcess);
-
-        presenter.onPermissionGranted();
-
-        verify(view).setupCamera();
-    }
-
-    @Test
-    public void onPermissionDenied() {
-        CodesToProcess codesToProcess = getCodesToProcess("1234", 1);
-        init(codesToProcess);
-
-        presenter.onPermissionDenied();
-
-        verify(view).showCameraPermission();
-    }
-
-    @Test
     public void onItemProcessed_invalidCode() {
         String code = "1234";
         String invalidCode = "1235";

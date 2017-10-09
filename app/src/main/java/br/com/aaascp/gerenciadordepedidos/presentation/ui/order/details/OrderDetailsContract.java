@@ -65,6 +65,8 @@ interface OrderDetailsContract {
         void navigateToDetails(Order order);
 
         void navigateToProcessor(CodesToProcess codesToProcess);
+
+        void checkPermissionForCamera();
     }
 
     interface Presenter extends BasePresenter {
@@ -98,5 +100,7 @@ interface OrderDetailsContract {
         void onShipTypeClicked();
 
         void onProcessorResult(CodesToProcess codesToProcess);
+
+        void onCameraPermissionEnabled();
     }
 }

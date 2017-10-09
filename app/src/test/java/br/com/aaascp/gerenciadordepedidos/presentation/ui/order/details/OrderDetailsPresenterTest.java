@@ -339,16 +339,25 @@ public class OrderDetailsPresenterTest {
     }
 
     @Test
-    public void onFabClicked_nothingProcessed() throws Exception {
+    public void onFabClicked_checkPermission() throws Exception {
         init(ORDER_NOT_PROCESSED);
 
         presenter.onFabClicked();
+
+        verify(view).checkPermissionForCamera();
+    }
+
+    @Test
+    public void onPermissionEnabled_nothingProcessed() throws Exception {
+        init(ORDER_NOT_PROCESSED);
+
+        presenter.onCameraPermissionEnabled();
 
         verify(view).navigateToProcessor(ORDER_NOT_PROCESSED.codesToProcess());
     }
 
     @Test
-    public void onFabClicked_codesProcessed() throws Exception {
+    public void onPermissionEnabled_codesProcessed() throws Exception {
         init(ORDER_NOT_PROCESSED);
 
         String code = ORDER_NOT_PROCESSED.items().keySet().iterator().next();
@@ -357,7 +366,7 @@ public class OrderDetailsPresenterTest {
         CodesToProcess newCodesToProcess = CodesToProcess.create(codes, ORDER_NOT_PROCESSED.id());
 
         presenter.onProcessorResult(newCodesToProcess);
-        presenter.onFabClicked();
+        presenter.onCameraPermissionEnabled();
 
         verify(view).navigateToProcessor(newCodesToProcess);
     }

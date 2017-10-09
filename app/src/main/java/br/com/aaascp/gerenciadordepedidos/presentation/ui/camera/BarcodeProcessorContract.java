@@ -13,13 +13,10 @@ interface BarcodeProcessorContract {
     interface View extends BaseView<Presenter> {
         void setupToolbar(int orderId);
 
-        void setupCamera();
-
         void setItemsLeft(int itemsLeftCount);
 
         void setZeroItemsLeft();
 
-        void showCameraPermission();
 
         void showProcessError();
 
@@ -42,9 +39,5 @@ interface BarcodeProcessorContract {
         void onProcessingDone();
 
         void onFinish();
-
-        void onPermissionGranted();
-
-        void onPermissionDenied();
     }
 }

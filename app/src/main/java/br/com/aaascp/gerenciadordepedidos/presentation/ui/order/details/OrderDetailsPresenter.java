@@ -7,6 +7,7 @@ import br.com.aaascp.gerenciadordepedidos.entity.Order;
 import br.com.aaascp.gerenciadordepedidos.repository.OrdersRepository;
 import br.com.aaascp.gerenciadordepedidos.repository.callback.RepositoryCallback;
 import br.com.aaascp.gerenciadordepedidos.util.DateFormatterUtils;
+import br.com.aaascp.gerenciadordepedidos.util.PermissionUtils;
 
 /**
  * Created by andre on 30/09/17.
@@ -117,6 +118,11 @@ final class OrderDetailsPresenter implements OrderDetailsContract.Presenter {
 
     @Override
     public void onFabClicked() {
+        view.checkPermissionForCamera();
+    }
+
+    @Override
+    public void onCameraPermissionEnabled() {
         view.navigateToProcessor(codesToProcess);
     }
 

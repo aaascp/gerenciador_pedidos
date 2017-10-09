@@ -24,6 +24,7 @@ import br.com.aaascp.gerenciadordepedidos.presentation.ui.order.info.OrderInfoAc
 import br.com.aaascp.gerenciadordepedidos.presentation.ui.order.list.OrdersListActivity;
 import br.com.aaascp.gerenciadordepedidos.presentation.util.DialogUtils;
 import br.com.aaascp.gerenciadordepedidos.presentation.util.EmptyStateAdapter;
+import br.com.aaascp.gerenciadordepedidos.util.PermissionUtils;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -34,7 +35,8 @@ import butterknife.OnClick;
 
 public class OrderDetailsActivity extends BaseActivity implements OrderDetailsContract.View {
 
-    static final int REQUEST_CODE_PROCESS = 100;
+    private static final int REQUEST_CODE_CAMERA_PERMISSION = 100;
+    static final int REQUEST_CODE_PROCESS = 200;
 
     public static final String EXTRA_ORDER_ID = "EXTRA_ORDER_ID";
     public static final String EXTRA_TOTAL = "EXTRA_TOTAL";
@@ -408,6 +410,15 @@ public class OrderDetailsActivity extends BaseActivity implements OrderDetailsCo
     @Override
     public void setPresenter(@NonNull OrderDetailsContract.Presenter presenter) {
         this.presenter = presenter;
+    }
+
+    @Override
+    public void checkPermissionForCamera() {
+        if (PermissionUtils.isCameraEnabled(this)) {
+            presenter.onCameraPermissionEnabled();
+        } else {
+            PermissionUtils.requestPermissionForCamera(this, REQUEST_CODE_CAMERA_PERMISSION);
+        }
     }
 
     private void finishOrder(int resultCode) {

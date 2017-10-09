@@ -72,16 +72,6 @@ final class BarcodeProcessorPresenter implements BarcodeProcessorContract.Presen
         view.close(codesToProcess);
     }
 
-    @Override
-    public void onPermissionGranted() {
-        view.setupCamera();
-    }
-
-    @Override
-    public void onPermissionDenied() {
-        view.showCameraPermission();
-    }
-
     private void onProcessSuccess() {
         view.showProcessSuccess();
         setItemsLeft();

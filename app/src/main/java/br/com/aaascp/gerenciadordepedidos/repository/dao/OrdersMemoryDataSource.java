@@ -25,7 +25,7 @@ import br.com.aaascp.gerenciadordepedidos.util.DateFormatterUtils;
 
 public final class OrdersMemoryDataSource implements OrdersDataSource {
 
-    private static final int NETWORK_DELAY = 2000;
+    private static final int NETWORK_DELAY = 500;
     private static SparseArray<Order> ORDERS_DATA = new SparseArray<>();
 
     static {
@@ -135,25 +135,7 @@ public final class OrdersMemoryDataSource implements OrdersDataSource {
                 .quantity(2)
                 .build();
 
-        OrderItem item2 = OrderItem.builder()
-                .id(id * 10 + 4)
-                .code("5012345678900")
-                .description("Cerveja 2")
-                .imageUrl("")
-                .quantity(1)
-                .build();
-
-        OrderItem item3 = OrderItem.builder()
-                .id(id * 10 + 6)
-                .code("7898357410015")
-                .description("Cerveja 3")
-                .imageUrl("")
-                .quantity(3)
-                .build();
-
         items.put("314159265359", item1);
-        items.put("5012345678900", item2);
-        items.put("7898357410015", item3);
 
         ShipmentInfo shipmentInfo = ShipmentInfo.builder()
                 .shipType("Sedex")
