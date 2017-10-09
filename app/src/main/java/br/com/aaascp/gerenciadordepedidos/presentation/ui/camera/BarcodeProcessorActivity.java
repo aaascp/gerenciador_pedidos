@@ -11,6 +11,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.Toolbar;
+import android.util.ArrayMap;
 import android.view.SurfaceView;
 import android.view.View;
 import android.widget.TextView;
@@ -18,9 +19,13 @@ import android.widget.TextView;
 import com.google.android.gms.vision.CameraSource;
 import com.google.android.gms.vision.barcode.BarcodeDetector;
 
+import java.util.Map;
+
 import br.com.aaascp.gerenciadordepedidos.R;
 import br.com.aaascp.gerenciadordepedidos.entity.CodesToProcess;
+import br.com.aaascp.gerenciadordepedidos.entity.Order;
 import br.com.aaascp.gerenciadordepedidos.presentation.ui.BaseActivity;
+import br.com.aaascp.gerenciadordepedidos.presentation.util.DialogUtils;
 import br.com.aaascp.gerenciadordepedidos.presentation.util.SnackBarUtils;
 import br.com.aaascp.gerenciadordepedidos.util.PermissionUtils;
 import butterknife.BindView;
@@ -116,7 +121,6 @@ public final class BarcodeProcessorActivity extends BaseActivity
     protected void onStart() {
         super.onStart();
 
-        setupOrientation();
         presenter.start();
     }
 
@@ -218,20 +222,16 @@ public final class BarcodeProcessorActivity extends BaseActivity
 
     @Override
     public void showFinishDialog() {
-        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
-
-        builder.setTitle(R.string.barcode_processor_finish_dialog_title)
-                .setMessage(R.string.barcode_processor_finish_dialog_message)
-                .setPositiveButton(
-                        R.string.dialog_ok,
-                        new AlertDialog.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int id) {
-                                presenter.onFinish();
-                            }
-                        });
-
-        builder.show();
+        DialogUtils.showGenericDialog(
+                this,
+                R.string.barcode_processor_finish_dialog_title,
+                R.string.barcode_processor_finish_dialog_message,
+                new AlertDialog.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int id) {
+                        presenter.onFinish();
+                    }
+                });
     }
 
     @Override
@@ -254,7 +254,7 @@ public final class BarcodeProcessorActivity extends BaseActivity
             return extras.getParcelable(EXTRA_CODES_TO_PROCESS);
         }
 
-        return null;
+        return CodesToProcess.create(new ArrayMap<String, Integer>(0), Order.INVALID_ORDER_ID);
     }
 
     private void showProcessing(final @ColorRes int color) {
@@ -279,19 +279,6 @@ public final class BarcodeProcessorActivity extends BaseActivity
         }, PROCESSING_TIME);
     }
 
-    public void setupOrientation() {
-        int orientation = getResources().getConfiguration().orientation;
-
-        switch (orientation) {
-            case ORIENTATION_LANDSCAPE:
-                guide.setBackgroundResource(R.drawable.gradient_vertical_white_transparent);
-                break;
-            case ORIENTATION_PORTRAIT:
-                guide.setBackgroundResource(R.drawable.gradient_horizontal_white_transparent);
-                break;
-        }
-    }
-
     private void setupBarcodeDetector() {
         barcodeDetector =
                 new BarcodeDetector.Builder(this)
@@ -305,7 +292,7 @@ public final class BarcodeProcessorActivity extends BaseActivity
                 new BarcodeProcessor(this, this));
     }
 
-    private void showMessage(String message) {
+    void showMessage(String message) {
         SnackBarUtils.showWithCenteredText(
                 root,
                 message);

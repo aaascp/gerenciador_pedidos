@@ -5,17 +5,11 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
-import android.view.MenuItem;
 import android.view.View;
-import android.widget.EditText;
-import android.widget.Toolbar;
 
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.robolectric.Robolectric;
@@ -56,9 +50,6 @@ public class OrderDetailsActivityTest {
     private static final Order ORDER = OrdersFactory.createOrder(1000, true);
 
     @Mock
-    private OrderDetailsAdapter adapter;
-
-    @Mock
     private OrderDetailsContract.Presenter presenter;
 
     private OrderDetailsActivity activity;
@@ -70,7 +61,6 @@ public class OrderDetailsActivityTest {
 
         activity.setPresenter(presenter);
     }
-
 
     @Test
     public void onActivityResult() throws Exception {
