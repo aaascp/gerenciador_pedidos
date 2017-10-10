@@ -43,9 +43,9 @@ public final class OrderDetailsActivity extends BaseActivity {
     private static final int REQUEST_CODE_PROCESS = 100;
     private static final int REQUEST_CODE_CAMERA_PERMISSION = 200;
 
-    private static final String EXTRA_TOTAL = "EXTRA_TOTAL";
-    private static final String EXTRA_CURRENT = "EXTRA_CURRENT";
-    private static final String EXTRA_ORDER_ID = "EXTRA_ORDER_ID";
+    public static final String EXTRA_TOTAL = "EXTRA_TOTAL";
+    public static final String EXTRA_CURRENT = "EXTRA_CURRENT";
+    public static final String EXTRA_ORDER_ID = "EXTRA_ORDER_ID";
 
     private static final int INVALID_ORDER_ID = -1;
     private static final int MENU_ITEM_SKIP = 0;

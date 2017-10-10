@@ -38,8 +38,8 @@ public final class OrdersListActivity extends BaseActivity {
     public static final int RESULT_CODE_CLOSE = 500;
 
 
-    private static final String EXTRA_ORDER_FILTERS = "EXTRA_ORDER_FILTERS";
-    private static final String EXTRA_PROCESS_ALL = "EXTRA_PROCESS_ALL";
+    static final String EXTRA_ORDER_FILTERS = "EXTRA_ORDER_FILTERS";
+    static final String EXTRA_PROCESS_ALL = "EXTRA_PROCESS_ALL";
 
     @BindView(R.id.orders_list_fab)
     FloatingActionButton fab;
@@ -83,8 +83,14 @@ public final class OrdersListActivity extends BaseActivity {
 
         extractExtras();
         setupToolbar();
-        setupOrdersList();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
         setupFab();
+        setupOrdersList();
     }
 
     @Override

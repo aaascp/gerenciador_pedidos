@@ -115,4 +115,5 @@ dependencies {
     androidTestCompile "com.android.support.test.espresso:espresso-core:$espressoVersion"
     androidTestCompile "com.android.support.test:rules:$rulesVersion"
     androidTestCompile"com.android.support.test.espresso:espresso-contrib:$espressoVersion"
+    androidTestCompile "com.android.support.test.espresso:espresso-intents:$espressoVersion"
 }
