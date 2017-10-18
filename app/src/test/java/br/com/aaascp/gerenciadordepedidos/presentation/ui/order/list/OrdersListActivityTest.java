@@ -11,6 +11,7 @@ import org.mockito.MockitoAnnotations;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
+import org.robolectric.shadows.ShadowActivity;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -21,13 +22,11 @@ import br.com.aaascp.gerenciadordepedidos.R;
 import br.com.aaascp.gerenciadordepedidos.entity.NullOrderFilterList;
 import br.com.aaascp.gerenciadordepedidos.entity.Order;
 import br.com.aaascp.gerenciadordepedidos.factory.OrdersFactory;
+import br.com.aaascp.gerenciadordepedidos.presentation.ui.order.details.OrderDetailsActivity;
 import br.com.aaascp.gerenciadordepedidos.presentation.util.EmptyStateAdapter;
 import br.com.aaascp.gerenciadordepedidos.repository.dao.OrdersFakeDataSource;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.verify;
 import static org.robolectric.Shadows.shadowOf;
 
 /**
@@ -69,8 +68,8 @@ public class OrdersListActivityTest {
 
         init(false);
 
-        activity.recyclerView.measure(0,0);
-        activity.recyclerView.layout(0,0,100,1000);
+        activity.recyclerView.measure(0, 0);
+        activity.recyclerView.layout(0, 0, 100, 1000);
     }
 
     @Test
@@ -126,7 +125,7 @@ public class OrdersListActivityTest {
 
     @Test
     public void setupOrdersList_error() throws Exception {
-       init(ERRORS);
+        init(ERRORS);
 
         EmptyStateAdapter.ViewHolder holder =
                 (EmptyStateAdapter.ViewHolder) activity.recyclerView.findViewHolderForAdapterPosition(0);
@@ -145,97 +144,185 @@ public class OrdersListActivityTest {
         assertEquals(holder.getMessage().getText().toString(), message);
     }
 
+    @Test
+    public void processAll_startsDetailsForListWithFirstOrder() throws Exception {
+        init(ORDERS);
 
-//    @Test
-//    public void onActivityResult_ok() throws Exception {
-//        activity.navigateToOrderDetails(1000, 1, 2);
-//
-//        Intent intent = shadowOf(activity).getNextStartedActivity();
-//
-//        shadowOf(activity).receiveResult(
-//                intent,
-//                OrdersListActivity.RESULT_CODE_OK,
-//                null);
-//
-//        verify(presenter).onResultNext();
-//    }
-//
-//    @Test
-//    public void orderDetailsSkipResult_skip() throws Exception {
-//        activity.navigateToOrderDetails(1000, 1, 2);
-//
-//        Intent intent = shadowOf(activity).getNextStartedActivity();
-//
-//        shadowOf(activity).receiveResult(
-//                intent,
-//                OrdersListActivity.RESULT_CODE_SKIP,
-//                null);
-//
-//        verify(presenter).onResultNext();
-//    }
-//
-//    @Test
-//    public void orderDetailsSkipResult_okUnique() throws Exception {
-//        activity.navigateToOrderDetails(1000, 1, 1);
-//
-//        Intent intent = shadowOf(activity).getNextStartedActivity();
-//
-//        shadowOf(activity).receiveResult(
-//                intent,
-//                OrdersListActivity.RESULT_CODE_OK_UNIQUE,
-//                null);
-//
-//        verify(presenter).onResultClose();
-//    }
-//
-//    @Test
-//    public void orderDetailsSkipResult_close() throws Exception {
-//        activity.navigateToOrderDetails(1000, 1, 2);
-//
-//        Intent intent = shadowOf(activity).getNextStartedActivity();
-//
-//        shadowOf(activity).receiveResult(
-//                intent,
-//                OrdersListActivity.RESULT_CODE_CLOSE,
-//                null);
-//
-//        verify(presenter).onResultClose();
-//    }
-//
-//    @Test
-//    public void navigateToOrderDetails_unique() throws Exception {
-//        activity.showOrdersList(Collections.singletonList(ORDER_PROCESSED));
-//
-//        OrdersListAdapter.ViewHolder holder =
-//                (OrdersListAdapter.ViewHolder) activity.recyclerView.findViewHolderForAdapterPosition(0);
-//
-//        holder.root.performClick();
-//
-//        ShadowActivity shadowActivity = shadowOf(activity);
-//        ShadowActivity.IntentForResult intentForResult = shadowActivity.getNextStartedActivityForResult();
-//
-//        assertEquals(intentForResult.requestCode, OrdersListActivity.REQUEST_CODE_ORDER_PROCESS);
-//        assertEquals(intentForResult.intent.getIntExtra(OrderDetailsActivity.EXTRA_ORDER_ID, Order.INVALID_ORDER_ID), ORDER_PROCESSED.id());
-//        assertEquals(intentForResult.intent.getIntExtra(OrderDetailsActivity.EXTRA_TOTAL, 0), 2);
-//        assertEquals(intentForResult.intent.getIntExtra(OrderDetailsActivity.EXTRA_CURRENT, 0), 1);
-//    }
-//
-//    @Test
-//    public void navigateToOrderDetails_withParams() throws Exception {
-//        activity.navigateToOrderDetails(1000, 2, 3);
-//
-//        ShadowActivity shadowActivity = shadowOf(activity);
-//        ShadowActivity.IntentForResult intentForResult = shadowActivity.getNextStartedActivityForResult();
-//
-//        assertEquals(intentForResult.requestCode, OrdersListActivity.REQUEST_CODE_ORDER_PROCESS);
-//        assertEquals(intentForResult.intent.getIntExtra(OrderDetailsActivity.EXTRA_ORDER_ID, Order.INVALID_ORDER_ID), ORDER_PROCESSED.id());
-//        assertEquals(intentForResult.intent.getIntExtra(OrderDetailsActivity.EXTRA_CURRENT, 0), 2);
-//        assertEquals(intentForResult.intent.getIntExtra(OrderDetailsActivity.EXTRA_TOTAL, 0), 3);
-//    }
-//
-//    @Test
-//    public void onFabClick() throws Exception {
-//        activity.onFabClick();
-//        verify(presenter).onFabCLick();
-//    }
+        activity.fab.performClick();
+
+        Intent startedIntent = shadowOf(activity).getNextStartedActivity();
+        assertEquals(startedIntent.getExtras().getInt(OrderDetailsActivity.EXTRA_TOTAL), ORDERS.size());
+        assertEquals(startedIntent.getExtras().getInt(OrderDetailsActivity.EXTRA_CURRENT), 1);
+        assertEquals(startedIntent.getExtras().getInt(OrderDetailsActivity.EXTRA_ORDER_ID), ORDERS.get(0).id());
+    }
+
+    @Test
+    public void processAll_resultOk_startsDetailsForNext() throws Exception {
+        init(ORDERS);
+
+        activity.fab.performClick();
+
+        ShadowActivity shadowActivity = shadowOf(activity);
+
+        Intent startedIntent = shadowActivity.getNextStartedActivity();
+
+        shadowActivity.receiveResult(
+                startedIntent,
+                OrdersListActivity.RESULT_CODE_OK,
+                null);
+
+        Intent nextIntent = shadowActivity.getNextStartedActivity();
+
+        assertEquals(nextIntent.getExtras().getInt(OrderDetailsActivity.EXTRA_TOTAL), ORDERS.size());
+        assertEquals(nextIntent.getExtras().getInt(OrderDetailsActivity.EXTRA_CURRENT), 2);
+        assertEquals(nextIntent.getExtras().getInt(OrderDetailsActivity.EXTRA_ORDER_ID), ORDERS.get(1).id());
+    }
+
+    @Test
+    public void processAll_resultOk_last_resetsCurrent() throws Exception {
+        init(ORDERS);
+
+        activity.fab.performClick();
+
+        ShadowActivity shadowActivity = shadowOf(activity);
+
+        for (int i = 0; i < ORDERS.size(); i++) {
+            shadowActivity.receiveResult(
+                    shadowActivity.getNextStartedActivity(),
+                    OrdersListActivity.RESULT_CODE_OK,
+                    null);
+        }
+
+        activity.fab.performClick();
+
+        Intent startedIntent = shadowActivity.getNextStartedActivity();
+        assertEquals(startedIntent.getExtras().getInt(OrderDetailsActivity.EXTRA_TOTAL), ORDERS.size());
+        assertEquals(startedIntent.getExtras().getInt(OrderDetailsActivity.EXTRA_CURRENT), 1);
+        assertEquals(startedIntent.getExtras().getInt(OrderDetailsActivity.EXTRA_ORDER_ID), ORDERS.get(0).id());
+    }
+
+    @Test
+    public void processAl_resultSkip_startsDetailsForNext() throws Exception {
+        init(ORDERS);
+
+        activity.fab.performClick();
+
+        ShadowActivity shadowActivity = shadowOf(activity);
+
+        Intent startedIntent = shadowActivity.getNextStartedActivity();
+
+        shadowActivity.receiveResult(
+                startedIntent,
+                OrdersListActivity.RESULT_CODE_SKIP,
+                null);
+
+        Intent nextIntent = shadowActivity.getNextStartedActivity();
+
+        assertEquals(nextIntent.getExtras().getInt(OrderDetailsActivity.EXTRA_TOTAL), ORDERS.size());
+        assertEquals(nextIntent.getExtras().getInt(OrderDetailsActivity.EXTRA_CURRENT), 2);
+        assertEquals(nextIntent.getExtras().getInt(OrderDetailsActivity.EXTRA_ORDER_ID), ORDERS.get(1).id());
+    }
+
+    @Test
+    public void processAll_resultSkip_last_resetsCurent() throws Exception {
+        init(ORDERS);
+
+        activity.fab.performClick();
+
+        ShadowActivity shadowActivity = shadowOf(activity);
+
+        for (int i = 0; i < ORDERS.size(); i++) {
+            shadowActivity.receiveResult(
+                    shadowActivity.getNextStartedActivity(),
+                    OrdersListActivity.RESULT_CODE_SKIP,
+                    null);
+        }
+
+        activity.fab.performClick();
+
+        Intent startedIntent = shadowActivity.getNextStartedActivity();
+        assertEquals(startedIntent.getExtras().getInt(OrderDetailsActivity.EXTRA_TOTAL), ORDERS.size());
+        assertEquals(startedIntent.getExtras().getInt(OrderDetailsActivity.EXTRA_CURRENT), 1);
+        assertEquals(startedIntent.getExtras().getInt(OrderDetailsActivity.EXTRA_ORDER_ID), ORDERS.get(0).id());
+    }
+
+    @Test
+    public void processAll_resultClose_resetsCurrent() throws Exception {
+        init(ORDERS);
+
+        activity.fab.performClick();
+
+        ShadowActivity shadowActivity = shadowOf(activity);
+
+        shadowActivity.receiveResult(
+                shadowActivity.getNextStartedActivity(),
+                OrdersListActivity.RESULT_CODE_CLOSE,
+                null);
+
+        activity.fab.performClick();
+        Intent nextIntent = shadowActivity.getNextStartedActivity();
+
+        assertEquals(nextIntent.getExtras().getInt(OrderDetailsActivity.EXTRA_TOTAL), ORDERS.size());
+        assertEquals(nextIntent.getExtras().getInt(OrderDetailsActivity.EXTRA_CURRENT), 1);
+        assertEquals(nextIntent.getExtras().getInt(OrderDetailsActivity.EXTRA_ORDER_ID), ORDERS.get(0).id());
+    }
+
+    @Test
+    public void processUnique_startsDetails() throws Exception {
+        init(ORDERS);
+
+        activity.recyclerView.getChildAt(0).performClick();
+
+        ShadowActivity shadowActivity = shadowOf(activity);
+
+        Intent startedIntent = shadowActivity.getNextStartedActivity();
+
+        assertEquals(startedIntent.getExtras().getInt(OrderDetailsActivity.EXTRA_TOTAL), 1);
+        assertEquals(startedIntent.getExtras().getInt(OrderDetailsActivity.EXTRA_CURRENT), 1);
+        assertEquals(startedIntent.getExtras().getInt(OrderDetailsActivity.EXTRA_ORDER_ID), ORDERS.get(0).id());
+    }
+
+    @Test
+    public void processUnique_resultOkUnique_resetsCurrent() throws Exception {
+        init(ORDERS);
+
+        activity.recyclerView.getChildAt(0).performClick();
+
+        ShadowActivity shadowActivity = shadowOf(activity);
+
+        shadowActivity.receiveResult(
+                shadowActivity.getNextStartedActivity(),
+                OrdersListActivity.RESULT_CODE_OK_UNIQUE,
+                null);
+
+        activity.fab.performClick();
+
+        Intent startedIntent = shadowActivity.getNextStartedActivity();
+
+        assertEquals(startedIntent.getExtras().getInt(OrderDetailsActivity.EXTRA_TOTAL), ORDERS.size());
+        assertEquals(startedIntent.getExtras().getInt(OrderDetailsActivity.EXTRA_CURRENT), 1);
+        assertEquals(startedIntent.getExtras().getInt(OrderDetailsActivity.EXTRA_ORDER_ID), ORDERS.get(0).id());
+    }
+
+    @Test
+    public void processUnique_resultClose_resetsCurrent() throws Exception {
+        init(ORDERS);
+
+        activity.recyclerView.getChildAt(0).performClick();
+
+        ShadowActivity shadowActivity = shadowOf(activity);
+
+        shadowActivity.receiveResult(
+                shadowActivity.getNextStartedActivity(),
+                OrdersListActivity.RESULT_CODE_CLOSE,
+                null);
+
+        activity.fab.performClick();
+
+        Intent startedIntent = shadowActivity.getNextStartedActivity();
+
+        assertEquals(startedIntent.getExtras().getInt(OrderDetailsActivity.EXTRA_TOTAL), ORDERS.size());
+        assertEquals(startedIntent.getExtras().getInt(OrderDetailsActivity.EXTRA_CURRENT), 1);
+        assertEquals(startedIntent.getExtras().getInt(OrderDetailsActivity.EXTRA_ORDER_ID), ORDERS.get(0).id());
+    }
 }
