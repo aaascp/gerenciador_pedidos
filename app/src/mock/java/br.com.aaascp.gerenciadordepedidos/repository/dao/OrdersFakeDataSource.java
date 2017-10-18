@@ -56,7 +56,19 @@ public class OrdersFakeDataSource implements OrdersDataSource {
     public void load(int id, final DataSourceCallback<Order> callback) {
         final Order order = ORDERS_DATA.get(id);
 
+        if (order.id() == ORDER_ERROR_ID) {
+            callback.onError(Collections.singletonList(ERROR_MESSAGE));
+            return;
+        } else if (order.id() == ORDER_COMMUNICATION_ERROR_ID) {
+            callback.onError(null);
+            return;
+        }
+
         callback.onSuccess(copyOrder(order));
+    }
+
+    public static Order load(int id) {
+        return ORDERS_DATA.get(id);
     }
 
     @Override

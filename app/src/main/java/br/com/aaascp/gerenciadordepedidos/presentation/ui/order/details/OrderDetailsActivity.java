@@ -40,8 +40,8 @@ import butterknife.OnClick;
 
 public final class OrderDetailsActivity extends BaseActivity {
 
-    private static final int REQUEST_CODE_PROCESS = 100;
-    private static final int REQUEST_CODE_CAMERA_PERMISSION = 200;
+    static final int REQUEST_CODE_CAMERA_PERMISSION = 200;
+    static final int REQUEST_CODE_PROCESS = 100;
 
     public static final String EXTRA_TOTAL = "EXTRA_TOTAL";
     public static final String EXTRA_CURRENT = "EXTRA_CURRENT";

@@ -35,8 +35,8 @@ public final class BarcodeProcessorActivity extends BaseActivity
 
     public static final String EXTRA_RESULT = "EXTRA_RESULT";
 
-    private static final String EXTRA_CODES_TO_PROCESS = "EXTRA_CODES_TO_PROCESS";
-    private static final String EXTRA_ORDER_ID = "EXTRA_ORDER_ID";
+    public static final String EXTRA_ORDER_ID = "EXTRA_ORDER_ID";
+    public static final String EXTRA_CODES_TO_PROCESS = "EXTRA_CODES_TO_PROCESS";
 
     private static final int PROCESSING_TIME = 3 * 1000;
 
