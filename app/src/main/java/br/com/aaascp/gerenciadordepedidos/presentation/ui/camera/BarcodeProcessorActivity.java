@@ -98,13 +98,6 @@ public final class BarcodeProcessorActivity extends BaseActivity
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
-
-        setupOrientation();
-    }
-
-    @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
 
@@ -237,20 +230,18 @@ public final class BarcodeProcessorActivity extends BaseActivity
     }
 
     private void showMessage(CodesToProcess.Status status, String code) {
-        String message = "%s: ";
+        String message = "";
 
         switch (status) {
             case SUCCESS:
-                message += "Sucesso";
+                message = getString(R.string.barcode_processor_success_message);
                 break;
             case CODE_ALREADY_PROCESSED:
-                message += "Código já processado";
+                message = getString(R.string.barcode_processor_already_processed_message);
                 break;
             case CODE_INVALID:
-                message += "Código Inválido";
+                message = getString(R.string.barcode_processor_invalid_message);
                 break;
-            default:
-                message += "Erro desconhecido";
         }
 
         SnackBarUtils.showWithCenteredText(
@@ -281,18 +272,5 @@ public final class BarcodeProcessorActivity extends BaseActivity
                         });
 
         builder.show();
-    }
-
-    public void setupOrientation() {
-        int orientation = getResources().getConfiguration().orientation;
-
-        switch (orientation) {
-            case ORIENTATION_LANDSCAPE:
-                guide.setBackgroundResource(R.drawable.gradient_vertical_white_transparent);
-                break;
-            case ORIENTATION_PORTRAIT:
-                guide.setBackgroundResource(R.drawable.gradient_horizontal_white_transparent);
-                break;
-        }
     }
 }
