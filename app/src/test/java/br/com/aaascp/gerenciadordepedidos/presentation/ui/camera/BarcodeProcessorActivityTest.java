@@ -63,7 +63,9 @@ public class BarcodeProcessorActivityTest {
         int orderId = 1000;
         activity.setupToolbar(orderId);
 
-        assertThat(activity.title.getText().toString(), containsString(String.valueOf(orderId)));
+        assertThat(
+                activity.title.getText().toString(),
+                containsString(String.valueOf(orderId)));
     }
 
     @Test
@@ -71,14 +73,18 @@ public class BarcodeProcessorActivityTest {
         int itemsLeft = 2;
         activity.setItemsLeft(itemsLeft);
 
-        assertThat(activity.itemsLeft.getText().toString(), containsString(String.valueOf(itemsLeft)));
+        assertThat(
+                activity.itemsLeft.getText().toString(),
+                containsString(String.valueOf(itemsLeft)));
     }
 
     @Test
     public void setZeroItemsLeft() {
         activity.setZeroItemsLeft();
 
-        assertEquals(activity.itemsLeft.getText().toString(), activity.getString(R.string.barcode_processor_items_left));
+        assertEquals(
+                activity.itemsLeft.getText().toString(),
+                activity.getString(R.string.barcode_processor_items_left));
     }
 
     @Test
@@ -104,8 +110,12 @@ public class BarcodeProcessorActivityTest {
         AlertDialog dialog = ShadowAlertDialog.getLatestAlertDialog();
         ShadowAlertDialog shadowDialog = shadowOf(dialog);
 
-        assertEquals(shadowDialog.getTitle().toString(), activity.getString(R.string.barcode_processor_finish_dialog_title));
-        assertEquals(shadowDialog.getMessage().toString(), activity.getString(R.string.barcode_processor_finish_dialog_message));
+        assertEquals(
+                shadowDialog.getTitle().toString(),
+                activity.getString(R.string.barcode_processor_finish_dialog_title));
+        assertEquals(
+                shadowDialog.getMessage().toString(),
+                activity.getString(R.string.barcode_processor_finish_dialog_message));
 
         dialog.getButton(DialogInterface.BUTTON_POSITIVE).performClick();
         verify(presenter).onFinish();
@@ -122,8 +132,15 @@ public class BarcodeProcessorActivityTest {
 
         ShadowActivity shadowActivity = shadowOf(activity);
 
-        assertEquals(BarcodeProcessorActivity.RESULT_OK, shadowActivity.getResultCode());
-        assertEquals(shadowActivity.getResultIntent().getParcelableExtra(BarcodeProcessorActivity.EXTRA_RESULT), codesToProcess);
+        assertEquals(
+                BarcodeProcessorActivity.RESULT_OK,
+                shadowActivity.getResultCode());
+
+        assertEquals(
+                shadowActivity.getResultIntent()
+                        .getParcelableExtra(
+                                BarcodeProcessorActivity.EXTRA_RESULT),
+                codesToProcess);
 
         assertTrue(shadowActivity.isFinishing());
     }

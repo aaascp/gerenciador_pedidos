@@ -25,7 +25,10 @@ public class BarcodeProcessorPresenterTest {
     private BarcodeProcessorPresenter presenter;
 
 
-    private static CodesToProcess getCodesToProcess(String code, int itemsLeft) {
+    private static CodesToProcess getCodesToProcess(
+            String code,
+            int itemsLeft) {
+
         Map<String, Integer> codes = new HashMap<>();
         codes.put(code, itemsLeft);
 

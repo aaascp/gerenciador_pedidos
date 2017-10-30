@@ -43,8 +43,14 @@ public class OrdersListActivityTest {
     private static Order ORDER_PROCESSED =
             OrdersFactory.createOrder(
                     1000,
-                    ShipmentInfo.builder().address("Endereço").shipType("Sedex").build(),
-                    CustomerInfo.builder().id(1).name("Customer").build(),
+                    ShipmentInfo.builder()
+                            .address("Endereço")
+                            .shipType("Sedex")
+                            .build(),
+                    CustomerInfo.builder()
+                            .id(1)
+                            .name("Customer")
+                            .build(),
                     5,
                     DateFormatterUtils.getDateHourInstance().now(),
                     DateFormatterUtils.getDateHourInstance().now());
@@ -52,8 +58,14 @@ public class OrdersListActivityTest {
     private static Order ORDER_NOT_PROCESSED =
             OrdersFactory.createOrder(
                     1001,
-                    ShipmentInfo.builder().address("Endereço").shipType("Transportadora").build(),
-                    CustomerInfo.builder().id(1).name("Customer").build(),
+                    ShipmentInfo.builder()
+                            .address("Endereço")
+                            .shipType("Transportadora")
+                            .build(),
+                    CustomerInfo.builder()
+                            .id(1)
+                            .name("Customer")
+                            .build(),
                     3,
                     null,
                     DateFormatterUtils.getDateHourInstance().now());
@@ -149,28 +161,59 @@ public class OrdersListActivityTest {
 
     @Test
     public void showOrdersList() throws Exception {
-        activity.showOrdersList(Arrays.asList(ORDER_PROCESSED, ORDER_NOT_PROCESSED));
+        activity.showOrdersList(
+                Arrays.asList(ORDER_PROCESSED, ORDER_NOT_PROCESSED));
 
         OrdersListAdapter.ViewHolder holder =
-                (OrdersListAdapter.ViewHolder) activity.recyclerView.findViewHolderForAdapterPosition(0);
+                (OrdersListAdapter.ViewHolder) activity.recyclerView
+                        .findViewHolderForAdapterPosition(0);
 
-        assertEquals(holder.id.getText().toString(), String.valueOf(ORDER_PROCESSED.id()));
-        assertEquals(holder.shipType.getText().toString(), ORDER_PROCESSED.shipmentInfo().shipType());
-        assertEquals(holder.itemsCount.getText().toString(), String.valueOf(ORDER_PROCESSED.size()));
-        assertEquals(holder.processedAt.getText().toString(), ORDER_PROCESSED.processedAt());
-        assertEquals(holder.processedAt.getCurrentTextColor(), ContextCompat.getColor(activity, R.color.green));
-        assertEquals(holder.lastModifiedAt.getText().toString(), ORDER_PROCESSED.lastModifiedAt());
-        assertEquals(holder.action.getText().toString(), String.valueOf(activity.getString(R.string.orders_list_action_details)));
+        assertEquals(
+                holder.id.getText().toString(),
+                String.valueOf(ORDER_PROCESSED.id()));
+        assertEquals(
+                holder.shipType.getText().toString(),
+                ORDER_PROCESSED.shipmentInfo().shipType());
+        assertEquals(
+                holder.itemsCount.getText().toString(),
+                String.valueOf(ORDER_PROCESSED.size()));
+        assertEquals(
+                holder.processedAt.getText().toString(),
+                ORDER_PROCESSED.processedAt());
+        assertEquals(
+                holder.processedAt.getCurrentTextColor(),
+                ContextCompat.getColor(activity, R.color.green));
+        assertEquals(
+                holder.lastModifiedAt.getText().toString(),
+                ORDER_PROCESSED.lastModifiedAt());
+        assertEquals(
+                holder.action.getText().toString(),
+                String.valueOf(activity.getString(R.string.orders_list_action_details)));
 
-        holder = (OrdersListAdapter.ViewHolder) activity.recyclerView.findViewHolderForAdapterPosition(1);
+        holder = (OrdersListAdapter.ViewHolder) activity.recyclerView
+                .findViewHolderForAdapterPosition(1);
 
-        assertEquals(holder.id.getText().toString(), String.valueOf(ORDER_NOT_PROCESSED.id()));
-        assertEquals(holder.shipType.getText().toString(), ORDER_NOT_PROCESSED.shipmentInfo().shipType());
-        assertEquals(holder.itemsCount.getText().toString(), String.valueOf(ORDER_NOT_PROCESSED.size()));
-        assertEquals(holder.processedAt.getText().toString(), activity.getString(R.string.order_list_processed_at_empty));
-        assertEquals(holder.processedAt.getCurrentTextColor(), ContextCompat.getColor(activity, R.color.red));
-        assertEquals(holder.lastModifiedAt.getText().toString(), ORDER_NOT_PROCESSED.lastModifiedAt());
-        assertEquals(holder.action.getText().toString(), String.valueOf(activity.getString(R.string.orders_list_action_process)));
+        assertEquals(
+                holder.id.getText().toString(),
+                String.valueOf(ORDER_NOT_PROCESSED.id()));
+        assertEquals(
+                holder.shipType.getText().toString(),
+                ORDER_NOT_PROCESSED.shipmentInfo().shipType());
+        assertEquals(
+                holder.itemsCount.getText().toString(),
+                String.valueOf(ORDER_NOT_PROCESSED.size()));
+        assertEquals(
+                holder.processedAt.getText().toString(),
+                activity.getString(R.string.order_list_processed_at_empty));
+        assertEquals(
+                holder.processedAt.getCurrentTextColor(),
+                ContextCompat.getColor(activity, R.color.red));
+        assertEquals(
+                holder.lastModifiedAt.getText().toString(),
+                ORDER_NOT_PROCESSED.lastModifiedAt());
+        assertEquals(
+                holder.action.getText().toString(),
+                String.valueOf(activity.getString(R.string.orders_list_action_process)));
     }
 
     @Test
@@ -178,7 +221,8 @@ public class OrdersListActivityTest {
         activity.showEmptyList();
 
         EmptyStateAdapter.ViewHolder holder =
-                (EmptyStateAdapter.ViewHolder) activity.recyclerView.findViewHolderForAdapterPosition(0);
+                (EmptyStateAdapter.ViewHolder) activity.recyclerView
+                        .findViewHolderForAdapterPosition(0);
 
         String message = activity.getString(R.string.order_list_empty);
         assertEquals(holder.getMessage().getText().toString(), message);
@@ -190,9 +234,12 @@ public class OrdersListActivityTest {
         activity.showError(error);
 
         EmptyStateAdapter.ViewHolder holder =
-                (EmptyStateAdapter.ViewHolder) activity.recyclerView.findViewHolderForAdapterPosition(0);
+                (EmptyStateAdapter.ViewHolder) activity.recyclerView
+                        .findViewHolderForAdapterPosition(0);
 
-        assertEquals(holder.getMessage().getText().toString(), error);
+        assertEquals(
+                holder.getMessage().getText().toString(),
+                error);
     }
 
 
@@ -201,29 +248,44 @@ public class OrdersListActivityTest {
         activity.showCommunicationError();
 
         EmptyStateAdapter.ViewHolder holder =
-                (EmptyStateAdapter.ViewHolder) activity.recyclerView.findViewHolderForAdapterPosition(0);
+                (EmptyStateAdapter.ViewHolder) activity.recyclerView
+                        .findViewHolderForAdapterPosition(0);
 
         String message = activity.getString(R.string.error_communication);
-        assertEquals(holder.getMessage().getText().toString(), message);
+        assertEquals(
+                holder.getMessage().getText().toString(),
+                message);
     }
 
 
     @Test
     public void navigateToOrderDetails_unique() throws Exception {
-        activity.showOrdersList(Collections.singletonList(ORDER_PROCESSED));
+        activity.showOrdersList(
+                Collections.singletonList(ORDER_PROCESSED));
 
         OrdersListAdapter.ViewHolder holder =
-                (OrdersListAdapter.ViewHolder) activity.recyclerView.findViewHolderForAdapterPosition(0);
+                (OrdersListAdapter.ViewHolder) activity.recyclerView
+                        .findViewHolderForAdapterPosition(0);
 
         holder.root.performClick();
 
         ShadowActivity shadowActivity = shadowOf(activity);
-        ShadowActivity.IntentForResult intentForResult = shadowActivity.getNextStartedActivityForResult();
+        ShadowActivity.IntentForResult intentForResult =
+                shadowActivity.getNextStartedActivityForResult();
 
-        assertEquals(intentForResult.requestCode, OrdersListActivity.REQUEST_CODE_ORDER_PROCESS);
-        assertEquals(intentForResult.intent.getIntExtra(OrderDetailsActivity.EXTRA_ORDER_ID, Order.INVALID_ORDER_ID), ORDER_PROCESSED.id());
-        assertEquals(intentForResult.intent.getIntExtra(OrderDetailsActivity.EXTRA_TOTAL, 0), 2);
-        assertEquals(intentForResult.intent.getIntExtra(OrderDetailsActivity.EXTRA_CURRENT, 0), 1);
+        assertEquals(
+                intentForResult.requestCode,
+                OrdersListActivity.REQUEST_CODE_ORDER_PROCESS);
+        assertEquals(
+                intentForResult.intent.getIntExtra(
+                        OrderDetailsActivity.EXTRA_ORDER_ID, Order.INVALID_ORDER_ID),
+                ORDER_PROCESSED.id());
+        assertEquals(
+                intentForResult.intent.getIntExtra(OrderDetailsActivity.EXTRA_TOTAL, 0),
+                2);
+        assertEquals(
+                intentForResult.intent.getIntExtra(OrderDetailsActivity.EXTRA_CURRENT, 0),
+                1);
     }
 
     @Test
@@ -231,12 +293,22 @@ public class OrdersListActivityTest {
         activity.navigateToOrderDetails(1000, 2, 3);
 
         ShadowActivity shadowActivity = shadowOf(activity);
-        ShadowActivity.IntentForResult intentForResult = shadowActivity.getNextStartedActivityForResult();
+        ShadowActivity.IntentForResult intentForResult =
+                shadowActivity.getNextStartedActivityForResult();
 
-        assertEquals(intentForResult.requestCode, OrdersListActivity.REQUEST_CODE_ORDER_PROCESS);
-        assertEquals(intentForResult.intent.getIntExtra(OrderDetailsActivity.EXTRA_ORDER_ID, Order.INVALID_ORDER_ID), ORDER_PROCESSED.id());
-        assertEquals(intentForResult.intent.getIntExtra(OrderDetailsActivity.EXTRA_CURRENT, 0), 2);
-        assertEquals(intentForResult.intent.getIntExtra(OrderDetailsActivity.EXTRA_TOTAL, 0), 3);
+        assertEquals(
+                intentForResult.requestCode,
+                OrdersListActivity.REQUEST_CODE_ORDER_PROCESS);
+        assertEquals(
+                intentForResult.intent.getIntExtra(
+                        OrderDetailsActivity.EXTRA_ORDER_ID, Order.INVALID_ORDER_ID),
+                ORDER_PROCESSED.id());
+        assertEquals(
+                intentForResult.intent.getIntExtra(OrderDetailsActivity.EXTRA_CURRENT, 0),
+                2);
+        assertEquals(
+                intentForResult.intent.getIntExtra(OrderDetailsActivity.EXTRA_TOTAL, 0),
+                3);
     }
 
     @Test

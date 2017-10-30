@@ -36,8 +36,14 @@ public class OrderDetailsPresenterTest {
     private static final Order ORDER_PROCESSED =
             OrdersFactory.createOrder(
                     1000,
-                    ShipmentInfo.builder().shipType("Sedex").address("Address").build(),
-                    CustomerInfo.builder().id(1).name("Customer").build(),
+                    ShipmentInfo.builder()
+                            .shipType("Sedex")
+                            .address("Address")
+                            .build(),
+                    CustomerInfo.builder()
+                            .id(1)
+                            .name("Customer")
+                            .build(),
                     2,
                     DateFormatterUtils.getDateHourInstance().now(),
                     DateFormatterUtils.getDateHourInstance().now());
@@ -46,8 +52,14 @@ public class OrderDetailsPresenterTest {
     private static final Order ORDER_NOT_PROCESSED =
             OrdersFactory.createOrder(
                     2000,
-                    ShipmentInfo.builder().shipType("Sedex").address("Address").build(),
-                    CustomerInfo.builder().id(1).name("Customer").build(),
+                    ShipmentInfo.builder()
+                            .shipType("Sedex")
+                            .address("Address")
+                            .build(),
+                    CustomerInfo.builder()
+                            .id(1)
+                            .name("Customer")
+                            .build(),
                     2,
                     "",
                     DateFormatterUtils.getDateHourInstance().now());
@@ -55,8 +67,13 @@ public class OrderDetailsPresenterTest {
     private static final Order ORDER_NOT_PROCESSED_FINISH =
             OrdersFactory.createOrder(
                     3000,
-                    ShipmentInfo.builder().shipType("Sedex").address("Address").build(),
-                    CustomerInfo.builder().id(1).name("Customer").build(),
+                    ShipmentInfo.builder()
+                            .shipType("Sedex")
+                            .address("Address").build(),
+                    CustomerInfo.builder()
+                            .id(1)
+                            .name("Customer")
+                            .build(),
                     0,
                     "",
                     DateFormatterUtils.getDateHourInstance().now());
@@ -69,7 +86,8 @@ public class OrderDetailsPresenterTest {
     private OrdersRepository ordersRepository;
 
     @Captor
-    private ArgumentCaptor<RepositoryCallback<Order>> repositoryCallbackArgumentCaptor;
+    private ArgumentCaptor<RepositoryCallback<Order>>
+            repositoryCallbackArgumentCaptor;
 
     private OrderDetailsPresenter presenter;
 
@@ -147,7 +165,9 @@ public class OrderDetailsPresenterTest {
         init(ORDER_NOT_PROCESSED_FINISH, 1, 1);
 
         verify(view).setShipType(ORDER_NOT_PROCESSED_FINISH.shipmentInfo().shipType());
-        verify(view).showOrder(ORDER_NOT_PROCESSED_FINISH, ORDER_NOT_PROCESSED_FINISH.codesToProcess());
+        verify(view).showOrder(
+                ORDER_NOT_PROCESSED_FINISH,
+                ORDER_NOT_PROCESSED_FINISH.codesToProcess());
         verify(view).showFinishLabel();
     }
 
@@ -156,9 +176,13 @@ public class OrderDetailsPresenterTest {
         init(ORDER_NOT_PROCESSED, 1, 1);
 
         verify(view).setShipType(ORDER_NOT_PROCESSED.shipmentInfo().shipType());
-        verify(view).showOrder(ORDER_NOT_PROCESSED, ORDER_NOT_PROCESSED.codesToProcess());
+        verify(view).showOrder(
+                ORDER_NOT_PROCESSED,
+                ORDER_NOT_PROCESSED.codesToProcess());
         verify(view).showItemsLeftLabel();
-        verify(view).setItemsLeft(ORDER_NOT_PROCESSED.size(), ORDER_NOT_PROCESSED.codesToProcess().itemsLeft());
+        verify(view).setItemsLeft(
+                ORDER_NOT_PROCESSED.size(),
+                ORDER_NOT_PROCESSED.codesToProcess().itemsLeft());
     }
 
     @Test
@@ -166,7 +190,8 @@ public class OrderDetailsPresenterTest {
         init();
 
         String error = "Error";
-        repositoryCallbackArgumentCaptor.getValue().onError(Collections.singletonList(error));
+        repositoryCallbackArgumentCaptor.getValue()
+                .onError(Collections.singletonList(error));
 
         verify(view).showError(error);
     }
@@ -235,7 +260,8 @@ public class OrderDetailsPresenterTest {
         for (String code : ORDER_NOT_PROCESSED.items().keySet()) {
             codes.put(code, 1);
         }
-        CodesToProcess newCodesToProcess = CodesToProcess.create(codes, ORDER_NOT_PROCESSED.id());
+        CodesToProcess newCodesToProcess =
+                CodesToProcess.create(codes, ORDER_NOT_PROCESSED.id());
 
         presenter.onProcessorResult(newCodesToProcess);
 
@@ -251,7 +277,8 @@ public class OrderDetailsPresenterTest {
         for (String code : ORDER_NOT_PROCESSED.items().keySet()) {
             codes.put(code, 0);
         }
-        CodesToProcess newCodesToProcess = CodesToProcess.create(codes, ORDER_NOT_PROCESSED.id());
+        CodesToProcess newCodesToProcess =
+                CodesToProcess.create(codes, ORDER_NOT_PROCESSED.id());
 
         presenter.onProcessorResult(newCodesToProcess);
 
@@ -267,7 +294,8 @@ public class OrderDetailsPresenterTest {
         for (String code : ORDER_NOT_PROCESSED.items().keySet()) {
             codes.put(code, 0);
         }
-        CodesToProcess newCodesToProcess = CodesToProcess.create(codes, ORDER_NOT_PROCESSED.id());
+        CodesToProcess newCodesToProcess =
+                CodesToProcess.create(codes, ORDER_NOT_PROCESSED.id());
 
         presenter.onProcessorResult(newCodesToProcess);
 
@@ -326,7 +354,9 @@ public class OrderDetailsPresenterTest {
 
         presenter.onClearDialogOk();
 
-        verify(ordersRepository, times(2)).getOrder(anyInt(), any(RepositoryCallback.class));
+        verify(ordersRepository, times(2)).getOrder(
+                anyInt(),
+                any(RepositoryCallback.class));
     }
 
     @Test
@@ -363,7 +393,8 @@ public class OrderDetailsPresenterTest {
         String code = ORDER_NOT_PROCESSED.items().keySet().iterator().next();
         Map<String, Integer> codes = new HashMap<>(2);
         codes.put(code, ORDER_NOT_PROCESSED.items().get(code).quantity() - 1);
-        CodesToProcess newCodesToProcess = CodesToProcess.create(codes, ORDER_NOT_PROCESSED.id());
+        CodesToProcess newCodesToProcess =
+                CodesToProcess.create(codes, ORDER_NOT_PROCESSED.id());
 
         presenter.onProcessorResult(newCodesToProcess);
         presenter.onCameraPermissionEnabled();
@@ -377,7 +408,9 @@ public class OrderDetailsPresenterTest {
 
         presenter.onFinishClicked();
 
-        verify(ordersRepository).save(ORDER_NOT_PROCESSED.withProcessedAt(DateFormatterUtils.getDateHourInstance().now()));
+        verify(ordersRepository).save(
+                ORDER_NOT_PROCESSED.withProcessedAt(
+                        DateFormatterUtils.getDateHourInstance().now()));
     }
 
     @Test
@@ -436,7 +469,9 @@ public class OrderDetailsPresenterTest {
 
         verify(view).hideLabels();
         verify(view).showItemsLeftLabel();
-        verify(view).setItemsLeft(ORDER_NOT_PROCESSED.size(), ORDER_NOT_PROCESSED.codesToProcess().itemsLeft());
+        verify(view).setItemsLeft(
+                ORDER_NOT_PROCESSED.size(),
+                ORDER_NOT_PROCESSED.codesToProcess().itemsLeft());
         verify(view, never()).hideClearButton();
         verify(view, never()).showAlreadyProcessedLabel();
         verify(view, never()).showFinishLabel();

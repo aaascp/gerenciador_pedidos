@@ -47,7 +47,8 @@ import static org.robolectric.Shadows.shadowOf;
 @Config(constants = BuildConfig.class)
 public class OrderDetailsActivityTest {
 
-    private static final Order ORDER = OrdersFactory.createOrder(1000, true);
+    private static final Order ORDER =
+            OrdersFactory.createOrder(1000, true);
 
     @Mock
     private OrderDetailsContract.Presenter presenter;
@@ -66,23 +67,29 @@ public class OrderDetailsActivityTest {
     public void onActivityResult() throws Exception {
         activity.navigateToProcessor(ORDER.codesToProcess());
 
-        ShadowActivity.IntentForResult intentResult = shadowOf(activity).getNextStartedActivityForResult();
+        ShadowActivity.IntentForResult intentResult =
+                shadowOf(activity).getNextStartedActivityForResult();
 
         Map<String, Integer> codes = new HashMap<>();
         for (String code : ORDER.codesToProcess().codes().keySet()) {
             codes.put(code, 0);
         }
-        CodesToProcess newCodesToProcess = CodesToProcess.create(codes, ORDER.id());
+        CodesToProcess newCodesToProcess =
+                CodesToProcess.create(codes, ORDER.id());
 
         Intent result = new Intent();
-        result.putExtra(BarcodeProcessorActivity.EXTRA_RESULT, newCodesToProcess);
+        result.putExtra(
+                BarcodeProcessorActivity.EXTRA_RESULT,
+                newCodesToProcess);
 
         shadowOf(activity).receiveResult(
                 intentResult.intent,
                 Activity.RESULT_OK,
                 result);
 
-        assertEquals(intentResult.requestCode, OrderDetailsActivity.REQUEST_CODE_PROCESS);
+        assertEquals(
+                intentResult.requestCode,
+                OrderDetailsActivity.REQUEST_CODE_PROCESS);
         verify(presenter).onProcessorResult(newCodesToProcess);
     }
 
@@ -92,42 +99,22 @@ public class OrderDetailsActivityTest {
         verify(presenter).start();
     }
 
-//    @Test
-//    public void menuSetup_info() throws Exception {
-//        ShadowActivity shadowActivity = shadowOf(activity);
-//        shadowActivity.onCreateOptionsMenu(activity.toolbar.getMenu());
-////        shadowActivity.clickMenuItem(R.id.menu_order_details_more_details);
-//
-//        verify(presenter).onInfoClicked();    }
-//
-//    @Test
-//    public void menuSetup_clear() throws Exception {
-////        activity.setupMenu();
-//        activity.findViewById(R.id.menu_order_details_clear).performClick();
-//
-//        verify(presenter).onClearClicked();
-//    }
-//
-//    @Test
-//    public void menuSetup_details() throws Exception {
-////        activity.setupMenu();
-//        activity.findViewById(R.id.menu_order_details_skip).performClick();
-//
-//        verify(presenter).onSkipClicked();
-//    }
-
     @Test
     public void hideClearButton() throws Exception {
         activity.hideClearButton();
 
-        assertEquals(activity.toolbar.getMenu().findItem(R.id.menu_order_details_clear).isVisible(), false);
+        assertEquals(
+                activity.toolbar.getMenu().findItem(R.id.menu_order_details_clear).isVisible(),
+                false);
     }
 
     @Test
     public void hideSkipButton() throws Exception {
         activity.hideSkipButton();
 
-        assertEquals(activity.toolbar.getMenu().findItem(R.id.menu_order_details_skip).isVisible(), false);
+        assertEquals(
+                activity.toolbar.getMenu().findItem(R.id.menu_order_details_skip).isVisible(),
+                false);
     }
 
     @Test
@@ -145,7 +132,8 @@ public class OrderDetailsActivityTest {
         OrderDetailsAdapter.ViewHolder holder;
         int i = 0;
         for (OrderItem item : ORDER.items().values()) {
-            holder = (OrderDetailsAdapter.ViewHolder) activity.recyclerView.findViewHolderForAdapterPosition(i);
+            holder = (OrderDetailsAdapter.ViewHolder) activity.recyclerView
+                    .findViewHolderForAdapterPosition(i);
 
             int itemsLeft = item.quantity() - newCodesToProcess.codes().get(item.code());
             String itemsLeftText =
@@ -154,9 +142,15 @@ public class OrderDetailsActivityTest {
                             itemsLeft,
                             item.quantity());
 
-            assertEquals(holder.code.getText().toString(), item.code());
-            assertEquals(holder.quantity.getText().toString(), itemsLeftText);
-            assertEquals(holder.description.getText().toString(), item.description());
+            assertEquals(
+                    holder.code.getText().toString(),
+                    item.code());
+            assertEquals(
+                    holder.quantity.getText().toString(),
+                    itemsLeftText);
+            assertEquals(
+                    holder.description.getText().toString(),
+                    item.description());
 
             i++;
         }
@@ -166,28 +160,36 @@ public class OrderDetailsActivityTest {
     public void setupTitle_unique() throws Exception {
         activity.setupTitle(1000, 1, 1);
 
-        assertThat(activity.toolbar.getTitle().toString(), containsString("#1000"));
+        assertThat(
+                activity.toolbar.getTitle().toString(),
+                containsString("#1000"));
     }
 
     @Test
     public void setupTitle_processAll() throws Exception {
         activity.setupTitle(1000, 1, 2);
 
-        assertThat(activity.toolbar.getTitle().toString(), containsString("#1000 (1/2)"));
+        assertThat(
+                activity.toolbar.getTitle().toString(),
+                containsString("#1000 (1/2)"));
     }
 
     @Test
     public void setShipType() throws Exception {
         activity.setShipType(ORDER.shipmentInfo().shipType());
 
-        assertEquals(activity.shipTypeView.getValue(), ORDER.shipmentInfo().shipType());
+        assertEquals(
+                activity.shipTypeView.getValue(),
+                ORDER.shipmentInfo().shipType());
     }
 
     @Test
     public void setItemsLeft() throws Exception {
         activity.setItemsLeft(2, 1);
 
-        assertEquals(activity.itemsLeftView.getText().toString(), "1 / 2");
+        assertEquals(
+                activity.itemsLeftView.getText().toString(),
+                "1 / 2");
     }
 
     @Test
@@ -197,7 +199,8 @@ public class OrderDetailsActivityTest {
         OrderDetailsAdapter.ViewHolder holder;
         int i = 0;
         for (OrderItem item : ORDER.items().values()) {
-            holder = (OrderDetailsAdapter.ViewHolder) activity.recyclerView.findViewHolderForAdapterPosition(i);
+            holder = (OrderDetailsAdapter.ViewHolder) activity.recyclerView
+                    .findViewHolderForAdapterPosition(i);
 
             int itemsLeft = item.quantity() - ORDER.codesToProcess().codes().get(item.code());
             String itemsLeftText =
@@ -206,9 +209,15 @@ public class OrderDetailsActivityTest {
                             itemsLeft,
                             item.quantity());
 
-            assertEquals(holder.code.getText().toString(), item.code());
-            assertEquals(holder.quantity.getText().toString(), itemsLeftText);
-            assertEquals(holder.description.getText().toString(), item.description());
+            assertEquals(
+                    holder.code.getText().toString(),
+                    item.code());
+            assertEquals(
+                    holder.quantity.getText().toString(),
+                    itemsLeftText);
+            assertEquals(
+                    holder.description.getText().toString(),
+                    item.description());
 
             i++;
         }
@@ -219,71 +228,94 @@ public class OrderDetailsActivityTest {
         String error = "Error";
         activity.showError(error);
 
-        RecyclerView recyclerView = (RecyclerView) activity.findViewById(R.id.order_details_recycler);
+        RecyclerView recyclerView =
+                (RecyclerView) activity.findViewById(R.id.order_details_recycler);
 
         EmptyStateAdapter.ViewHolder holder =
                 (EmptyStateAdapter.ViewHolder) recyclerView.findViewHolderForAdapterPosition(0);
 
-        assertEquals(holder.getMessage().getText().toString(), error);
+        assertEquals(
+                holder.getMessage().getText().toString(),
+                error);
     }
 
 
     @Test
     public void showCommunicationError() throws Exception {
         activity.showCommunicationError();
-        RecyclerView recyclerView = (RecyclerView) activity.findViewById(R.id.order_details_recycler);
+        RecyclerView recyclerView =
+                (RecyclerView) activity.findViewById(R.id.order_details_recycler);
 
         EmptyStateAdapter.ViewHolder holder =
                 (EmptyStateAdapter.ViewHolder) recyclerView.findViewHolderForAdapterPosition(0);
 
         String message = activity.getString(R.string.error_communication);
-        assertEquals(holder.getMessage().getText().toString(), message);
+        assertEquals(
+                holder.getMessage().getText().toString(),
+                message);
     }
 
     @Test
     public void hideLabels() throws Exception {
         activity.hideLabels();
 
-        assertEquals(activity.finishRoot.getVisibility(), View.GONE);
-        assertEquals(activity.itemsLeftRoot.getVisibility(), View.GONE);
-        assertEquals(activity.alreadyProcessedRoot.getVisibility(), View.GONE);
+        assertEquals(
+                activity.finishRoot.getVisibility(),
+                View.GONE);
+        assertEquals(
+                activity.itemsLeftRoot.getVisibility(),
+                View.GONE);
+        assertEquals(
+                activity.alreadyProcessedRoot.getVisibility(),
+                View.GONE);
     }
 
     @Test
     public void showFinishLabel() throws Exception {
         activity.showFinishLabel();
 
-        assertEquals(activity.finishRoot.getVisibility(), View.VISIBLE);
+        assertEquals(
+                activity.finishRoot.getVisibility(),
+                View.VISIBLE);
     }
 
     @Test
     public void showItemsLeftLabel() throws Exception {
         activity.showItemsLeftLabel();
 
-        assertEquals(activity.itemsLeftRoot.getVisibility(), View.VISIBLE);
+        assertEquals(
+                activity.itemsLeftRoot.getVisibility(),
+                View.VISIBLE);
     }
 
     @Test
     public void showAlreadyProcessedLabel() throws Exception {
         activity.showAlreadyProcessedLabel();
 
-        assertEquals(activity.alreadyProcessedRoot.getVisibility(), View.VISIBLE);
+        assertEquals(
+                activity.alreadyProcessedRoot.getVisibility(),
+                View.VISIBLE);
     }
 
     @Test
     public void navigateToDetails() throws Exception {
-        activity.showOrder(ORDER, ORDER.codesToProcess());
+        activity.showOrder(
+                ORDER,
+
+                ORDER.codesToProcess());
 
         OrderDetailsAdapter.ViewHolder holder =
-                (OrderDetailsAdapter.ViewHolder) activity.recyclerView.findViewHolderForAdapterPosition(0);
+                (OrderDetailsAdapter.ViewHolder) activity.recyclerView
+                        .findViewHolderForAdapterPosition(0);
 
         holder.root.performClick();
 
         ShadowActivity shadowActivity = shadowOf(activity);
         Intent intent = shadowActivity.getNextStartedActivity();
 
-        OrderItem item = ORDER.items().get(holder.code.getText().toString());
-        assertEquals(intent.getParcelableExtra(OrderItemActivity.EXTRA_ITEM), item);
+        assertEquals(
+                intent.getParcelableExtra(OrderItemActivity.EXTRA_ITEM),
+                ORDER.items().get(holder.code.getText().toString()));
     }
 
     @Test
@@ -291,7 +323,10 @@ public class OrderDetailsActivityTest {
         activity.finishSkip();
         ShadowActivity shadowActivity = shadowOf(activity);
 
-        assertEquals(OrdersListActivity.RESULT_CODE_SKIP, shadowActivity.getResultCode());
+        assertEquals(
+                OrdersListActivity.RESULT_CODE_SKIP,
+                shadowActivity.getResultCode());
+
         assertTrue(shadowActivity.isFinishing());
     }
 
@@ -300,7 +335,10 @@ public class OrderDetailsActivityTest {
         activity.finishClose();
         ShadowActivity shadowActivity = shadowOf(activity);
 
-        assertEquals(OrdersListActivity.RESULT_CODE_CLOSE, shadowActivity.getResultCode());
+        assertEquals(
+                OrdersListActivity.RESULT_CODE_CLOSE,
+                shadowActivity.getResultCode());
+
         assertTrue(shadowActivity.isFinishing());
     }
 
@@ -309,7 +347,10 @@ public class OrderDetailsActivityTest {
         activity.finishOk();
         ShadowActivity shadowActivity = shadowOf(activity);
 
-        assertEquals(OrdersListActivity.RESULT_CODE_OK, shadowActivity.getResultCode());
+        assertEquals(
+                OrdersListActivity.RESULT_CODE_OK,
+                shadowActivity.getResultCode());
+
         assertTrue(shadowActivity.isFinishing());
     }
 
@@ -318,7 +359,10 @@ public class OrderDetailsActivityTest {
         activity.finishOkUnique();
         ShadowActivity shadowActivity = shadowOf(activity);
 
-        assertEquals(OrdersListActivity.RESULT_CODE_OK_UNIQUE, shadowActivity.getResultCode());
+        assertEquals(
+                OrdersListActivity.RESULT_CODE_OK_UNIQUE,
+                shadowActivity.getResultCode());
+
         assertTrue(shadowActivity.isFinishing());
     }
 
@@ -336,8 +380,12 @@ public class OrderDetailsActivityTest {
         AlertDialog dialog = ShadowAlertDialog.getLatestAlertDialog();
         ShadowAlertDialog shadowDialog = shadowOf(dialog);
 
-        assertEquals(shadowDialog.getTitle().toString(), activity.getString(R.string.order_details_back_dialog_title));
-        assertEquals(shadowDialog.getMessage().toString(), activity.getString(R.string.order_details_back_dialog_message));
+        assertEquals(
+                shadowDialog.getTitle().toString(),
+                activity.getString(R.string.order_details_back_dialog_title));
+        assertEquals(
+                shadowDialog.getMessage().toString(),
+                activity.getString(R.string.order_details_back_dialog_message));
 
         dialog.getButton(DialogInterface.BUTTON_POSITIVE).performClick();
         verify(presenter).onBackDialogOk();
@@ -350,8 +398,12 @@ public class OrderDetailsActivityTest {
         AlertDialog dialog = ShadowAlertDialog.getLatestAlertDialog();
         ShadowAlertDialog shadowDialog = shadowOf(dialog);
 
-        assertEquals(shadowDialog.getTitle().toString(), activity.getString(R.string.order_details_skip_dialog_title));
-        assertEquals(shadowDialog.getMessage().toString(), activity.getString(R.string.order_details_skip_dialog_message));
+        assertEquals(
+                shadowDialog.getTitle().toString(),
+                activity.getString(R.string.order_details_skip_dialog_title));
+        assertEquals(
+                shadowDialog.getMessage().toString(),
+                activity.getString(R.string.order_details_skip_dialog_message));
 
         dialog.getButton(DialogInterface.BUTTON_POSITIVE).performClick();
         verify(presenter).onSkipDialogOk();
@@ -364,8 +416,12 @@ public class OrderDetailsActivityTest {
         AlertDialog dialog = ShadowAlertDialog.getLatestAlertDialog();
         ShadowAlertDialog shadowDialog = shadowOf(dialog);
 
-        assertEquals(shadowDialog.getTitle().toString(), activity.getString(R.string.order_details_clear_dialog_title));
-        assertEquals(shadowDialog.getMessage().toString(), activity.getString(R.string.order_details_clear_dialog_message));
+        assertEquals(
+                shadowDialog.getTitle().toString(),
+                activity.getString(R.string.order_details_clear_dialog_title));
+        assertEquals(
+                shadowDialog.getMessage().toString(),
+                activity.getString(R.string.order_details_clear_dialog_message));
 
         dialog.getButton(DialogInterface.BUTTON_POSITIVE).performClick();
         verify(presenter).onClearDialogOk();
@@ -378,8 +434,12 @@ public class OrderDetailsActivityTest {
         AlertDialog dialog = ShadowAlertDialog.getLatestAlertDialog();
         ShadowAlertDialog shadowDialog = shadowOf(dialog);
 
-        assertEquals(shadowDialog.getTitle().toString(), activity.getString(R.string.order_details_close_dialog_title));
-        assertEquals(shadowDialog.getMessage().toString(), activity.getString(R.string.order_details_close_dialog_message));
+        assertEquals(
+                shadowDialog.getTitle().toString(),
+                activity.getString(R.string.order_details_close_dialog_title));
+        assertEquals(
+                shadowDialog.getMessage().toString(),
+                activity.getString(R.string.order_details_close_dialog_message));
 
         dialog.getButton(DialogInterface.BUTTON_POSITIVE).performClick();
         verify(presenter).onCloseDialogOk();
@@ -390,10 +450,16 @@ public class OrderDetailsActivityTest {
         activity.navigateToProcessor(ORDER.codesToProcess());
 
         ShadowActivity shadowActivity = shadowOf(activity);
-        ShadowActivity.IntentForResult intentResult = shadowActivity.getNextStartedActivityForResult();
+        ShadowActivity.IntentForResult intentResult =
+                shadowActivity.getNextStartedActivityForResult();
 
-        assertEquals(intentResult.intent.getParcelableExtra(BarcodeProcessorActivity.EXTRA_CODES_TO_PROCESS), ORDER.codesToProcess());
-        assertEquals(intentResult.requestCode, OrderDetailsActivity.REQUEST_CODE_PROCESS);
+        assertEquals(
+                intentResult.intent.getParcelableExtra(
+                        BarcodeProcessorActivity.EXTRA_CODES_TO_PROCESS),
+                ORDER.codesToProcess());
+        assertEquals(
+                intentResult.requestCode,
+                OrderDetailsActivity.REQUEST_CODE_PROCESS);
     }
 
     @Test

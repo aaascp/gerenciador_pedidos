@@ -27,7 +27,9 @@ import static org.mockito.Mockito.verify;
 public class OrdersListPresenterTest {
 
     private static int ORDERS_SIZE = 2;
-    private static List<Order> ORDERS = OrdersFactory.getOrders(ORDERS_SIZE, 0.5);
+    private static List<Order> ORDERS =
+            OrdersFactory.getOrders(ORDERS_SIZE, 0.5);
+
     private static List<Order> ORDERS_EMPTY = new ArrayList<>(0);
     private static List<String> ERRORS = Lists.newArrayList("Error");
     private static List<String> ERRORS_EMPTY = null;
@@ -42,7 +44,8 @@ public class OrdersListPresenterTest {
     private OrderFilterList filters;
 
     @Captor
-    private ArgumentCaptor<RepositoryCallback<List<Order>>> repositoryCallbackArgumentCaptor;
+    private ArgumentCaptor<RepositoryCallback<List<Order>>>
+            repositoryCallbackArgumentCaptor;
 
     private OrdersListPresenter ordersListPresenter;
 
@@ -69,7 +72,9 @@ public class OrdersListPresenterTest {
                 eq(filters),
                 repositoryCallbackArgumentCaptor.capture());
 
-        repositoryCallbackArgumentCaptor.getValue().onSuccess(orders);
+        repositoryCallbackArgumentCaptor
+                .getValue()
+                .onSuccess(orders);
     }
 
     private void startError(List<String> errors) {
@@ -79,7 +84,9 @@ public class OrdersListPresenterTest {
                 eq(filters),
                 repositoryCallbackArgumentCaptor.capture());
 
-        repositoryCallbackArgumentCaptor.getValue().onError(errors);
+        repositoryCallbackArgumentCaptor
+                .getValue()
+                .onError(errors);
     }
 
     @Before
