@@ -49,10 +49,17 @@ import static org.robolectric.Shadows.shadowOf;
 @Config(constants = BuildConfig.class)
 public class OrderDetailsActivityTest {
 
-    private static final Order ORDER_NOT_FINISHED = OrdersFactory.createOrder(1000, false);
-    private static final Order ORDER_FINISHED = OrdersFactory.createOrder(1001, true);
-    private static final Order ORDER_ERROR = OrdersFakeDataSource.createOrderError();
-    private static final Order ORDER_COMMUNICATION_ERROR = OrdersFakeDataSource.createOrderCommunicationError();
+    private static final Order ORDER_NOT_FINISHED =
+            OrdersFactory.createOrder(1000, false);
+
+    private static final Order ORDER_FINISHED =
+            OrdersFactory.createOrder(1001, true);
+
+    private static final Order ORDER_ERROR =
+            OrdersFakeDataSource.createOrderError();
+
+    private static final Order ORDER_COMMUNICATION_ERROR =
+            OrdersFakeDataSource.createOrderCommunicationError();
 
     private OrderDetailsActivity activity;
 
@@ -66,11 +73,20 @@ public class OrderDetailsActivityTest {
         OrdersFakeDataSource.addOrder(order);
 
         Intent intent = new Intent();
-        intent.putExtra(OrderDetailsActivity.EXTRA_ORDER_ID, order.id());
-        intent.putExtra(OrderDetailsActivity.EXTRA_TOTAL, total);
-        intent.putExtra(OrderDetailsActivity.EXTRA_CURRENT, current);
+        intent.putExtra(
+                OrderDetailsActivity.EXTRA_ORDER_ID,
+                order.id());
+        intent.putExtra(
+                OrderDetailsActivity.EXTRA_TOTAL,
+                total);
+        intent.putExtra(
+                OrderDetailsActivity.EXTRA_CURRENT,
+                current);
 
-        activity = Robolectric.buildActivity(OrderDetailsActivity.class, intent).create().start().get();
+        activity = Robolectric.buildActivity(OrderDetailsActivity.class, intent)
+                .create()
+                .start()
+                .get();
 
         activity.recyclerView.measure(0, 0);
         activity.recyclerView.layout(0, 0, 100, 1000);
@@ -80,28 +96,15 @@ public class OrderDetailsActivityTest {
         init(order, 1, 1);
     }
 
-//    Nao consigo acessar menu
-//    @Test
-//    public void startForUnique_hidesSkipButton() throws Exception {
-//        init(ORDER_FINISHED, 1, 1);
-//
-//        assertEquals(shadowOf(activity).getOptionsMenu().findItem(R.id.menu_order_details_skip).isVisible(), false);
-//    }
-//
-//    @Test
-//    public void startForList_showsSkipButton() throws Exception {
-//        init(ORDER_FINISHED, 1, 2);
-//
-//        assertEquals(shadowOf(activity).getOptionsMenu().findItem(R.id.menu_order_details_skip).isVisible(), true);
-//    }
-
     @Test
     public void setupTitle_unique() throws Exception {
         int current = 1;
         int total = 1;
         init(ORDER_FINISHED, current, total);
 
-        assertThat(activity.toolbar.getTitle().toString(), containsString(String.valueOf(ORDER_FINISHED.id())));
+        assertThat(
+                activity.toolbar.getTitle().toString(),
+                containsString(String.valueOf(ORDER_FINISHED.id())));
     }
 
     @Test
@@ -110,21 +113,30 @@ public class OrderDetailsActivityTest {
         int total = 2;
         init(ORDER_FINISHED, current, total);
 
-        assertThat(activity.toolbar.getTitle().toString(), containsString(String.format("%d (%d/%d)", ORDER_FINISHED.id(), current, total)));
+        assertThat(
+                activity.toolbar.getTitle().toString(),
+                containsString(
+                        String.format("%d (%d/%d)", ORDER_FINISHED.id(),
+                                current,
+                                total)));
     }
 
     @Test
     public void setShipType() throws Exception {
         init(ORDER_FINISHED);
 
-        assertEquals(activity.shipTypeView.getValue(), ORDER_FINISHED.shipmentInfo().shipType());
+        assertEquals(
+                activity.shipTypeView.getValue(),
+                ORDER_FINISHED.shipmentInfo().shipType());
     }
 
     @Test
     public void setItemsLeft() throws Exception {
         init(ORDER_NOT_FINISHED);
 
-        assertEquals(activity.itemsLeftView.getText().toString(), "0 / 2");
+        assertEquals(
+                activity.itemsLeftView.getText().toString(),
+                "0 / 2");
     }
 
     @Test
@@ -134,18 +146,27 @@ public class OrderDetailsActivityTest {
         OrderDetailsAdapter.ViewHolder holder;
         int i = 0;
         for (OrderItem item : ORDER_FINISHED.items().values()) {
-            holder = (OrderDetailsAdapter.ViewHolder) activity.recyclerView.findViewHolderForAdapterPosition(i);
+            holder = (OrderDetailsAdapter.ViewHolder) activity.recyclerView
+                    .findViewHolderForAdapterPosition(i);
 
-            int itemsLeft = item.quantity() - ORDER_FINISHED.codesToProcess().codes().get(item.code());
+            int itemsLeft =
+                    item.quantity() - ORDER_FINISHED.codesToProcess().codes().get(item.code());
+
             String itemsLeftText =
                     String.format(
                             activity.getString(R.string.order_details_count_text),
                             itemsLeft,
                             item.quantity());
 
-            assertEquals(holder.code.getText().toString(), item.code());
-            assertEquals(holder.quantity.getText().toString(), itemsLeftText);
-            assertEquals(holder.description.getText().toString(), item.description());
+            assertEquals(
+                    holder.code.getText().toString(),
+                    item.code());
+            assertEquals(
+                    holder.quantity.getText().toString(),
+                    itemsLeftText);
+            assertEquals(
+                    holder.description.getText().toString(),
+                    item.description());
 
             i++;
         }
@@ -156,9 +177,12 @@ public class OrderDetailsActivityTest {
         init(ORDER_ERROR);
 
         EmptyStateAdapter.ViewHolder holder =
-                (EmptyStateAdapter.ViewHolder) activity.recyclerView.findViewHolderForAdapterPosition(0);
+                (EmptyStateAdapter.ViewHolder) activity.recyclerView
+                        .findViewHolderForAdapterPosition(0);
 
-        assertEquals(holder.getMessage().getText().toString(), OrdersFakeDataSource.ERROR_MESSAGE);
+        assertEquals(
+                holder.getMessage().getText().toString(),
+                OrdersFakeDataSource.ERROR_MESSAGE);
     }
 
     @Test
@@ -166,24 +190,31 @@ public class OrderDetailsActivityTest {
         init(ORDER_COMMUNICATION_ERROR);
 
         EmptyStateAdapter.ViewHolder holder =
-                (EmptyStateAdapter.ViewHolder) activity.recyclerView.findViewHolderForAdapterPosition(0);
+                (EmptyStateAdapter.ViewHolder) activity.recyclerView
+                        .findViewHolderForAdapterPosition(0);
 
         String message = activity.getString(R.string.error_communication);
-        assertEquals(holder.getMessage().getText().toString(), message);
+        assertEquals(
+                holder.getMessage().getText().toString(),
+                message);
     }
 
     @Test
     public void showItemsLeftLabel() throws Exception {
         init(ORDER_NOT_FINISHED);
 
-        assertEquals(activity.itemsLeftRoot.getVisibility(), View.VISIBLE);
+        assertEquals(
+                activity.itemsLeftRoot.getVisibility(),
+                View.VISIBLE);
     }
 
     @Test
     public void showAlreadyProcessedLabel() throws Exception {
         init(ORDER_FINISHED);
 
-        assertEquals(activity.alreadyProcessedRoot.getVisibility(), View.VISIBLE);
+        assertEquals(
+                activity.alreadyProcessedRoot.getVisibility(),
+                View.VISIBLE);
     }
 
     @Test
@@ -191,7 +222,8 @@ public class OrderDetailsActivityTest {
         init(ORDER_FINISHED);
 
         OrderDetailsAdapter.ViewHolder holder =
-                (OrderDetailsAdapter.ViewHolder) activity.recyclerView.findViewHolderForAdapterPosition(0);
+                (OrderDetailsAdapter.ViewHolder) activity.recyclerView
+                        .findViewHolderForAdapterPosition(0);
 
         holder.root.performClick();
 
@@ -219,7 +251,10 @@ public class OrderDetailsActivityTest {
         activity.onFinishedClick();
         ShadowActivity shadowActivity = shadowOf(activity);
 
-        assertEquals(OrdersListActivity.RESULT_CODE_OK, shadowActivity.getResultCode());
+        assertEquals(
+                OrdersListActivity.RESULT_CODE_OK,
+                shadowActivity.getResultCode());
+
         assertTrue(shadowActivity.isFinishing());
     }
 
@@ -230,7 +265,10 @@ public class OrderDetailsActivityTest {
         activity.onFinishedClick();
         ShadowActivity shadowActivity = shadowOf(activity);
 
-        assertEquals(OrdersListActivity.RESULT_CODE_OK_UNIQUE, shadowActivity.getResultCode());
+        assertEquals(
+                OrdersListActivity.RESULT_CODE_OK_UNIQUE,
+                shadowActivity.getResultCode());
+
         assertTrue(shadowActivity.isFinishing());
     }
 
@@ -250,8 +288,12 @@ public class OrderDetailsActivityTest {
         AlertDialog dialog = ShadowAlertDialog.getLatestAlertDialog();
         ShadowAlertDialog shadowDialog = shadowOf(dialog);
 
-        assertEquals(shadowDialog.getTitle().toString(), activity.getString(R.string.order_details_back_dialog_title));
-        assertEquals(shadowDialog.getMessage().toString(), activity.getString(R.string.order_details_back_dialog_message));
+        assertEquals(
+                shadowDialog.getTitle().toString(),
+                activity.getString(R.string.order_details_back_dialog_title));
+        assertEquals(
+                shadowDialog.getMessage().toString(),
+                activity.getString(R.string.order_details_back_dialog_message));
     }
 
     @Test
@@ -276,7 +318,10 @@ public class OrderDetailsActivityTest {
         AlertDialog dialog = ShadowAlertDialog.getLatestAlertDialog();
         dialog.getButton(DialogInterface.BUTTON_POSITIVE).performClick();
 
-        assertEquals(OrdersListActivity.RESULT_CODE_SKIP, shadowActivity.getResultCode());
+        assertEquals(
+                OrdersListActivity.RESULT_CODE_SKIP,
+                shadowActivity.getResultCode());
+
         assertTrue(shadowActivity.isFinishing());
     }
 
@@ -293,13 +338,15 @@ public class OrderDetailsActivityTest {
         shadowOf(activity).grantPermissions(Manifest.permission.CAMERA);
         activity.onFabClick();
 
-        ShadowActivity.IntentForResult intentResult = shadowOf(activity).getNextStartedActivityForResult();
+        ShadowActivity.IntentForResult intentResult =
+                shadowOf(activity).getNextStartedActivityForResult();
 
         Map<String, Integer> codes = new HashMap<>();
         for (String code : ORDER_NOT_FINISHED.codesToProcess().codes().keySet()) {
             codes.put(code, 0);
         }
-        CodesToProcess newCodesToProcess = CodesToProcess.create(codes, ORDER_NOT_FINISHED.id());
+        CodesToProcess newCodesToProcess =
+                CodesToProcess.create(codes, ORDER_NOT_FINISHED.id());
 
         Intent result = new Intent();
         result.putExtra(BarcodeProcessorActivity.EXTRA_RESULT, newCodesToProcess);
@@ -315,48 +362,45 @@ public class OrderDetailsActivityTest {
         OrderDetailsAdapter.ViewHolder holder;
         int i = 0;
         for (OrderItem item : ORDER_NOT_FINISHED.items().values()) {
-            holder = (OrderDetailsAdapter.ViewHolder) activity.recyclerView.findViewHolderForAdapterPosition(i);
+            holder = (OrderDetailsAdapter.ViewHolder) activity.recyclerView
+                    .findViewHolderForAdapterPosition(i);
 
-            int itemsLeft = item.quantity() - newCodesToProcess.codes().get(item.code());
+            int itemsLeft =
+                    item.quantity() - newCodesToProcess.codes().get(item.code());
+
             String itemsLeftText =
                     String.format(
                             activity.getString(R.string.order_details_count_text),
                             itemsLeft,
                             item.quantity());
 
-            assertEquals(holder.code.getText().toString(), item.code());
-            assertEquals(holder.quantity.getText().toString(), itemsLeftText);
-            assertEquals(holder.description.getText().toString(), item.description());
+            assertEquals(
+                    holder.code.getText().toString(),
+                    item.code());
+            assertEquals(
+                    holder.quantity.getText().toString(),
+                    itemsLeftText);
+            assertEquals(
+                    holder.description.getText().toString(),
+                    item.description());
 
             i++;
         }
     }
 
-//     Nao consigo clicar icone toolbar
-//    @Test
-//    public void showCloseDialogOk_finishClose() throws Exception {
-//       init(ORDER_FINISHED);
-//
-//        ShadowActivity shadowActivity = shadowOf(activity);
-//        activity.toolbar.findViewWithTag("back_button").performClick();
-//
-//        AlertDialog dialog = ShadowAlertDialog.getLatestAlertDialog();
-//        dialog.getButton(DialogInterface.BUTTON_POSITIVE).performClick();
-//
-//        assertEquals(OrdersListActivity.RESULT_CODE_CLOSE, shadowActivity.getResultCode());
-//        assertTrue(shadowActivity.isFinishing());
-//    }
-
     @Test
     public void onMoreDetailsClick_showDetails() throws Exception {
         init(ORDER_FINISHED);
 
-        MenuItem menuItem = new RoboMenuItem(R.id.menu_order_details_more_details);
+        MenuItem menuItem =
+                new RoboMenuItem(R.id.menu_order_details_more_details);
         activity.onOptionsItemSelected(menuItem);
 
         Intent startedIntent = shadowOf(activity).getNextStartedActivity();
 
-        assertEquals(startedIntent.getParcelableExtra(OrderInfoActivity.EXTRA_ORDER), ORDER_FINISHED);
+        assertEquals(
+                startedIntent.getParcelableExtra(OrderInfoActivity.EXTRA_ORDER),
+                ORDER_FINISHED);
     }
 
     @Test
@@ -369,8 +413,12 @@ public class OrderDetailsActivityTest {
         AlertDialog dialog = ShadowAlertDialog.getLatestAlertDialog();
         ShadowAlertDialog shadowDialog = shadowOf(dialog);
 
-        assertEquals(shadowDialog.getTitle().toString(), activity.getString(R.string.order_details_clear_dialog_title));
-        assertEquals(shadowDialog.getMessage().toString(), activity.getString(R.string.order_details_clear_dialog_message));
+        assertEquals(
+                shadowDialog.getTitle().toString(),
+                activity.getString(R.string.order_details_clear_dialog_title));
+        assertEquals(
+                shadowDialog.getMessage().toString(),
+                activity.getString(R.string.order_details_clear_dialog_message));
     }
 
     @Test
@@ -383,8 +431,12 @@ public class OrderDetailsActivityTest {
         AlertDialog dialog = ShadowAlertDialog.getLatestAlertDialog();
         ShadowAlertDialog shadowDialog = shadowOf(dialog);
 
-        assertEquals(shadowDialog.getTitle().toString(), activity.getString(R.string.order_details_skip_dialog_title));
-        assertEquals(shadowDialog.getMessage().toString(), activity.getString(R.string.order_details_skip_dialog_message));
+        assertEquals(
+                shadowDialog.getTitle().toString(),
+                activity.getString(R.string.order_details_skip_dialog_title));
+        assertEquals(
+                shadowDialog.getMessage().toString(),
+                activity.getString(R.string.order_details_skip_dialog_message));
     }
 
     @Test
@@ -395,7 +447,10 @@ public class OrderDetailsActivityTest {
         View onFinishedClick = activity.findViewById(R.id.order_details_finish);
         onFinishedClick.performClick();
 
-        assertEquals(OrdersListActivity.RESULT_CODE_OK, shadowActivity.getResultCode());
+        assertEquals(
+                OrdersListActivity.RESULT_CODE_OK,
+                shadowActivity.getResultCode());
+
         assertTrue(shadowActivity.isFinishing());
     }
 
@@ -407,7 +462,10 @@ public class OrderDetailsActivityTest {
         View onFinishedClick = activity.findViewById(R.id.order_details_finish);
         onFinishedClick.performClick();
 
-        assertEquals(OrdersListActivity.RESULT_CODE_OK_UNIQUE, shadowActivity.getResultCode());
+        assertEquals(
+                OrdersListActivity.RESULT_CODE_OK_UNIQUE,
+                shadowActivity.getResultCode());
+
         assertTrue(shadowActivity.isFinishing());
     }
 
@@ -419,7 +477,10 @@ public class OrderDetailsActivityTest {
         View onAlreadyProcessedClick = activity.findViewById(R.id.order_details_processed);
         onAlreadyProcessedClick.performClick();
 
-        assertEquals(OrdersListActivity.RESULT_CODE_CLOSE, shadowActivity.getResultCode());
+        assertEquals(
+                OrdersListActivity.RESULT_CODE_CLOSE,
+                shadowActivity.getResultCode());
+
         assertTrue(shadowActivity.isFinishing());
     }
 
@@ -432,7 +493,9 @@ public class OrderDetailsActivityTest {
 
         Intent startedIntent = shadowOf(activity).getNextStartedActivity();
 
-        assertEquals(startedIntent.getParcelableExtra(OrderInfoActivity.EXTRA_ORDER), ORDER_FINISHED);
+        assertEquals(
+                startedIntent.getParcelableExtra(OrderInfoActivity.EXTRA_ORDER),
+                ORDER_FINISHED);
     }
 
     @Test
@@ -444,9 +507,14 @@ public class OrderDetailsActivityTest {
         activity.onFabClick();
 
         ShadowActivity shadowActivity = shadowOf(activity);
-        ShadowActivity.IntentForResult intentResult = shadowActivity.getNextStartedActivityForResult();
+        ShadowActivity.IntentForResult intentResult =
+                shadowActivity.getNextStartedActivityForResult();
 
-        assertEquals(intentResult.intent.getParcelableExtra(BarcodeProcessorActivity.EXTRA_CODES_TO_PROCESS), ORDER_NOT_FINISHED.codesToProcess());
+        assertEquals(
+                intentResult.intent.getParcelableExtra(
+                        BarcodeProcessorActivity.EXTRA_CODES_TO_PROCESS),
+                ORDER_NOT_FINISHED.codesToProcess());
+
         assertEquals(intentResult.requestCode, OrderDetailsActivity.REQUEST_CODE_PROCESS);
     }
 
@@ -457,13 +525,15 @@ public class OrderDetailsActivityTest {
         shadowOf(activity).grantPermissions(Manifest.permission.CAMERA);
         activity.onFabClick();
 
-        ShadowActivity.IntentForResult intentResult = shadowOf(activity).getNextStartedActivityForResult();
+        ShadowActivity.IntentForResult intentResult =
+                shadowOf(activity).getNextStartedActivityForResult();
 
         Map<String, Integer> codes = new HashMap<>();
         for (String code : ORDER_NOT_FINISHED.codesToProcess().codes().keySet()) {
             codes.put(code, 0);
         }
-        CodesToProcess newCodesToProcess = CodesToProcess.create(codes, ORDER_NOT_FINISHED.id());
+        CodesToProcess newCodesToProcess =
+                CodesToProcess.create(codes, ORDER_NOT_FINISHED.id());
 
         Intent result = new Intent();
         result.putExtra(BarcodeProcessorActivity.EXTRA_RESULT, newCodesToProcess);
@@ -473,7 +543,9 @@ public class OrderDetailsActivityTest {
                 Activity.RESULT_OK,
                 result);
 
-        assertEquals(intentResult.requestCode, OrderDetailsActivity.REQUEST_CODE_PROCESS);
+        assertEquals(
+                intentResult.requestCode,
+                OrderDetailsActivity.REQUEST_CODE_PROCESS);
 
         activity.recyclerView.measure(0, 0);
         activity.recyclerView.layout(0, 0, 100, 1000);
@@ -481,18 +553,27 @@ public class OrderDetailsActivityTest {
         OrderDetailsAdapter.ViewHolder holder;
         int i = 0;
         for (OrderItem item : ORDER_NOT_FINISHED.items().values()) {
-            holder = (OrderDetailsAdapter.ViewHolder) activity.recyclerView.findViewHolderForAdapterPosition(i);
+            holder = (OrderDetailsAdapter.ViewHolder) activity.recyclerView
+                    .findViewHolderForAdapterPosition(i);
 
-            int itemsLeft = item.quantity() - newCodesToProcess.codes().get(item.code());
+            int itemsLeft =
+                    item.quantity() - newCodesToProcess.codes().get(item.code());
+
             String itemsLeftText =
                     String.format(
                             activity.getString(R.string.order_details_count_text),
                             itemsLeft,
                             item.quantity());
 
-            assertEquals(holder.code.getText().toString(), item.code());
-            assertEquals(holder.quantity.getText().toString(), itemsLeftText);
-            assertEquals(holder.description.getText().toString(), item.description());
+            assertEquals(
+                    holder.code.getText().toString(),
+                    item.code());
+            assertEquals(
+                    holder.quantity.getText().toString(),
+                    itemsLeftText);
+            assertEquals(
+                    holder.description.getText().toString(),
+                    item.description());
 
             i++;
         }
@@ -502,9 +583,15 @@ public class OrderDetailsActivityTest {
     public void onShowOrder_alreadyProcessed() throws Exception {
         init(ORDER_FINISHED);
 
-        assertEquals(activity.alreadyProcessedRoot.getVisibility(), View.VISIBLE);
-        assertEquals(activity.itemsLeftRoot.getVisibility(), View.GONE);
-        assertEquals(activity.finishRoot.getVisibility(), View.GONE);
+        assertEquals(
+                activity.alreadyProcessedRoot.getVisibility(),
+                View.VISIBLE);
+        assertEquals(
+                activity.itemsLeftRoot.getVisibility(),
+                View.GONE);
+        assertEquals(
+                activity.finishRoot.getVisibility(),
+                View.GONE);
     }
 
     @Test
@@ -514,33 +601,49 @@ public class OrderDetailsActivityTest {
         shadowOf(activity).grantPermissions(Manifest.permission.CAMERA);
         activity.onFabClick();
 
-        ShadowActivity.IntentForResult intentResult = shadowOf(activity).getNextStartedActivityForResult();
+        ShadowActivity.IntentForResult intentResult =
+                shadowOf(activity).getNextStartedActivityForResult();
 
         Map<String, Integer> codes = new HashMap<>();
         for (String code : ORDER_NOT_FINISHED.codesToProcess().codes().keySet()) {
             codes.put(code, 0);
         }
-        CodesToProcess newCodesToProcess = CodesToProcess.create(codes, ORDER_NOT_FINISHED.id());
+        CodesToProcess newCodesToProcess =
+                CodesToProcess.create(codes, ORDER_NOT_FINISHED.id());
 
         Intent result = new Intent();
-        result.putExtra(BarcodeProcessorActivity.EXTRA_RESULT, newCodesToProcess);
+        result.putExtra(
+                BarcodeProcessorActivity.EXTRA_RESULT,
+                newCodesToProcess);
 
         shadowOf(activity).receiveResult(
                 intentResult.intent,
                 Activity.RESULT_OK,
                 result);
 
-        assertEquals(activity.finishRoot.getVisibility(), View.VISIBLE);
-        assertEquals(activity.alreadyProcessedRoot.getVisibility(), View.GONE);
-        assertEquals(activity.itemsLeftRoot.getVisibility(), View.GONE);
+        assertEquals(
+                activity.finishRoot.getVisibility(),
+                View.VISIBLE);
+        assertEquals(
+                activity.alreadyProcessedRoot.getVisibility(),
+                View.GONE);
+        assertEquals(
+                activity.itemsLeftRoot.getVisibility(),
+                View.GONE);
     }
 
     @Test
     public void onShowOrder_showItemsLeft() throws Exception {
         init(ORDER_NOT_FINISHED);
 
-        assertEquals(activity.itemsLeftRoot.getVisibility(), View.VISIBLE);
-        assertEquals(activity.alreadyProcessedRoot.getVisibility(), View.GONE);
-        assertEquals(activity.finishRoot.getVisibility(), View.GONE);
+        assertEquals(
+                activity.itemsLeftRoot.getVisibility(),
+                View.VISIBLE);
+        assertEquals(
+                activity.alreadyProcessedRoot.getVisibility(),
+                View.GONE);
+        assertEquals(
+                activity.finishRoot.getVisibility(),
+                View.GONE);
     }
 }

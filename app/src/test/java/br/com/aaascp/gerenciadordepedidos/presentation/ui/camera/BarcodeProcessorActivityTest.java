@@ -56,31 +56,44 @@ public class BarcodeProcessorActivityTest {
         codesToProcess = CodesToProcess.create(codes, ORDER_ID);
 
         Intent intent = new Intent();
-        intent.putExtra(BarcodeProcessorActivity.EXTRA_CODES_TO_PROCESS, codesToProcess);
-        intent.putExtra(BarcodeProcessorActivity.EXTRA_ORDER_ID, ORDER_ID);
+        intent.putExtra(
+                BarcodeProcessorActivity.EXTRA_CODES_TO_PROCESS,
+                codesToProcess);
+        intent.putExtra(
+                BarcodeProcessorActivity.EXTRA_ORDER_ID,
+                ORDER_ID);
 
-        activity = Robolectric.buildActivity(BarcodeProcessorActivity.class, intent).create().start().get();
+        activity = Robolectric.buildActivity(BarcodeProcessorActivity.class, intent)
+                .create()
+                .start()
+                .get();
     }
 
     @Test
     public void onCreate_setupToolbar() {
         init();
 
-        assertThat(activity.title.getText().toString(), containsString(String.valueOf(ORDER_ID)));
+        assertThat(
+                activity.title.getText().toString(),
+                containsString(String.valueOf(ORDER_ID)));
     }
 
     @Test
     public void onCreate_setItemsLeft() {
         init(1, 2);
 
-        assertThat(activity.itemsLeft.getText().toString(), containsString("3"));
+        assertThat(
+                activity.itemsLeft.getText().toString(),
+                containsString("3"));
     }
 
     @Test
     public void onCreate_setItemsLeft_finished() {
         init(0);
 
-        assertThat(activity.itemsLeft.getText().toString(), containsString("0"));
+        assertThat(
+                activity.itemsLeft.getText().toString(),
+                containsString("0"));
     }
 
     @Test
@@ -89,7 +102,9 @@ public class BarcodeProcessorActivityTest {
 
         activity.onItemProcessed(String.valueOf(CODE_BASE));
 
-        assertThat(activity.itemsLeft.getText().toString(), containsString("1"));
+        assertThat(
+                activity.itemsLeft.getText().toString(),
+                containsString("1"));
     }
 
     @Test
@@ -101,8 +116,12 @@ public class BarcodeProcessorActivityTest {
         AlertDialog dialog = ShadowAlertDialog.getLatestAlertDialog();
         ShadowAlertDialog shadowDialog = shadowOf(dialog);
 
-        assertEquals(shadowDialog.getTitle().toString(), activity.getString(R.string.barcode_processor_finish_dialog_title));
-        assertEquals(shadowDialog.getMessage().toString(), activity.getString(R.string.barcode_processor_finish_dialog_message));
+        assertEquals(
+                shadowDialog.getTitle().toString(),
+                activity.getString(R.string.barcode_processor_finish_dialog_title));
+        assertEquals(
+                shadowDialog.getMessage().toString(),
+                activity.getString(R.string.barcode_processor_finish_dialog_message));
     }
 
 
@@ -114,7 +133,9 @@ public class BarcodeProcessorActivityTest {
         ShadowLooper.runUiThreadTasksIncludingDelayedTasks();
         activity.onItemProcessed(String.valueOf(CODE_BASE));
 
-        assertThat(activity.itemsLeft.getText().toString(), containsString("0"));
+        assertThat(
+                activity.itemsLeft.getText().toString(),
+                containsString("0"));
     }
 
     @Test
@@ -123,7 +144,9 @@ public class BarcodeProcessorActivityTest {
 
         activity.onItemProcessed(String.valueOf(CODE_INVALID));
 
-        assertThat(activity.itemsLeft.getText().toString(), containsString("1"));
+        assertThat(
+                activity.itemsLeft.getText().toString(),
+                containsString("1"));
     }
 
     @Test
@@ -133,7 +156,9 @@ public class BarcodeProcessorActivityTest {
         activity.onItemProcessed(String.valueOf(CODE_BASE));
         activity.onItemProcessed(String.valueOf(CODE_BASE));
 
-        assertThat(activity.itemsLeft.getText().toString(), containsString("1"));
+        assertThat(
+                activity.itemsLeft.getText().toString(),
+                containsString("1"));
     }
 
     @Test
@@ -145,8 +170,13 @@ public class BarcodeProcessorActivityTest {
 
         ShadowActivity shadowActivity = shadowOf(activity);
 
-        assertEquals(BarcodeProcessorActivity.RESULT_OK, shadowActivity.getResultCode());
-        assertEquals(shadowActivity.getResultIntent().getParcelableExtra(BarcodeProcessorActivity.EXTRA_RESULT), codesToProcess);
+        assertEquals(
+                BarcodeProcessorActivity.RESULT_OK,
+                shadowActivity.getResultCode());
+        assertEquals(
+                shadowActivity.getResultIntent().getParcelableExtra(
+                        BarcodeProcessorActivity.EXTRA_RESULT),
+                codesToProcess);
 
         assertTrue(shadowActivity.isFinishing());
     }
@@ -160,8 +190,13 @@ public class BarcodeProcessorActivityTest {
 
         ShadowActivity shadowActivity = shadowOf(activity);
 
-        assertEquals(BarcodeProcessorActivity.RESULT_OK, shadowActivity.getResultCode());
-        assertEquals(shadowActivity.getResultIntent().getParcelableExtra(BarcodeProcessorActivity.EXTRA_RESULT), codesToProcess);
+        assertEquals(
+                BarcodeProcessorActivity.RESULT_OK,
+                shadowActivity.getResultCode());
+        assertEquals(
+                shadowActivity.getResultIntent().getParcelableExtra(
+                        BarcodeProcessorActivity.EXTRA_RESULT),
+                codesToProcess);
 
         assertTrue(shadowActivity.isFinishing());
     }

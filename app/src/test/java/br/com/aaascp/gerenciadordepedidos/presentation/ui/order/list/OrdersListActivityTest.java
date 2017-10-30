@@ -37,12 +37,24 @@ import static org.robolectric.Shadows.shadowOf;
 @Config(constants = BuildConfig.class)
 public class OrdersListActivityTest {
 
-    private static Order ORDER_PROCESSED = OrdersFactory.createOrder(1000, true);
-    private static Order ORDER_NOT_PROCESSED = OrdersFactory.createOrder(1001, false);
-    private static List<Order> ORDERS = Arrays.asList(ORDER_PROCESSED, ORDER_NOT_PROCESSED);
+    private static Order ORDER_PROCESSED =
+            OrdersFactory.createOrder(1000, true);
+
+    private static Order ORDER_NOT_PROCESSED =
+            OrdersFactory.createOrder(1001, false);
+
+    private static List<Order> ORDERS =
+            Arrays.asList(ORDER_PROCESSED, ORDER_NOT_PROCESSED);
+
     private static List<Order> EMPTY_LIST = Collections.emptyList();
-    private static List<Order> ERRORS = Collections.singletonList(OrdersFakeDataSource.createOrderError());
-    private static List<Order> COMMUNICATION_ERROR = Collections.singletonList(OrdersFakeDataSource.createOrderCommunicationError());
+
+    private static List<Order> ERRORS =
+            Collections.singletonList(
+                    OrdersFakeDataSource.createOrderError());
+
+    private static List<Order> COMMUNICATION_ERROR =
+            Collections.singletonList(
+                    OrdersFakeDataSource.createOrderCommunicationError());
 
     private OrdersListActivity activity;
 
@@ -53,10 +65,15 @@ public class OrdersListActivityTest {
 
     private void init(boolean processAll) {
         Intent intent = new Intent();
-        intent.putExtra(OrdersListActivity.EXTRA_PROCESS_ALL, processAll);
-        intent.putExtra(OrdersListActivity.EXTRA_ORDER_FILTERS, NullOrderFilterList.create());
+        intent.putExtra(
+                OrdersListActivity.EXTRA_PROCESS_ALL, processAll);
+        intent.putExtra(OrdersListActivity.EXTRA_ORDER_FILTERS,
+                NullOrderFilterList.create());
 
-        activity = Robolectric.buildActivity(OrdersListActivity.class, intent).create().start().get();
+        activity = Robolectric.buildActivity(OrdersListActivity.class, intent)
+                .create()
+                .start()
+                .get();
     }
 
     private void init(List<Order> orders) {
@@ -91,25 +108,55 @@ public class OrdersListActivityTest {
         init(ORDERS);
 
         OrdersListAdapter.ViewHolder holder =
-                (OrdersListAdapter.ViewHolder) activity.recyclerView.findViewHolderForAdapterPosition(0);
+                (OrdersListAdapter.ViewHolder) activity.recyclerView
+                        .findViewHolderForAdapterPosition(0);
 
-        assertEquals(holder.id.getText().toString(), String.valueOf(ORDERS.get(0).id()));
-        assertEquals(holder.shipType.getText().toString(), ORDERS.get(0).shipmentInfo().shipType());
-        assertEquals(holder.itemsCount.getText().toString(), String.valueOf(ORDERS.get(0).size()));
-        assertEquals(holder.processedAt.getText().toString(), ORDERS.get(0).processedAt());
-        assertEquals(holder.processedAt.getCurrentTextColor(), ContextCompat.getColor(activity, R.color.green));
-        assertEquals(holder.lastModifiedAt.getText().toString(), ORDERS.get(0).lastModifiedAt());
-        assertEquals(holder.action.getText().toString(), String.valueOf(activity.getString(R.string.orders_list_action_details)));
+        assertEquals(
+                holder.id.getText().toString(),
+                String.valueOf(ORDERS.get(0).id()));
+        assertEquals(
+                holder.shipType.getText().toString(),
+                ORDERS.get(0).shipmentInfo().shipType());
+        assertEquals(
+                holder.itemsCount.getText().toString(),
+                String.valueOf(ORDERS.get(0).size()));
+        assertEquals(
+                holder.processedAt.getText().toString(),
+                ORDERS.get(0).processedAt());
+        assertEquals(
+                holder.processedAt.getCurrentTextColor(),
+                ContextCompat.getColor(activity, R.color.green));
+        assertEquals(
+                holder.lastModifiedAt.getText().toString(),
+                ORDERS.get(0).lastModifiedAt());
+        assertEquals(
+                holder.action.getText().toString(),
+                String.valueOf(activity.getString(R.string.orders_list_action_details)));
 
-        holder = (OrdersListAdapter.ViewHolder) activity.recyclerView.findViewHolderForAdapterPosition(1);
+        holder = (OrdersListAdapter.ViewHolder) activity.recyclerView
+                .findViewHolderForAdapterPosition(1);
 
-        assertEquals(holder.id.getText().toString(), String.valueOf(ORDERS.get(1).id()));
-        assertEquals(holder.shipType.getText().toString(), ORDERS.get(1).shipmentInfo().shipType());
-        assertEquals(holder.itemsCount.getText().toString(), String.valueOf(ORDERS.get(1).size()));
-        assertEquals(holder.processedAt.getText().toString(), activity.getString(R.string.order_list_processed_at_empty));
-        assertEquals(holder.processedAt.getCurrentTextColor(), ContextCompat.getColor(activity, R.color.red));
-        assertEquals(holder.lastModifiedAt.getText().toString(), ORDERS.get(1).lastModifiedAt());
-        assertEquals(holder.action.getText().toString(), String.valueOf(activity.getString(R.string.orders_list_action_process)));
+        assertEquals(
+                holder.id.getText().toString(),
+                String.valueOf(ORDERS.get(1).id()));
+        assertEquals(
+                holder.shipType.getText().toString(),
+                ORDERS.get(1).shipmentInfo().shipType());
+        assertEquals(
+                holder.itemsCount.getText().toString(),
+                String.valueOf(ORDERS.get(1).size()));
+        assertEquals(
+                holder.processedAt.getText().toString(),
+                activity.getString(R.string.order_list_processed_at_empty));
+        assertEquals(
+                holder.processedAt.getCurrentTextColor(),
+                ContextCompat.getColor(activity, R.color.red));
+        assertEquals(
+                holder.lastModifiedAt.getText().toString(),
+                ORDERS.get(1).lastModifiedAt());
+        assertEquals(
+                holder.action.getText().toString(),
+                String.valueOf(activity.getString(R.string.orders_list_action_process)));
     }
 
     @Test
@@ -117,10 +164,12 @@ public class OrdersListActivityTest {
         init(EMPTY_LIST);
 
         EmptyStateAdapter.ViewHolder holder =
-                (EmptyStateAdapter.ViewHolder) activity.recyclerView.findViewHolderForAdapterPosition(0);
+                (EmptyStateAdapter.ViewHolder) activity.recyclerView
+                        .findViewHolderForAdapterPosition(0);
 
-        String message = activity.getString(R.string.order_list_empty);
-        assertEquals(holder.getMessage().getText().toString(), message);
+        assertEquals(
+                holder.getMessage().getText().toString(),
+                activity.getString(R.string.order_list_empty));
     }
 
     @Test
@@ -128,9 +177,12 @@ public class OrdersListActivityTest {
         init(ERRORS);
 
         EmptyStateAdapter.ViewHolder holder =
-                (EmptyStateAdapter.ViewHolder) activity.recyclerView.findViewHolderForAdapterPosition(0);
+                (EmptyStateAdapter.ViewHolder) activity.recyclerView
+                        .findViewHolderForAdapterPosition(0);
 
-        assertEquals(holder.getMessage().getText().toString(), OrdersFakeDataSource.ERROR_MESSAGE);
+        assertEquals(
+                holder.getMessage().getText().toString(),
+                OrdersFakeDataSource.ERROR_MESSAGE);
     }
 
     @Test
@@ -138,10 +190,12 @@ public class OrdersListActivityTest {
         init(COMMUNICATION_ERROR);
 
         EmptyStateAdapter.ViewHolder holder =
-                (EmptyStateAdapter.ViewHolder) activity.recyclerView.findViewHolderForAdapterPosition(0);
+                (EmptyStateAdapter.ViewHolder) activity.recyclerView
+                        .findViewHolderForAdapterPosition(0);
 
-        String message = activity.getString(R.string.error_communication);
-        assertEquals(holder.getMessage().getText().toString(), message);
+        assertEquals(
+                holder.getMessage().getText().toString(),
+                activity.getString(R.string.error_communication));
     }
 
     @Test
@@ -151,9 +205,15 @@ public class OrdersListActivityTest {
         activity.fab.performClick();
 
         Intent startedIntent = shadowOf(activity).getNextStartedActivity();
-        assertEquals(startedIntent.getExtras().getInt(OrderDetailsActivity.EXTRA_TOTAL), ORDERS.size());
-        assertEquals(startedIntent.getExtras().getInt(OrderDetailsActivity.EXTRA_CURRENT), 1);
-        assertEquals(startedIntent.getExtras().getInt(OrderDetailsActivity.EXTRA_ORDER_ID), ORDERS.get(0).id());
+        assertEquals(
+                startedIntent.getExtras().getInt(OrderDetailsActivity.EXTRA_TOTAL),
+                ORDERS.size());
+        assertEquals(
+                startedIntent.getExtras().getInt(OrderDetailsActivity.EXTRA_CURRENT),
+                1);
+        assertEquals(
+                startedIntent.getExtras().getInt(OrderDetailsActivity.EXTRA_ORDER_ID),
+                ORDERS.get(0).id());
     }
 
     @Test
@@ -173,9 +233,15 @@ public class OrdersListActivityTest {
 
         Intent nextIntent = shadowActivity.getNextStartedActivity();
 
-        assertEquals(nextIntent.getExtras().getInt(OrderDetailsActivity.EXTRA_TOTAL), ORDERS.size());
-        assertEquals(nextIntent.getExtras().getInt(OrderDetailsActivity.EXTRA_CURRENT), 2);
-        assertEquals(nextIntent.getExtras().getInt(OrderDetailsActivity.EXTRA_ORDER_ID), ORDERS.get(1).id());
+        assertEquals(
+                nextIntent.getExtras().getInt(OrderDetailsActivity.EXTRA_TOTAL),
+                ORDERS.size());
+        assertEquals(
+                nextIntent.getExtras().getInt(OrderDetailsActivity.EXTRA_CURRENT),
+                2);
+        assertEquals(
+                nextIntent.getExtras().getInt(OrderDetailsActivity.EXTRA_ORDER_ID),
+                ORDERS.get(1).id());
     }
 
     @Test
@@ -196,9 +262,15 @@ public class OrdersListActivityTest {
         activity.fab.performClick();
 
         Intent startedIntent = shadowActivity.getNextStartedActivity();
-        assertEquals(startedIntent.getExtras().getInt(OrderDetailsActivity.EXTRA_TOTAL), ORDERS.size());
-        assertEquals(startedIntent.getExtras().getInt(OrderDetailsActivity.EXTRA_CURRENT), 1);
-        assertEquals(startedIntent.getExtras().getInt(OrderDetailsActivity.EXTRA_ORDER_ID), ORDERS.get(0).id());
+        assertEquals(
+                startedIntent.getExtras().getInt(OrderDetailsActivity.EXTRA_TOTAL),
+                ORDERS.size());
+        assertEquals(
+                startedIntent.getExtras().getInt(OrderDetailsActivity.EXTRA_CURRENT),
+                1);
+        assertEquals(
+                startedIntent.getExtras().getInt(OrderDetailsActivity.EXTRA_ORDER_ID),
+                ORDERS.get(0).id());
     }
 
     @Test
@@ -218,9 +290,15 @@ public class OrdersListActivityTest {
 
         Intent nextIntent = shadowActivity.getNextStartedActivity();
 
-        assertEquals(nextIntent.getExtras().getInt(OrderDetailsActivity.EXTRA_TOTAL), ORDERS.size());
-        assertEquals(nextIntent.getExtras().getInt(OrderDetailsActivity.EXTRA_CURRENT), 2);
-        assertEquals(nextIntent.getExtras().getInt(OrderDetailsActivity.EXTRA_ORDER_ID), ORDERS.get(1).id());
+        assertEquals(
+                nextIntent.getExtras().getInt(OrderDetailsActivity.EXTRA_TOTAL),
+                ORDERS.size());
+        assertEquals(
+                nextIntent.getExtras().getInt(OrderDetailsActivity.EXTRA_CURRENT),
+                2);
+        assertEquals(
+                nextIntent.getExtras().getInt(OrderDetailsActivity.EXTRA_ORDER_ID),
+                ORDERS.get(1).id());
     }
 
     @Test
@@ -241,9 +319,15 @@ public class OrdersListActivityTest {
         activity.fab.performClick();
 
         Intent startedIntent = shadowActivity.getNextStartedActivity();
-        assertEquals(startedIntent.getExtras().getInt(OrderDetailsActivity.EXTRA_TOTAL), ORDERS.size());
-        assertEquals(startedIntent.getExtras().getInt(OrderDetailsActivity.EXTRA_CURRENT), 1);
-        assertEquals(startedIntent.getExtras().getInt(OrderDetailsActivity.EXTRA_ORDER_ID), ORDERS.get(0).id());
+        assertEquals(
+                startedIntent.getExtras().getInt(OrderDetailsActivity.EXTRA_TOTAL),
+                ORDERS.size());
+        assertEquals(
+                startedIntent.getExtras().getInt(OrderDetailsActivity.EXTRA_CURRENT),
+                1);
+        assertEquals(
+                startedIntent.getExtras().getInt(OrderDetailsActivity.EXTRA_ORDER_ID),
+                ORDERS.get(0).id());
     }
 
     @Test
@@ -262,9 +346,15 @@ public class OrdersListActivityTest {
         activity.fab.performClick();
         Intent nextIntent = shadowActivity.getNextStartedActivity();
 
-        assertEquals(nextIntent.getExtras().getInt(OrderDetailsActivity.EXTRA_TOTAL), ORDERS.size());
-        assertEquals(nextIntent.getExtras().getInt(OrderDetailsActivity.EXTRA_CURRENT), 1);
-        assertEquals(nextIntent.getExtras().getInt(OrderDetailsActivity.EXTRA_ORDER_ID), ORDERS.get(0).id());
+        assertEquals(
+                nextIntent.getExtras().getInt(OrderDetailsActivity.EXTRA_TOTAL),
+                ORDERS.size());
+        assertEquals(
+                nextIntent.getExtras().getInt(OrderDetailsActivity.EXTRA_CURRENT),
+                1);
+        assertEquals(
+                nextIntent.getExtras().getInt(OrderDetailsActivity.EXTRA_ORDER_ID),
+                ORDERS.get(0).id());
     }
 
     @Test
@@ -277,9 +367,15 @@ public class OrdersListActivityTest {
 
         Intent startedIntent = shadowActivity.getNextStartedActivity();
 
-        assertEquals(startedIntent.getExtras().getInt(OrderDetailsActivity.EXTRA_TOTAL), 1);
-        assertEquals(startedIntent.getExtras().getInt(OrderDetailsActivity.EXTRA_CURRENT), 1);
-        assertEquals(startedIntent.getExtras().getInt(OrderDetailsActivity.EXTRA_ORDER_ID), ORDERS.get(0).id());
+        assertEquals(
+                startedIntent.getExtras().getInt(OrderDetailsActivity.EXTRA_TOTAL),
+                1);
+        assertEquals(
+                startedIntent.getExtras().getInt(OrderDetailsActivity.EXTRA_CURRENT),
+                1);
+        assertEquals(
+                startedIntent.getExtras().getInt(OrderDetailsActivity.EXTRA_ORDER_ID),
+                ORDERS.get(0).id());
     }
 
     @Test
@@ -299,9 +395,15 @@ public class OrdersListActivityTest {
 
         Intent startedIntent = shadowActivity.getNextStartedActivity();
 
-        assertEquals(startedIntent.getExtras().getInt(OrderDetailsActivity.EXTRA_TOTAL), ORDERS.size());
-        assertEquals(startedIntent.getExtras().getInt(OrderDetailsActivity.EXTRA_CURRENT), 1);
-        assertEquals(startedIntent.getExtras().getInt(OrderDetailsActivity.EXTRA_ORDER_ID), ORDERS.get(0).id());
+        assertEquals(
+                startedIntent.getExtras().getInt(OrderDetailsActivity.EXTRA_TOTAL),
+                ORDERS.size());
+        assertEquals(
+                startedIntent.getExtras().getInt(OrderDetailsActivity.EXTRA_CURRENT),
+                1);
+        assertEquals(
+                startedIntent.getExtras().getInt(OrderDetailsActivity.EXTRA_ORDER_ID),
+                ORDERS.get(0).id());
     }
 
     @Test
@@ -321,8 +423,14 @@ public class OrdersListActivityTest {
 
         Intent startedIntent = shadowActivity.getNextStartedActivity();
 
-        assertEquals(startedIntent.getExtras().getInt(OrderDetailsActivity.EXTRA_TOTAL), ORDERS.size());
-        assertEquals(startedIntent.getExtras().getInt(OrderDetailsActivity.EXTRA_CURRENT), 1);
-        assertEquals(startedIntent.getExtras().getInt(OrderDetailsActivity.EXTRA_ORDER_ID), ORDERS.get(0).id());
+        assertEquals(
+                startedIntent.getExtras().getInt(OrderDetailsActivity.EXTRA_TOTAL),
+                ORDERS.size());
+        assertEquals(
+                startedIntent.getExtras().getInt(OrderDetailsActivity.EXTRA_CURRENT),
+                1);
+        assertEquals(
+                startedIntent.getExtras().getInt(OrderDetailsActivity.EXTRA_ORDER_ID),
+                ORDERS.get(0).id());
     }
 }
